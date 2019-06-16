@@ -2,7 +2,7 @@
     <div class="scrollbar-inner">
         <div class="sidenav-header d-flex align-items-center">
             <a class="navbar-brand" href="{{ route('home') }}">
-                <img src="{{ asset('argon') }}/img/brand/blue.png" class="navbar-brand-img" alt="...">
+                <img src="{{ asset('hofolding/tsvlogo.png')}}" class="navbar-brand-img" alt="...">
             </a>
             <div class="ml-auto">
                 <!-- Sidenav toggler -->
@@ -19,7 +19,7 @@
             <!-- Collapse -->
             <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                 <!-- Nav items -->
-                <ul class="navbar-nav">
+                <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-dashboards">
                             <i class="ni ni-shop text-primary"></i>
@@ -36,6 +36,65 @@
                             </ul>
                         </div>
                     </li>
+                </ul>
+
+
+                <!-- Divider -->
+                <hr class="my-3">
+                <!-- Heading -->
+                <h6 class="navbar-heading p-0 text-muted">{{ __('Eigenes') }}</h6>
+                <ul class="navbar-nav mb-md-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('profile.edit') }}">
+                            <i class="ni ni-badge text-blue"></i>
+                            <span class="nav-link-text">{{ __('Meine Daten') }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('events.index') }}">
+                            <i class="ni ni-watch-time text-blue"></i>
+                            <span class="nav-link-text">{{ __('Meine Buchungen') }}</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Divider -->
+                <hr class="my-3">
+                <!-- Heading -->
+                <h6 class="navbar-heading p-0 text-muted">{{ __('Verwaltung') }}</h6>
+                <ul class="navbar-nav mb-md-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('user.index') }}">
+                            <i class="ni ni-single-02 text-blue"></i>
+                            <span class="nav-link-text">{{ __('Teammitglieder') }}</span>
+                        </a>
+                    </li>
+                    @can(\App\Buisness\Enum\PermissionEnum::groupManagment()->getName())
+                    @endcan
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('groups.index') }}">
+                            <i class="ni ni-bullet-list-67 text-blue"></i>
+                            <span class="nav-link-text">{{ __('Gruppen') }}</span>
+                        </a>
+                    </li>
+                    @can(\App\Buisness\Enum\PermissionEnum::eventManagement()->getName())
+                    @endcan
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('events.index') }}">
+                            <i class="ni ni-user-run text-blue"></i>
+                            <span class="nav-link-text">{{ __('Veranstaltungen') }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('settings.index') }}">
+                            <i class="ni ni-settings text-blue"></i>
+                            <span class="nav-link-text">{{ __('Einstellungen') }}</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Divider -->
+                <hr class="my-3">
+                <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link active" href="#navbar-examples" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">
                             <i class="fab fa-laravel" style="color: #f4645f;"></i>
