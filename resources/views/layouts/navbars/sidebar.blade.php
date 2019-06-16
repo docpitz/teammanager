@@ -21,20 +21,10 @@
                 <!-- Nav items -->
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
-                        <a class="nav-link collapsed" href="#navbar-dashboards" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-dashboards">
-                            <i class="ni ni-shop text-primary"></i>
-                            <span class="nav-link-text">{{ __('Dashboards') }}</span>
+                        <a class="nav-link" href="{{ route('home') }}">
+                            <i class="fas fa-home text-primary"></i>
+                            <span class="nav-link-text">{{ __('Dashboard') }}</span>
                         </a>
-                        <div class="collapse" id="navbar-dashboards">
-                            <ul class="nav nav-sm flex-column">
-                                <li class="nav-item">
-                                    <a href="{{ route('home') }}" class="nav-link">{{ __('Dashboard') }}</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('page.index','dashboard-alternative') }}" class="nav-link">{{ __('Alternative') }}</a>
-                                </li>
-                            </ul>
-                        </div>
                     </li>
                 </ul>
 
@@ -46,13 +36,13 @@
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('profile.edit') }}">
-                            <i class="ni ni-badge text-blue"></i>
+                            <i class="fas fa-address-card text-primary"></i>
                             <span class="nav-link-text">{{ __('Meine Daten') }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('events.index') }}">
-                            <i class="ni ni-watch-time text-blue"></i>
+                            <i class="fas fa-table-tennis text-primary"></i>
                             <span class="nav-link-text">{{ __('Meine Buchungen') }}</span>
                         </a>
                     </li>
@@ -64,7 +54,7 @@
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('user.index') }}">
-                            <i class="ni ni-single-02 text-blue"></i>
+                            <i class="fas fa-user text-primary"></i>
                             <span class="nav-link-text">{{ __('Teammitglieder') }}</span>
                         </a>
                     </li>
@@ -72,7 +62,7 @@
                     @endcan
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('groups.index') }}">
-                            <i class="ni ni-bullet-list-67 text-blue"></i>
+                            <i class="fas fa-users text-primary"></i>
                             <span class="nav-link-text">{{ __('Gruppen') }}</span>
                         </a>
                     </li>
@@ -80,13 +70,13 @@
                     @endcan
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('events.index') }}">
-                            <i class="ni ni-user-run text-blue"></i>
+                            <i class="fas fa-calendar-alt text-primary"></i>
                             <span class="nav-link-text">{{ __('Veranstaltungen') }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('settings.index') }}">
-                            <i class="ni ni-settings text-blue"></i>
+                            <i class="fas fa-cogs text-primary"></i>
                             <span class="nav-link-text">{{ __('Einstellungen') }}</span>
                         </a>
                     </li>
