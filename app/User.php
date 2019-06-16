@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Buisness\Enum\RoleEnum;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -37,7 +38,13 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
+
+    public function getRole() : RoleEnum
+    {
+        return RoleEnum::getInstance(RoleEnum::getValue($this->getRoleName()));
+    }
 
     public function getRoleName() : String
     {

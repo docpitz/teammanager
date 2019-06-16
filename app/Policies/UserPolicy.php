@@ -18,7 +18,7 @@ class UserPolicy
      */
     public function manageUsers(User $user)
     {
-        return $user->hasAnyPermission(PermissionEnum::userManagement()->getModel());
+        return $user->hasAnyPermission(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key);
     }
 
 }

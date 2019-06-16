@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        $admin->assignRole(RoleEnum::superAdmin()->getModel());
+        $admin->assignRole(RoleEnum::getInstance(RoleEnum::SuperAdmin)->getModel());
         $admin->save();
 
 

@@ -40,6 +40,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define(PermissionEnum::userManagement()->getValue(), 'App\Policies\UserPolicy@manageUsers');
+        Gate::define(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, 'App\Policies\UserPolicy@manageUsers');
     }
 }

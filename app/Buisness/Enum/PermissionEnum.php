@@ -1,21 +1,21 @@
 <?php
 namespace App\Buisness\Enum;
 
-use Spatie\Enum\Enum;
+use BenSampo\Enum\Enum;
 use Spatie\Permission\Models\Permission;
 
-/**
- * @method static self userManagement()
- * @method static self userOwn()
- * @method static self groupManagment()
- * @method static self eventManagement()
- * @method static self eventBookingImmediate()
- * @method static self eventBookingDelayed()
- */
-class PermissionEnum extends Enum
+
+final class PermissionEnum extends Enum
 {
+    const UserManagement        = 0;
+    const UserOwn               = 1;
+    const GroupManagement       = 2;
+    const EventManagement       = 3;
+    const EventBookingImmediate = 4;
+    const EventBookingDelayed   = 5;
+
     public function getModel() : Permission
     {
-        return Permission::findByName($this);
+        return Permission::findByName($this->key);
     }
 }

@@ -22,7 +22,7 @@ class UserController extends Controller
      */
     public function index(User $model)
     {
-        $this->authorize(PermissionEnum::userManagement()->getValue(), User::class);
+        $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
         return view('users.index', ['users' => User::paginate(25)]);
     }
 
@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $this->authorize(PermissionEnum::userManagement()->getValue(), User::class);
+        $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
         return view('users.create');
     }
 
@@ -46,7 +46,7 @@ class UserController extends Controller
      */
     public function store(UserRequest $request, User $model)
     {
-        $this->authorize(PermissionEnum::userManagement()->getValue(), User::class);
+        $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
         $model->create($request->merge(['password' => Hash::make($request->get('password'))])->all());
         return redirect()->route('user.index')->withStatus(__('Teammitglied erfolgreich erstellt.'));
     }
@@ -59,7 +59,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $this->authorize(PermissionEnum::userManagement()->getValue(), User::class);
+        $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
         return view('users.edit', compact('user'));
     }
 
@@ -72,7 +72,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        $this->authorize(PermissionEnum::userManagement()->getValue(), User::class);
+        $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
         $user->update(
             $request->merge(['password' => Hash::make($request->get('password'))])
                 ->except([$request->get('password') ? '' : 'password']
@@ -89,7 +89,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $this->authorize(PermissionEnum::userManagement()->getValue(), User::class);
+        $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
         $user->delete();
         return redirect()->route('user.index')->withStatus(__('Teammitglied erfolgreich gelöscht'));
     }

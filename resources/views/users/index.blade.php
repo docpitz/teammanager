@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => __('User Management')])
+@extends('layouts.app', ['title' => __('Teammitglieder')])
 
 @section('content')
     @component('layouts.headers.auth')

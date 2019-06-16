@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/packages/LaravelFrontendPresets/ArgonPreset/src" isTestSource="true" packagePrefix="LaravelFrontendPresets\ArgonPreset\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/barryvdh/laravel-debugbar" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/bensampo/laravel-enum" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/beyondcode/laravel-dump-server" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dnoegel/php-xdg-base-dir" />
@@ -69,7 +70,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/resource-operations" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/version" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/enum" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/image" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/image-optimizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/laravel-medialibrary" />

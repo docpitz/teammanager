@@ -17,18 +17,18 @@ class RolesAndPermissionTableSeeder extends Seeder
     public function run()
     {
 
-        $pUserManagement = Permission::create([self::NAME => PermissionEnum::userManagement()]);
-        $pUserOwn = Permission::create([self::NAME => PermissionEnum::userOwn()]);
-        $pEventManagment = Permission::create([self::NAME => PermissionEnum::eventManagement()]);
-        $pEventBookingImmediate = Permission::create([self::NAME => PermissionEnum::eventBookingImmediate()]);
-        $pEventBookingDelayed = Permission::create([self::NAME => PermissionEnum::eventBookingDelayed()]);
-        $pGroupManagement = Permission::create([self::NAME => PermissionEnum::groupManagment()]);
+        $pUserManagement = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::UserManagement)->key]);
+        $pUserOwn = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::UserOwn)->key]);
+        $pEventManagment = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::EventManagement)->key]);
+        $pEventBookingImmediate = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key]);
+        $pEventBookingDelayed = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::EventBookingDelayed)->key]);
+        $pGroupManagement = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::GroupManagement)->key]);
 
 
-        $rSuperAdmin = Role::create([self::NAME => RoleEnum::superAdmin()]);
-        $rOrganisator = Role::create([self::NAME => RoleEnum::organisator()]);
-        $rTeamIntern = Role::create([self::NAME => RoleEnum::teamIntern()]);
-        $rTeamExtern = Role::create([self::NAME => RoleEnum::teamExtern()]);
+        $rSuperAdmin = Role::create([self::NAME => RoleEnum::getInstance(RoleEnum::SuperAdmin)->key]);
+        $rOrganisator = Role::create([self::NAME => RoleEnum::getInstance(RoleEnum::Organisator)->key]);
+        $rTeamIntern = Role::create([self::NAME => RoleEnum::getInstance(RoleEnum::TeamIntern)->key]);
+        $rTeamExtern = Role::create([self::NAME => RoleEnum::getInstance(RoleEnum::TeamExtern)->key]);
 
         $rSuperAdmin->givePermissionTo($pUserManagement,
             $pUserOwn,

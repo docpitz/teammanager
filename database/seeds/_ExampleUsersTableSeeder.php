@@ -23,7 +23,7 @@ class _ExampleUsersTableSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        $organisator->assignRole(RoleEnum::organisator()->getModel());
+        $organisator->assignRole(RoleEnum::getInstance(RoleEnum::Organisator)->getModel());
         $organisator->save();
 
         $teamMemberOne = new User([
@@ -35,7 +35,7 @@ class _ExampleUsersTableSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        $teamMemberOne->assignRole(RoleEnum::teamIntern()->getModel());
+        $teamMemberOne->assignRole(RoleEnum::getInstance(RoleEnum::TeamIntern)->getModel());
         $teamMemberOne->save();
 
         $teamMemberTwo = new User([
@@ -47,7 +47,7 @@ class _ExampleUsersTableSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        $teamMemberTwo->assignRole(RoleEnum::teamIntern()->getModel());
+        $teamMemberTwo->assignRole(RoleEnum::getInstance(RoleEnum::TeamIntern)->getModel());
         $teamMemberTwo->save();
     }
 }

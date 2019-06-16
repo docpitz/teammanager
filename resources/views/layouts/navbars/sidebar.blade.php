@@ -58,16 +58,12 @@
                             <span class="nav-link-text">{{ __('Teammitglieder') }}</span>
                         </a>
                     </li>
-                    @can(\App\Buisness\Enum\PermissionEnum::groupManagment()->getName())
-                    @endcan
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('groups.index') }}">
                             <i class="fas fa-users text-primary"></i>
                             <span class="nav-link-text">{{ __('Gruppen') }}</span>
                         </a>
                     </li>
-                    @can(\App\Buisness\Enum\PermissionEnum::eventManagement()->getName())
-                    @endcan
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('events.index') }}">
                             <i class="fas fa-calendar-alt text-primary"></i>
