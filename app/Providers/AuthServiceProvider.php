@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Buisness\Enum\PermissionEnum;
 use App\Tag;
 use App\Item;
 use App\Role;
@@ -39,8 +40,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('manage-items', 'App\Policies\UserPolicy@manageItems');
-
-        Gate::define('manage-users', 'App\Policies\UserPolicy@manageUsers');
+        Gate::define(PermissionEnum::userManagement()->getValue(), 'App\Policies\UserPolicy@manageUsers');
     }
 }

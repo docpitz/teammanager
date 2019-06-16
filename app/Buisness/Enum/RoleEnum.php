@@ -12,10 +12,8 @@ use Spatie\Permission\Models\Role;
  */
 class RoleEnum extends Enum
 {
-    public function getRoleModel() : Role
+    public function getModel() : Role
     {
         return Role::findByName($this);
     }
-
-
 }

@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\User;
+use App\Buisness\Enum\RoleEnum;
 
 class UsersTableSeeder extends Seeder
 {
@@ -12,25 +14,19 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\User::class)->create([
-            'id' => 1,
-            'name' => 'Admin',
-            'email' => 'admin@argon.com',
-            'role_id' => 1,
+        $admin = new User([
+            'name' => 'Florian Pitz',
+            'email' => 'florian.pitz@tsvhofolding.de',
+            'email_verified_at' => now(),
+            'password' => Hash::make('secret'),
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
 
-        factory(App\User::class)->create([
-            'id' => 2,
-            'name' => 'Creator',
-            'email' => 'creator@argon.com',
-            'role_id' => 2,
-        ]);
+        $admin->assignRole(RoleEnum::superAdmin()->getModel());
+        $admin->save();
 
-        factory(App\User::class)->create([
-            'id' => 3,
-            'name' => 'Member',
-            'email' => 'member@argon.com',
-            'role_id' => 3,
-        ]);
+
+
     }
 }

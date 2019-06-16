@@ -2,6 +2,7 @@
 namespace App\Buisness\Enum;
 
 use Spatie\Enum\Enum;
+use Spatie\Permission\Models\Permission;
 
 /**
  * @method static self userManagement()
@@ -13,5 +14,8 @@ use Spatie\Enum\Enum;
  */
 class PermissionEnum extends Enum
 {
-
+    public function getModel() : Permission
+    {
+        return Permission::findByName($this);
+    }
 }

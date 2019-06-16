@@ -2,102 +2,80 @@
 
 @section('content')
     @component('layouts.headers.auth')
-        @component('layouts.headers.breadcrumbs')
-            @slot('title')
-                {{ __('Examples') }}
-            @endslot
-
-            <li class="breadcrumb-item"><a href="{{ route('user.index') }}">{{ __('User Management') }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ __('List') }}</li>
-        @endcomponent
     @endcomponent
 
     <div class="container-fluid mt--6">
         <div class="row">
             <div class="col">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card shadow">
+                    <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">{{ __('Users') }}</h3>
-                                <p class="text-sm mb-0">
-                                    {{ __('This is an example of user management. This is a minimal setup in order to get started fast.') }}
-                                </p>
+                                <h3 class="mb-0">{{ __('Teammitglieder') }}</h3>
                             </div>
-                            @can('create', App\User::class)
-                                <div class="col-4 text-right">
-                                    <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary">{{ __('Add user') }}</a>
-                                </div>
-                            @endcan
+                            <div class="col-4 text-right">
+                                <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary">{{ __('Teammitglied hinzufügen') }}</a>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-12 mt-2">
-                        @include('alerts.success')
-                        @include('alerts.errors')
+                    <div class="col-12">
+                        @if (session('status'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('status') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
                     </div>
 
-                    <div class="table-responsive py-4">
-                        <table class="table align-items-center table-flush"  id="datatable-basic">
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
                             <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Photo</th>
-                                    <th scope="col">{{ __('Name') }}</th>
-                                    <th scope="col">{{ __('Email') }}</th>
-                                    <th scope="col">{{ __('Role') }}</th>
-                                    <th scope="col">{{ __('Creation Date') }}</th>
-                                    @can('manage-users', App\User::class)
-                                        <th scope="col"></th>
-                                    @endcan
-                                </tr>
+                            <tr>
+                                <th scope="col">{{ __('Name') }}</th>
+                                <th scope="col">{{ __('E-Mail') }}</th>
+                                <th scope="col">{{ __('Berechtigung') }}</th>
+                                <th scope="col"></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach ($users as $user)
-                                    <tr>
-                                        <td>
-                                            <span class="avatar avatar-sm rounded-circle">
-                                                <img src="{{ $user->profilePicture() }}" alt="" style="max-width: 100px; border-radiu: 25px">
-                                            </span>
-                                        </td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>
-                                            <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
-                                        </td>
-                                        <td>{{ $user->role->name }}</td>
-                                        <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
-                                        @can('manage-users', App\User::class)
-                                            <td class="text-right">
-                                                @if (auth()->user()->can('update', $user) || auth()->user()->can('delete', $user))
-                                                    <div class="dropdown">
-                                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fas fa-ellipsis-v"></i>
-                                                        </a>
-                                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                            @if ($user->id != auth()->id())
-                                                                @can('update', $user)
-                                                                    <a class="dropdown-item" href="{{ route('user.edit', $user) }}">{{ __('Edit') }}</a>
-                                                                @endcan
-                                                                @can('delete', $user)
-                                                                    <form action="{{ route('user.destroy', $user) }}" method="post">
-                                                                        @csrf
-                                                                        @method('delete')
-                                                                        <button type="button" class="dropdown-item" onclick="confirm('{{ __("Are you sure you want to delete this user?") }}') ? this.parentElement.submit() : ''">
-                                                                            {{ __('Delete') }}
-                                                                        </button>
-                                                                    </form>
-                                                                @endcan
-                                                            @else
-                                                                <a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Edit') }}</a>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            </td>
-                                        @endcan
-                                    </tr>
-                                @endforeach
+                            @foreach ($users as $user)
+                                <tr>
+                                    <td>{{ $user->name }}</td>
+                                    <td>
+                                        <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                                    </td>
+                                    <td>{{ $user->getRoleNameFormatted() }}</td>
+                                    <td class="text-right">
+                                        <form action="{{ route('user.destroy', $user) }}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <a href="{{ route('user.edit', $user) }}">
+                                                <i class="fas fa-user-edit"></i>
+                                            </a>
+                                            @if ($user->id != auth()->id())
+                                                <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie dieses Teammitglied wirklich löschen?") }}') ? this.parentElement.submit() : ''">
+                                                    <i class="fas fa-user-slash"></i>
+                                                </button>
+                                            @else
+                                                <button type="button" class="btn btn-link" disabled="disabled">
+                                                    <i class="fas fa-user-slash"></i>
+                                                </button>
+                                            @endif
+
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
+                    </div>
+                    <div class="card-footer py-4">
+                        <nav class="d-flex justify-content-end" aria-label="...">
+                            {{ $users->links() }}
+                        </nav>
                     </div>
                 </div>
             </div>

@@ -20,9 +20,23 @@ class DatabaseSeeder extends Seeder
         DB::table('categories')->truncate();
         DB::table('items')->truncate();
 
-        $this->call([RolesTableSeeder::class, UsersTableSeeder::class]);
-        $this->call([TagsTableSeeder::class, CategoriesTableSeeder::class, ItemsTableSeeder::class]);
+        $this->call([RolesAndPermissionTableSeeder::class,
+            UsersTableSeeder::class,
+            TagsTableSeeder::class,
+            CategoriesTableSeeder::class,
+            ItemsTableSeeder::class]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+        if($this->isTestSystem())
+        {
+            // Only Test
+            $this->call([_ExampleUsersTableSeeder::class]);
+        }
+    }
+
+    private function isTestSystem() : bool
+    {
+        return strcmp(config('APP_ENV'),'local');
     }
 }
