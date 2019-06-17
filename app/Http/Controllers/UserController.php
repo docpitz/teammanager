@@ -48,7 +48,8 @@ class UserController extends Controller
     public function store(UserRequest $request, User $model)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
-        $model->create($request->merge(['password' => Hash::make($request->get('password'))])->all());
+        $createdModel = $model->create($request->merge(['password' => Hash::make($request->get('password'))])->all());
+        $createdModel->roles()->sync(Role::findByName($request['role_name']));
         return redirect()->route('user.index')->withStatus(__('Teammitglied erfolgreich erstellt.'));
     }
 

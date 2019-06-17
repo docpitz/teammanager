@@ -2,14 +2,6 @@
 
 @section('content')
     @component('layouts.headers.auth')
-        @component('layouts.headers.breadcrumbs')
-            @slot('title')
-                {{ __('Examples') }}
-            @endslot
-
-            <li class="breadcrumb-item"><a href="{{ route('user.index') }}">{{ __('User Management') }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ __('Add User') }}</li>
-        @endcomponent
     @endcomponent
 
     <div class="container-fluid mt--6">
@@ -19,19 +11,18 @@
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">{{ __('User Management') }}</h3>
+                                <h3 class="mb-0">{{ __('Teammitglied anlegen') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('user.index') }}" class="btn btn-sm btn-primary">{{ __('Back to list') }}</a>
+                                <a href="{{ route('user.index') }}" class="btn btn-sm btn-primary">{{ __('Zurück zur Übersicht') }}</a>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('user.store') }}" autocomplete="off"
-                            enctype="multipart/form-data">
+                              enctype="multipart/form-data">
                             @csrf
-
-                            <h6 class="heading-small text-muted mb-4">{{ __('User information') }}</h6>
+                            <h6 class="heading-small text-muted mb-4">{{ __('Neues Teammitglied') }}</h6>
                             <div class="pl-lg-4">
                                 <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-name">{{ __('Name') }}</label>
@@ -40,22 +31,23 @@
                                     @include('alerts.feedback', ['field' => 'name'])
                                 </div>
                                 <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email') }}" required>
+                                    <label class="form-control-label" for="input-email">{{ __('E-Nail') }}</label>
+                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail') }}" value="{{ old('email') }}" required>
 
                                     @include('alerts.feedback', ['field' => 'email'])
                                 </div>
-                                <div class="form-group{{ $errors->has('role_id') ? ' has-danger' : '' }}">
+                                <div class="form-group{{ $errors->has('role_name') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-role">{{ __('Role') }}</label>
-                                    <select name="role_id" id="input-role" class="form-control{{ $errors->has('role_id') ? ' is-invalid' : '' }}" placeholder="{{ __('Role') }}" required>
+                                    <select name="role_name" id="input-role" class="form-control{{ $errors->has('role_name') ? ' is-invalid' : '' }}" placeholder="{{ __('Role') }}" required>
                                         <option value="">-</option>
-                                        @foreach ($roles as $role)
-                                            <option value="{{ $role->id }}" {{ $role->id == old('role_id') ? 'selected' : '' }}>{{ $role->name }}</option>
+                                        @foreach (\App\Buisness\Enum\RoleEnum::getInstances() as $role)
+                                            <option value="{{ $role->key }}" {{ $role->key == old('role_name') ? 'selected' : ''}}>{{ $role->description }} </option>
                                         @endforeach
                                     </select>
 
-                                    @include('alerts.feedback', ['field' => 'role_id'])
+                                    @include('alerts.feedback', ['field' => 'role_name'])
                                 </div>
+                                <!--
                                 <div class="form-group{{ $errors->has('photo') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-name">{{ __('Profile photo') }}</label>
                                     <div class="custom-file">
@@ -65,9 +57,10 @@
 
                                     @include('alerts.feedback', ['field' => 'photo'])
                                 </div>
+                                -->
                                 <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-password">{{ __('Password') }}</label>
-                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ __('Password') }}" value="" required>
+                                    <label class="form-control-label" for="input-password">{{ __('Passwort') }}</label>
+                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ __('Passwort') }}" value="" required>
 
                                     @include('alerts.feedback', ['field' => 'password'])
                                 </div>
@@ -77,7 +70,7 @@
                                 </div>
 
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
+                                    <button type="submit" class="btn btn-success mt-4">{{ __('Speichern') }}</button>
                                 </div>
                             </div>
                         </form>
