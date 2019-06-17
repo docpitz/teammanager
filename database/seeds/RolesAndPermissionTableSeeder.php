@@ -17,24 +17,35 @@ class RolesAndPermissionTableSeeder extends Seeder
     public function run()
     {
 
-        $pUserManagement = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::UserManagement)->key]);
-        $pUserOwn = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::UserOwn)->key]);
-        $pEventManagment = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::EventManagement)->key]);
-        $pEventBookingImmediate = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key]);
-        $pEventBookingDelayed = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::EventBookingDelayed)->key]);
-        $pGroupManagement = Permission::create([self::NAME => PermissionEnum::getInstance(PermissionEnum::GroupManagement)->key]);
+        foreach (PermissionEnum::getInstances() as $permission)
+        {
+            Permission::create([self::NAME => $permission->key]);
+        }
+
+        foreach (RoleEnum::getInstances() as $role)
+        {
+            Role::create([self::NAME => $role->key]);
+        }
+        $pUserManagement = PermissionEnum::getInstance(PermissionEnum::UserManagement)->getModel();
+        $pUserOwn = PermissionEnum::getInstance(PermissionEnum::UserOwn)->getModel();
+        $pEventManagment = PermissionEnum::getInstance(PermissionEnum::EventManagement)->getModel();
+        $pEventBookingImmediate = PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->getModel();
+        $pEventBookingDelayed = PermissionEnum::getInstance(PermissionEnum::EventBookingDelayed)->getModel();
+        $pGroupManagement = PermissionEnum::getInstance(PermissionEnum::GroupManagement)->getModel();
+        $pSettings = PermissionEnum::getInstance(PermissionEnum::Settings)->getModel();
 
 
-        $rSuperAdmin = Role::create([self::NAME => RoleEnum::getInstance(RoleEnum::SuperAdmin)->key]);
-        $rOrganisator = Role::create([self::NAME => RoleEnum::getInstance(RoleEnum::Organisator)->key]);
-        $rTeamIntern = Role::create([self::NAME => RoleEnum::getInstance(RoleEnum::TeamIntern)->key]);
-        $rTeamExtern = Role::create([self::NAME => RoleEnum::getInstance(RoleEnum::TeamExtern)->key]);
+        $rSuperAdmin = RoleEnum::getInstance(RoleEnum::SuperAdmin)->getModel();
+        $rOrganisator = RoleEnum::getInstance(RoleEnum::Organisator)->getModel();
+        $rTeamIntern = RoleEnum::getInstance(RoleEnum::TeamIntern)->getModel();
+        $rTeamExtern = RoleEnum::getInstance(RoleEnum::TeamExtern)->getModel();
 
         $rSuperAdmin->givePermissionTo($pUserManagement,
             $pUserOwn,
             $pEventManagment,
             $pEventBookingImmediate,
-            $pGroupManagement);
+            $pGroupManagement,
+            $pSettings);
 
         $rOrganisator->givePermissionTo($pUserManagement,
             $pUserOwn,

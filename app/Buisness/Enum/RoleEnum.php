@@ -12,10 +12,10 @@ use Spatie\Permission\Models\Role;
  */
 class RoleEnum extends Enum
 {
-    const SuperAdmin    = 0;
-    const Organisator   = 1;
-    const TeamIntern    = 2;
-    const TeamExtern    = 3;
+    const SuperAdmin    = 1;
+    const Organisator   = 2;
+    const TeamIntern    = 3;
+    const TeamExtern    = 4;
 
     public function getModel() : Role
     {

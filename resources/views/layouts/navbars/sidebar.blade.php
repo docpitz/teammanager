@@ -47,37 +47,52 @@
                         </a>
                     </li>
                 </ul>
+                @canany(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::UserManagement)->key,
+                \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::GroupManagement)->key,
+                \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventManagement)->key,
+                \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::Settings)->key)
                 <!-- Divider -->
                 <hr class="my-3">
                 <!-- Heading -->
                 <h6 class="navbar-heading p-0 text-muted">{{ __('Verwaltung') }}</h6>
+
                 <ul class="navbar-nav mb-md-3">
+                    @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::UserManagement)->key)
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('user.index') }}">
                             <i class="fas fa-user text-primary"></i>
                             <span class="nav-link-text">{{ __('Teammitglieder') }}</span>
                         </a>
                     </li>
+                    @endcan
+                    @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::GroupManagement)->key)
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('groups.index') }}">
                             <i class="fas fa-users text-primary"></i>
                             <span class="nav-link-text">{{ __('Gruppen') }}</span>
                         </a>
                     </li>
+                    @endcan
+                    @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventManagement)->key)
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('events.index') }}">
                             <i class="fas fa-calendar-alt text-primary"></i>
                             <span class="nav-link-text">{{ __('Veranstaltungen') }}</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('settings.index') }}">
-                            <i class="fas fa-cogs text-primary"></i>
-                            <span class="nav-link-text">{{ __('Einstellungen') }}</span>
-                        </a>
-                    </li>
+                    @endcan
+                    @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::Settings)->key)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('settings.index') }}">
+                                <i class="fas fa-cogs text-primary"></i>
+                                <span class="nav-link-text">{{ __('Einstellungen') }}</span>
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
+                @endcan
 
+                @role(\App\Buisness\Enum\RoleEnum::getInstance(\App\Buisness\Enum\RoleEnum::SuperAdmin)->key)
                 <!-- Divider -->
                 <hr class="my-3">
                 <ul class="navbar-nav">
@@ -91,35 +106,24 @@
                                 <li class="nav-item">
                                     <a href="{{ route('profile.edit') }}" class="nav-link">{{ __('Profile') }}</a>
                                 </li>
-                                @can('manage-users', App\User::class)
                                     <li class="nav-item">
                                         <a href="{{ route('role.index') }}" class="nav-link">{{ __('Role Management') }}</a>
                                     </li>
-                                @endcan
-                                @can('manage-users', App\User::class)
                                     <li class="nav-item">
                                         <a href="{{ route('user.index') }}" class="nav-link">{{ __('User Management') }}</a>
                                     </li>
-                                @endcan
-                                @can('manage-items', App\User::class)
                                     <li class="nav-item">
                                         <a href="{{ route('category.index') }}" class="nav-link">{{ __('Category Management') }}</a>
                                     </li>
-                                @endcan
-                                @can('manage-items', App\User::class)
                                     <li class="nav-item">
                                         <a href="{{ route('tag.index') }}" class="nav-link">{{ __('Tag Management') }}</a>
                                     </li>
-                                @endcan
-                                @can('manage-items', App\User::class)
                                     <li class="nav-item">
                                         <a href="{{ route('item.index') }}" class="nav-link">{{ __('Item Management') }}</a>
                                     </li>
-                                @else
                                     <li class="nav-item">
                                         <a href="{{ route('item.index') }}" class="nav-link">{{ __('Items') }}</a>
                                     </li>
-                                @endcan
                             </ul>
                         </div>
                     </li>
@@ -284,6 +288,7 @@
                         </a>
                     </li>
                 </ul>
+                @endrole
             </div>
         </div>
     </div>

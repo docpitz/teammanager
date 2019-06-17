@@ -41,19 +41,23 @@ class User extends Authenticatable
         'created_at' => 'datetime',
     ];
 
-    public function getRole() : RoleEnum
+    public function getRole() : ?RoleEnum
     {
+        if(is_null($this->getRoleName()))
+        {
+            return NULL;
+        }
         return RoleEnum::getInstance(RoleEnum::getValue($this->getRoleName()));
     }
 
-    public function getRoleName() : String
+    public function getRoleName() : ?String
     {
         $roleArray = $this->getRoleNames();
         if(count($roleArray) > 0)
         {
             return $roleArray[0];
         }
-        return "";
+        return NULL;
     }
 
     public function getRoleNameFormatted() : String

@@ -37,16 +37,16 @@
 
                                     @include('alerts.feedback', ['field' => 'email'])
                                 </div>
-                                <div class="form-group{{ $errors->has('role_id') ? ' has-danger' : '' }}">
+                                <div class="form-group{{ $errors->has('role_name') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-role">{{ __('Nutzer-Rolle') }}</label>
-                                    <select name="role_id" id="input-role" class="form-control{{ $errors->has('role_id') ? ' is-invalid' : '' }}" placeholder="{{ __('Nutzer-Rolle') }}" required>
-                                        <option value="">-</option>
+                                    <select name="role_name" id="input-role" class="form-control{{ $errors->has('role_name') ? ' is-invalid' : '' }}" placeholder="{{ __('Nutzer-Rolle') }}" required>
+                                        <option value="" {{  $user->getRole() == null ?  'selected' : ''}}>-</option>
                                         @foreach (\App\Buisness\Enum\RoleEnum::getInstances() as $role)
-                                            <option value="{{ $role->value }}" {{ $role->value === $user->getRole()->value ? 'selected' : ''}}>{{ $role->description }} </option>
+                                            <option value="{{ $role->key }}" {{ $user->getRole() == null ? '' : $role->value === $user->getRole()->value ? 'selected' : ''}}>{{ $role->description }} </option>
                                         @endforeach
                                     </select>
 
-                                    @include('alerts.feedback', ['field' => 'role_id'])
+                                    @include('alerts.feedback', ['field' => 'role_name'])
                                 </div>
                                 <!-- Vorbereiten für eine spätere Version
                                 <div class="form-group{{ $errors->has('photo') ? ' has-danger' : '' }}">

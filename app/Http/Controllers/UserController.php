@@ -6,6 +6,7 @@ use App\Buisness\Enum\PermissionEnum;
 use App\User;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -73,11 +74,16 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
-        $user->update(
-            $request->merge(['password' => Hash::make($request->get('password'))])
-                ->except([$request->get('password') ? '' : 'password']
-                ));
+        $user->roles()->sync(Role::findByName($request['role_name']));
 
+        if(is_null($request->get('password'))) {
+            $expectedRequest = $request->except('password');
+            $user->update($expectedRequest);
+        }
+        else {
+            $mergedRequest = $request->merge(['password' => Hash::make($request->get('password'))]);
+            $user->update($mergedRequest->all());
+        }
         return redirect()->route('user.index')->withStatus(__('Teammitglied erfolgreich geändert.'));
     }
 
