@@ -60,14 +60,7 @@ class User extends Authenticatable
         return NULL;
     }
 
-    public function getRoleNameFormatted() : String
-    {
-        $roleName = ucwords($this->getRoleName());
-        $data = preg_split('/(?=[A-Z])/', $roleName);
-        return implode(' ', $data);
-    }
-
-    public function profilePicture() : String
+        public function profilePicture() : String
     {
         return 'http://i.pravatar.cc/200';
     }

@@ -14,7 +14,9 @@
                                 <h3 class="mb-0">{{ __('Teammitglied anlegen') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('user.index') }}" class="btn btn-sm btn-primary">{{ __('Zurück zur Übersicht') }}</a>
+                                <a href="{{ route('user.index') }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-level-up-alt fa-2x"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -41,7 +43,7 @@
                                     <select name="role_name" id="input-role" class="form-control{{ $errors->has('role_name') ? ' is-invalid' : '' }}" placeholder="{{ __('Role') }}" required>
                                         <option value="">-</option>
                                         @foreach (\App\Buisness\Enum\RoleEnum::getInstances() as $role)
-                                            <option value="{{ $role->key }}" {{ $role->key == old('role_name') ? 'selected' : ''}}>{{ $role->description }} </option>
+                                            <option value="{{ $role->key }}" {{ $role->key == old('role_name') ? 'selected' : ''}}>{{ $role->getFormattedName() }} </option>
                                         @endforeach
                                     </select>
 

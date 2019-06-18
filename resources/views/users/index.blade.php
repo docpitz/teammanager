@@ -14,7 +14,9 @@
                                 <h3 class="mb-0">{{ __('Teammitglieder') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary">{{ __('Teammitglied hinzufügen') }}</a>
+                                <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-user-plus text-white fa-2x"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -47,7 +49,7 @@
                                     <td>
                                         <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                     </td>
-                                    <td>{{ $user->getRoleNameFormatted() }}</td>
+                                    <td>{{ $user->getRole()->getFormattedName() }}</td>
                                     <td class="text-right">
                                         <form action="{{ route('user.destroy', $user) }}" method="post">
                                             @csrf

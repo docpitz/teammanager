@@ -22,4 +22,11 @@ class RoleEnum extends Enum
         return Role::findByName($this->key);
     }
 
+    public function getFormattedName() : String
+    {
+        $roleName = ucwords($this->description);
+        $data = preg_split('/(?=[A-Z])/', $roleName);
+        return implode(' ', $data);
+    }
+
 }
