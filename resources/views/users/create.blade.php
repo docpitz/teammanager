@@ -33,7 +33,7 @@
                                     @include('alerts.feedback', ['field' => 'name'])
                                 </div>
                                 <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">{{ __('E-Nail') }}</label>
+                                    <label class="form-control-label" for="input-email">{{ __('E-Mail') }}</label>
                                     <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail') }}" value="{{ old('email') }}" required>
 
                                     @include('alerts.feedback', ['field' => 'email'])
