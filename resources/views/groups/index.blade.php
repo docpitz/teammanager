@@ -11,10 +11,10 @@
                     <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">{{ __('Teammitglieder') }}</h3>
+                                <h3 class="mb-0">{{ __('Gruppen') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('group.create') }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-plus-circle text-white fa-2x"></i>
                                 </a>
                             </div>
@@ -37,35 +37,27 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">{{ __('Name') }}</th>
-                                <th scope="col">{{ __('E-Mail') }}</th>
-                                <th scope="col">{{ __('Berechtigung') }}</th>
+                                <th scope="col">{{ __('Anzahl Gruppenmitglieder') }}</th>
                                 <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($users as $user)
+                            @foreach ($groups as $group)
                                 <tr>
-                                    <td>{{ $user->surname }} {{ $user->firstname }}</td>
+                                    <td>{{ $group->name }}</td>
                                     <td>
-                                        <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                                        {{ $group->users()->count() }}
                                     </td>
-                                    <td>{{ $user->getRole()->getFormattedName() }}</td>
                                     <td class="text-right">
-                                        <form action="{{ route('user.destroy', $user) }}" method="post">
+                                        <form action="{{ route('group.destroy', $group) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <a href="{{ route('user.edit', $user) }}">
+                                            <a href="{{ route('group.edit', $group) }}">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            @if ($user->id != auth()->id())
-                                                <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie dieses Teammitglied wirklich löschen?") }}') ? this.parentElement.submit() : ''">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            @else
-                                                <button type="button" class="btn btn-link" disabled="disabled">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            @endif
+                                            <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie dieses Teammitglied wirklich löschen?") }}') ? this.parentElement.submit() : ''">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
 
                                         </form>
                                     </td>
@@ -76,7 +68,7 @@
                     </div>
                     <div class="card-footer py-4">
                         <nav class="d-flex justify-content-end" aria-label="...">
-                            {{ $users->links() }}
+                            {{ $groups->links() }}
                         </nav>
                     </div>
                 </div>

@@ -64,7 +64,7 @@ class User extends Authenticatable
         return 'http://i.pravatar.cc/200';
     }
 
-    public function groups() : BelongsToMany {
+    public function groups() {
         return $this->belongsToMany('App\Group');
     }
 

@@ -33,10 +33,12 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('role', 'RoleController', ['except' => ['show', 'destroy']]);
 	Route::resource('user', 'UserController', ['except' => ['show']]);
 
-    Route::resource('groups', 'GroupsController', ['except' => ['show']]);
-    Route::resource('events', 'EventsController', ['except' => ['show']]);
-    Route::resource('settings', 'SettingsController', ['except' => ['show']]);
+    Route::resource('group', 'GroupController', ['except' => ['show']]);
+    Route::resource('event', 'EventController', ['except' => ['show']]);
+    Route::resource('myevent', 'MyEventController', ['except' => ['show']]);
 
+    Route::get('setting', ['as' => 'setting.edit', 'uses' => 'SettingCotroller@edit']);
+    Route::put('setting', ['as' => 'setting.update', 'uses' => 'SettingCotroller@update']);
 
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);

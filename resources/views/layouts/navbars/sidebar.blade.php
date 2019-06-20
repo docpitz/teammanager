@@ -41,7 +41,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('events.index') }}">
+                        <a class="nav-link" href="{{ route('myevent.index') }}">
                             <i class="fas fa-table-tennis text-primary"></i>
                             <span class="nav-link-text">{{ __('Meine Buchungen') }}</span>
                         </a>
@@ -67,7 +67,7 @@
                     @endcan
                     @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::GroupManagement)->key)
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('groups.index') }}">
+                        <a class="nav-link" href="{{ route('group.index') }}">
                             <i class="fas fa-users text-primary"></i>
                             <span class="nav-link-text">{{ __('Gruppen') }}</span>
                         </a>
@@ -75,7 +75,7 @@
                     @endcan
                     @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventManagement)->key)
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('events.index') }}">
+                        <a class="nav-link" href="{{ route('event.index') }}">
                             <i class="fas fa-calendar-alt text-primary"></i>
                             <span class="nav-link-text">{{ __('Veranstaltungen') }}</span>
                         </a>
@@ -83,7 +83,7 @@
                     @endcan
                     @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::Settings)->key)
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('settings.index') }}">
+                            <a class="nav-link" href="{{ route('setting.edit') }}">
                                 <i class="fas fa-cogs text-primary"></i>
                                 <span class="nav-link-text">{{ __('Einstellungen') }}</span>
                             </a>
