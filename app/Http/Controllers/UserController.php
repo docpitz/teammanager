@@ -24,7 +24,7 @@ class UserController extends Controller
     public function index(User $model)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
-        return view('users.index', ['users' => User::paginate(25)]);
+        return view('users.index', ['users' => User::orderBy('surname','asc')->paginate(25)]);
     }
 
     /**

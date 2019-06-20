@@ -27,17 +27,35 @@
 
                             <h6 class="heading-small text-muted mb-4">{{ __('Informationen über Teammitglied') }} (erstellt am {{ date('d.m.Y', strtotime($user->created_at)) }})</h6>
                             <div class="pl-lg-4">
-                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-name">{{ __('Name') }}</label>
-                                    <input type="text" name="name" id="input-name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', $user->name) }}"  required autofocus>
+                                <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-name">{{ __('Benutzername') }}</label>
+                                    <input type="text" name="username" id="input-name" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" placeholder="{{ __('Benutzername') }}" value="{{ old('username', $user->username) }}"  required autofocus>
 
-                                    @include('alerts.feedback', ['field' => 'name'])
+                                    @include('alerts.feedback', ['field' => 'username'])
+                                </div>
+                                <div class="form-group{{ $errors->has('firstname') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-name">{{ __('Vorname') }}</label>
+                                    <input type="text" name="firstname" id="input-name" class="form-control{{ $errors->has('firstname') ? ' is-invalid' : '' }}" placeholder="{{ __('Vorname') }}" value="{{ old('firstname', $user->firstname) }}"  required>
+
+                                    @include('alerts.feedback', ['field' => 'firstname'])
+                                </div>
+                                <div class="form-group{{ $errors->has('surname') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-name">{{ __('Nachname') }}</label>
+                                    <input type="text" name="surname" id="input-name" class="form-control{{ $errors->has('surname') ? ' is-invalid' : '' }}" placeholder="{{ __('Nachname') }}" value="{{ old('surname', $user->surname) }}"  required>
+
+                                    @include('alerts.feedback', ['field' => 'surname'])
                                 </div>
                                 <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">{{ __('E-Mail') }}</label>
-                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail') }}" value="{{ old('email', $user->email) }}" required>
+                                    <label class="form-control-label" for="input-email">{{ __('E-Mail-Adresse') }}</label>
+                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail-Adresse') }}" value="{{ old('email', $user->email) }}" required>
 
                                     @include('alerts.feedback', ['field' => 'email'])
+                                </div>
+                                <div class="form-group{{ $errors->has('email_optional') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-email_optional">{{ __('Weitere E-Mail-Adresse') }}</label>
+                                    <input type="email" name="email_optional" id="input-email_optional" class="form-control{{ $errors->has('email_optional') ? ' is-invalid' : '' }}" placeholder="{{ __('Weitere E-Mail-Adresse') }}" value="{{ old('email_optional', $user->email_optional) }}">
+
+                                    @include('alerts.feedback', ['field' => 'email_optional'])
                                 </div>
                                 <div class="form-group{{ $errors->has('role_name') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-role">{{ __('Nutzer-Rolle') }}</label>

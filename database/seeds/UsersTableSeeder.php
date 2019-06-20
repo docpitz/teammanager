@@ -15,8 +15,11 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $admin = new User([
-            'name' => 'Florian Pitz',
+            'username' => 'FlorianPitz',
+            'firstname' => 'Florian',
+            'surname' => 'Pitz',
             'email' => 'florian.pitz@tsvhofolding.de',
+            'email_optional' => null,
             'email_verified_at' => now(),
             'password' => Hash::make('secret'),
             'created_at' => now(),

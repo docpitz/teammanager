@@ -27,11 +27,20 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'username' => [
+                'required', 'min:3', Rule::unique((new User)->getTable())->ignore($this->route()->user->id ?? null)
+            ],
+            'firstname' => [
+                'required', 'min:3'
+            ],
+            'surname' => [
                 'required', 'min:3'
             ],
             'email' => [
-                'required', 'email', Rule::unique((new User)->getTable())->ignore($this->route()->user->id ?? null)
+                'required', 'email'
+            ],
+            'email_optional' => [
+                'nullable', 'email'
             ],
             'password' => [
                 $this->route()->user ? 'nullable' : 'required', 'confirmed', 'min:6'
@@ -39,7 +48,6 @@ class UserRequest extends FormRequest
             'role_name' => [
                 'required'
             ]
-
         ];
     }
 }

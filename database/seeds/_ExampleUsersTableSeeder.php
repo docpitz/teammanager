@@ -15,8 +15,11 @@ class _ExampleUsersTableSeeder extends Seeder
     public function run()
     {
         $organisator = new User([
-            'name' => 'Daniela Pitz',
+            'username' => 'DanielaPitz',
+            'firstname' => 'Daniela',
+            'surname' => 'Pitz',
             'email' => 'daniela.pitz@tsvhofolding.de',
+            'email_optional' => null,
             'email_verified_at' => now(),
             'password' => Hash::make('secret'),
             'created_at' => now(),
@@ -27,8 +30,11 @@ class _ExampleUsersTableSeeder extends Seeder
         $organisator->save();
 
         $teamMemberOne = new User([
-            'name' => 'Magdalena Pitz',
+            'username' => 'MagdalenaPitz',
+            'firstname' => 'Magdalena',
+            'surname' => 'Pitz',
             'email' => 'lena.pitz@gute-loesung.de',
+            'email_optional' => null,
             'email_verified_at' => now(),
             'password' => Hash::make('secret'),
             'created_at' => now(),
@@ -39,8 +45,11 @@ class _ExampleUsersTableSeeder extends Seeder
         $teamMemberOne->save();
 
         $teamMemberTwo = new User([
-            'name' => 'Lennart Rieger',
+            'username' => 'LennartRieger',
+            'firstname' => 'Lennart',
+            'surname' => 'Rieger',
             'email' => 'lennart.rieger@gmx.de',
+            'email_optional' => null,
             'email_verified_at' => now(),
             'password' => Hash::make('secret'),
             'created_at' => now(),

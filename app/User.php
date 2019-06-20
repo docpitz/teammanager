@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Buisness\Enum\RoleEnum;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'username','firstname','surname', 'email', 'email_optional', 'password',
     ];
 
     /**
@@ -41,8 +42,7 @@ class User extends Authenticatable
         'created_at' => 'datetime',
     ];
 
-    public function getRole() : ?RoleEnum
-    {
+    public function getRole() : ?RoleEnum {
         if(is_null($this->getRoleName()))
         {
             return NULL;
@@ -50,8 +50,7 @@ class User extends Authenticatable
         return RoleEnum::getInstance(RoleEnum::getValue($this->getRoleName()));
     }
 
-    public function getRoleName() : ?String
-    {
+    private function getRoleName() : ?String {
         $roleArray = $this->getRoleNames();
         if(count($roleArray) > 0)
         {
@@ -60,9 +59,13 @@ class User extends Authenticatable
         return NULL;
     }
 
-        public function profilePicture() : String
+    public function profilePicture() : String
     {
         return 'http://i.pravatar.cc/200';
+    }
+
+    public function groups() : BelongsToMany {
+        return $this->belongsToMany('App\Group');
     }
 
 }
