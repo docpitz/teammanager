@@ -17,7 +17,7 @@ class CreateEventUserTable extends Migration
             $table->unsignedBigInteger('event_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('participation_status_id');
-            $table->timestamp('date_user_changed_participation_status');
+            $table->timestamp('date_user_changed_participation_status')->nullable();
 
             $table->foreign('event_id')
                 ->references('id')
@@ -29,8 +29,12 @@ class CreateEventUserTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
 
+            $table->foreign('participation_status_id')
+                ->references('id')
+                ->on('participation_statuses');
+
             $table->timestamps();
-            $table->primary('event_id', 'user_id');
+            $table->primary(['event_id', 'user_id']);
         });
     }
 

@@ -16,7 +16,6 @@ class CreateParticipationStatusesTable extends Migration
         Schema::create('participation_statuses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->timestamps();
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Buisness\Enum\PermissionEnum;
 use App\Group;
+use App\Policies\EventPolicy;
 use App\Policies\GroupPolicy;
 use App\Tag;
 use App\Item;
@@ -32,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         Role::class => RolePolicy::class,
         Tag::class => TagPolicy::class,
         Group::class == GroupPolicy::class,
+        Event::class == EventPolicy::class,
     ];
 
     /**

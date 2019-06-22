@@ -23,10 +23,15 @@ class CreateEventsTable extends Migration
             $table->timestamp('date_event_start')->nullable();
             $table->timestamp('date_event_end')->nullable();
             $table->timestamp('date_sign_up_start')->nullable();
-            $table->timestamp('date_sign_up_end_')->nullable();
+            $table->timestamp('date_sign_up_end')->nullable();
             $table->timestamp('date_publication')->nullable();
+            $table->unsignedBigInteger('participation_status_id');
 
             $table->timestamps();
+
+            $table->foreign('participation_status_id')
+                ->references('id')
+                ->on('participation_statuses');
         });
     }
 

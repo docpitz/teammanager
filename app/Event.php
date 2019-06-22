@@ -17,10 +17,11 @@ class Event extends Model
         'score',
         'max_participant',
         'meeting_place',
+        'participation_status_id',
         'date_event_start',
         'date_event_end',
         'date_sign_up_start',
-        'date_sign_up_end_',
+        'date_sign_up_end',
         'date_publication',
     ];
 
@@ -33,9 +34,11 @@ class Event extends Model
         'date_event_start' => 'datetime',
         'date_event_end' => 'datetime',
         'date_sign_up_start' => 'datetime',
-        'date_sign_up_end_' => 'datetime',
+        'date_sign_up_end' => 'datetime',
         'date_publication' => 'datetime',
     ];
+
+    protected $dates = ['date_event_start', 'date_event_end', 'date_sign_up_start', 'date_sign_up_end', 'date_publication'];
 
     public function users() {
         return $this->belongsToMany('App\User')
