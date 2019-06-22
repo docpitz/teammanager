@@ -26,12 +26,8 @@ class RoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required', 'min:3', Rule::unique((new Role)->getTable())->ignore($this->route()->role->id ?? null)
-            ],
-            'description' => [
-                'nullable', 'min:5'
-            ]
+            'name' => ['required', 'min:3', Rule::unique((new Role)->getTable())->ignore($this->route()->role->id ?? null)],
+            'description' => 'nullable|min:5'
         ];
     }
 }

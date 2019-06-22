@@ -28,30 +28,14 @@ class EventRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required', 'min:3'
-            ],
-            'description' => [
-                'nullable'
-            ],
-            'score' => [
-                'nullable'
-            ],
-            'max_participant' => [
-                'required'
-            ],
-            'meeting_place' => [
-                'required'
-            ],
-            'date_event_range' => [
-                'required'
-            ],
-            'date_sign_up_range' => [
-                'required'
-            ],
-            'date_publication' => [
-                'required'
-            ],
+            'name' => 'required|min:3',
+            'description' => 'nullable',
+            'score' => 'nullable',
+            'max_participant' => 'required',
+            'meeting_place' => 'required',
+            'date_event_range' => 'required',
+            'date_sign_up_range' => 'required',
+            'date_publication' => 'required',
         ];
     }
 

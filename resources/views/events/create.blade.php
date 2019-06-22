@@ -25,7 +25,6 @@
                               enctype="multipart/form-data">
                             @csrf
                             <h6 class="heading-small text-muted mb-4">{{ __('Veranstaltung anlegen') }}</h6>
-                            {{var_dump($errors)}}
                             <div class="pl-lg-6">
                                 <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-name">{{ __('Veranstaltungsname') }}</label>
@@ -116,7 +115,6 @@
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Speichern') }}</button>
                                 </div>
-                            </div>
                             </div>
                         </form>
                     </div>
