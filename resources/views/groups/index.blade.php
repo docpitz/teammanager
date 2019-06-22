@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => __('Teammitglieder')])
+@extends('layouts.app', ['title' => __('Gruppen')])
 
 @section('content')
     @component('layouts.headers.auth')
@@ -55,7 +55,7 @@
                                             <a href="{{ route('group.edit', $group) }}">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie dieses Teammitglied wirklich löschen?") }}') ? this.parentElement.submit() : ''">
+                                            <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie diese Gruppe wirklich löschen?") }}') ? this.parentElement.submit() : ''">
                                                 <i class="fas fa-trash"></i>
                                             </button>
 

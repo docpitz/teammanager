@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => __('Teammitglied bearbeiten')])
+@extends('layouts.app', ['title' => __('Gruppe bearbeiten')])
 
 @section('content')
     @component('layouts.headers.auth')
@@ -10,7 +10,7 @@
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">{{ __('Gruppen erstellen') }}</h3>
+                                <h3 class="mb-0">{{ __('Gruppe bearbeiten') }}</h3>
                             </div>
                             <div class="col-4 text-right">
                                 <a href="{{ route('group.index') }}" class="btn btn-sm btn-primary">
@@ -35,7 +35,9 @@
                                 </div>
                                 <select multiple="multiple" size="10" name="group_users[]" title="users">
                                     @foreach ($userWithGroupInfo as $user)
-                                        <option value="{{$user['id']}}" {{$user['selected'] ? 'selected' : ''}}>{{$user['surname']}} {{$user['firstname']}}</option>
+                                        <option value="{{$user['id']}}" {{ ! is_null(old("group_users")) ? in_array($user['id'], old("group_users")) ? 'selected' : '' : $user['selected'] ? "selected":""}}>
+                                            {{$user['surname']}} {{$user['firstname']}}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <div class="text-center">

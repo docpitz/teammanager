@@ -65,7 +65,7 @@ class GroupController extends Controller
 
         $allUserWithGroupInfo = array();
         $i = 0;
-        foreach(User::all() as $user) {
+        foreach(User::orderBy('surname')->orderBy('firstname')->get() as $user) {
 
             $allUserWithGroupInfo[$i]["id"] = $user->id;
             $allUserWithGroupInfo[$i]["surname"] = $user->surname;

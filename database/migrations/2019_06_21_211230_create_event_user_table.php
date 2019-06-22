@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGroupUserTable extends Migration
+class CreateEventUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateGroupUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('group_user', function (Blueprint $table) {
-            $table->unsignedBigInteger('group_id');
+        Schema::create('event_user', function (Blueprint $table) {
+            $table->unsignedBigInteger('event_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('participation_status_id');
+            $table->timestamp('date_user_changed_participation_status');
 
-            $table->foreign('group_id')
+            $table->foreign('event_id')
                 ->references('id')
-                ->on('groups')
+                ->on('events')
                 ->onDelete('cascade');
 
             $table->foreign('user_id')
@@ -27,7 +29,8 @@ class CreateGroupUserTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
 
-            $table->primary(['group_id', 'user_id']);
+            $table->timestamps();
+            $table->primary('event_id', 'user_id');
         });
     }
 
@@ -38,6 +41,6 @@ class CreateGroupUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_user');
+        Schema::dropIfExists('event_user');
     }
 }

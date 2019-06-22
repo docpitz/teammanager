@@ -24,7 +24,9 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             TagsTableSeeder::class,
             CategoriesTableSeeder::class,
-            ItemsTableSeeder::class]);
+            ItemsTableSeeder::class,
+            ParticipationStatusesTableSeeder::class,
+            ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 

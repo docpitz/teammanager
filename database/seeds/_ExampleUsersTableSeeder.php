@@ -58,5 +58,10 @@ class _ExampleUsersTableSeeder extends Seeder
 
         $teamMemberTwo->assignRole(RoleEnum::getInstance(RoleEnum::TeamIntern)->getModel());
         $teamMemberTwo->save();
+
+        factory(App\User::class, 100)->create()->each(function($u) {
+            $u->assignRole(RoleEnum::getInstance(RoleEnum::TeamIntern)->getModel());
+            $u->save;
+        });
     }
 }

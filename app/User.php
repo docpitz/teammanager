@@ -65,7 +65,14 @@ class User extends Authenticatable
     }
 
     public function groups() {
-        return $this->belongsToMany('App\Group');
+        return $this->belongsToMany('App\Group')
+            ->withTimestamps();
+    }
+
+    public function events() {
+        return $this->belongsToMany('App\Event')
+            ->withPivot('participation_status_id', 'date_user_changed_participation_status')
+            ->withTimestamps();
     }
 
 }

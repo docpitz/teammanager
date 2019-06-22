@@ -37,7 +37,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('profile.edit') }}">
                             <i class="fas fa-address-card text-primary"></i>
-                            <span class="nav-link-text">{{ __('Meine Daten') }}</span>
+                            <span class="nav-link-text">{{ __('Mein Profil') }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
