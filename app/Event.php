@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Buisness\Enum\ParticipationStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
@@ -44,5 +45,9 @@ class Event extends Model
         return $this->belongsToMany('App\User')
             ->withPivot('participation_status_id', 'date_user_changed_participation_status')
             ->withTimestamps();
+    }
+
+    public function countPromise() {
+        return $this->users()->wherePivot('participation_status_id', ParticipationStatusEnum::Promised)->count();
     }
 }

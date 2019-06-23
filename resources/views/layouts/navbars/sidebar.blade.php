@@ -43,7 +43,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('myevent.index') }}">
                             <i class="fas fa-table-tennis text-primary"></i>
-                            <span class="nav-link-text">{{ __('Meine Buchungen') }}</span>
+                            <span class="nav-link-text">{{ __('Meine Veranstaltungen') }}</span>
                         </a>
                     </li>
                 </ul>

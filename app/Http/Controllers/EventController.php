@@ -64,10 +64,32 @@ class EventController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\View\View
      */
-    public function edit(Event $user)
+    public function edit(Event $event)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
-        return view('events.edit', compact('user'));
+        $event['date_event_range'] = $event->date_event_start->format('d.m.Y H:i').' - '.$event->date_event_end->format('d.m.Y H:i');
+        $event['date_sign_up_range'] = $event->date_sign_up_start->format('d.m.Y').' - '.$event->date_sign_up_start->format('d.m.Y');
+
+        $allUserWithEventInfo = array();
+        $i = 0;
+        foreach(User::orderBy('surname')->orderBy('firstname')->get() as $user) {
+
+            $allUserWithEventInfo[$i]["id"] = $user->id;
+            $allUserWithEventInfo[$i]["surname"] = $user->surname;
+            $allUserWithEventInfo[$i]["firstname"] = $user->firstname;
+            $allUserWithEventInfo[$i]["groups"] = implode(', ', array_column($user->groups()->getModels(['name']),'name'));
+            $selected = false;
+            foreach($event->users()
+                        ->getModels() as $userFoundInEvent) {
+                if($user->id == $userFoundInEvent->id) {
+                    $selected = true;
+                    continue;
+                }
+            }
+            $allUserWithEventInfo[$i]["selected"] = $selected;
+            $i++;
+        }
+        return view('events.edit', ['event' => $event, 'userWithEventInfo' => $allUserWithEventInfo]);
     }
 
     /**
@@ -77,20 +99,24 @@ class EventController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(EventRequest $request, Event $user)
+    public function update(EventRequest $request, Event $event)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
-        $user->roles()->sync(Role::findByName($request['role_name']));
+        $event->update($request->all());
 
-        if(is_null($request->get('password'))) {
-            $expectedRequest = $request->except('password');
-            $user->update($expectedRequest);
-        }
-        else {
-            $mergedRequest = $request->merge(['password' => Hash::make($request->get('password'))]);
-            $user->update($mergedRequest->all());
-        }
-        return redirect()->route('event.index')->withStatus(__('Teammitglied erfolgreich geändert.'));
+        // Users that already exist will not be changed or deleted
+        // Users that have been added will be re-entered with the current default response
+        // Users that have been deleted will simply be deleted.
+        $arrayEventUsersFromDB = array_column($event->users()->getModels(['id']), 'id');
+        $arrayOfUserIds = $request->get('event_users');
+        $arrayDeleted = array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
+        $arrayAdded = array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
+        $event->users()->detach($arrayDeleted);
+        $event->users()->attach($arrayAdded,
+            ['participation_status_id' => $request->get('participation_status_id')]);
+
+        return redirect()->route('event.index')->withStatus(__('Veranstaltung erfolgreich geändert.'));
+
     }
 
     /**
@@ -99,10 +125,10 @@ class EventController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Event $user)
+    public function destroy(Event $event)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
-        $user->delete();
-        return redirect()->route('event.index')->withStatus(__('Teammitglied erfolgreich gelöscht'));
+        $event->delete();
+        return redirect()->route('event.index')->withStatus(__('Veranstaltung erfolgreich gelöscht'));
     }
 }

@@ -131,12 +131,16 @@
 @push('css')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @endpush
-
+{{var_dump(old('date_event_start'))}}
 @push('js')
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script>
         $('input[name="date_event_range"]').daterangepicker({
+            @if(old('date_event_range'))
+            startDate: moment('{{ explode(' - ',old('date_event_range'))[0] }}','DD.MM.YYYY HH:mm'),
+            endDate: moment('{{ explode(' - ',old('date_event_range'))[1] }}','DD.MM.YYYY HH:mm'),
+            @endif
             timePicker: true,
             timePicker24Hour: true,
             drops: "up",
@@ -171,6 +175,10 @@
         });
 
         $('input[name="date_sign_up_range"]').daterangepicker({
+            @if(old('date_sign_up_range'))
+            startDate: moment('{{ explode(' - ',old('date_sign_up_range'))[0] }}','DD.MM.YYYY'),
+            endDate: moment('{{ explode(' - ',old('date_sign_up_range'))[1] }}','DD.MM.YYYY'),
+            @endif
             drops: "up",
             showISOWeekNumbers: true,
             autoUpdateInput: false,
@@ -202,6 +210,9 @@
         });
 
         $('input[name="date_publication"]').daterangepicker({
+            @if(old('date_publication'))
+            startDate: moment('{{ old('date_publication') }}','DD.MM.YYYY'),
+            @endif
             drops: "up",
             showISOWeekNumbers: true,
             singleDatePicker: true,

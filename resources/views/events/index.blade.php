@@ -37,7 +37,7 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">{{ __('Name') }}</th>
-                                <th scope="col">{{ __('Teilnehmer') }}</th>
+                                <th scope="col">{{ __('Teilnehmer(ange./max./mögl.)') }}</th>
                                 <th scope="col">{{ __('Veranstaltungsbeginn') }}</th>
                                 <th scope="col">{{ __('Veröffentlichung') }}</th>
                                 <th scope="col">{{ __('Anmeldeschluss') }}</th>
@@ -48,7 +48,7 @@
                             @foreach ($events as $event)
                                 <tr>
                                     <td>{{ $event->name }}</td>
-                                    <td>{{ $event->max_participant }}</td>
+                                    <td>{{ $event->countPromise() }} / {{ $event->max_participant }} / {{ count($event->users) }}</td>
                                     <td>{{ $event->date_event_start->format('d.m.Y H:i') }}</td>
                                     <td>{{ $event->date_publication->format('d.m.Y') }}</td>
                                     <td>{{ $event->date_sign_up_end->format('d.m.Y') }}</td>
