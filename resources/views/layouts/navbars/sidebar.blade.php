@@ -41,7 +41,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('myevent.index') }}">
+                        @if(auth()->user()->countNoAnswer() > 0)
+                        <span id="badge_no_answer" class="badge badge-pill badge-warning" style="float:right;margin-bottom:-23px;">{{auth()->user()->countNoAnswer()}}</span>
+                        @endif
+                        <a class="nav-link" href="{{ route('myEvent') }}">
                             <i class="fas fa-table-tennis text-primary"></i>
                             <span class="nav-link-text">{{ __('Meine Veranstaltungen') }}</span>
                         </a>
@@ -83,7 +86,7 @@
                     @endcan
                     @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::Settings)->key)
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('setting.edit') }}">
+                            <a class="nav-link" href="">
                                 <i class="fas fa-cogs text-primary"></i>
                                 <span class="nav-link-text">{{ __('Einstellungen') }}</span>
                             </a>

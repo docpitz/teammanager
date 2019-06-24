@@ -20,6 +20,8 @@ Route::get('/', function () {
 	return view('pages.welcome');
 })->name('welcome');
 
+
+
 Auth::routes();
 
 Route::get('dashboard', 'HomeController@index')->name('home');
@@ -35,10 +37,15 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('group', 'GroupController', ['except' => ['show']]);
     Route::resource('event', 'EventController', ['except' => ['show']]);
-    Route::resource('myevent', 'MyEventController', ['except' => ['show']]);
 
-    Route::get('setting', ['as' => 'setting.edit', 'uses' => 'SettingCotroller@edit']);
-    Route::put('setting', ['as' => 'setting.update', 'uses' => 'SettingCotroller@update']);
+    Route::get('myEvent', 'MyEventController@edit')->name('myEvent');
+    Route::post('myEvent/{event}/ajaxCancel', 'MyEventController@delete')->name('myEvent.delete');
+    Route::post('myEvent/{event}/ajaxPromise', 'MyEventController@save')->name('myEvent.save');
+
+    //Route::resource('myevent', 'MyEventController', ['except' => ['show']]);
+
+    //Route::get('setting', ['as' => 'setting.edit', 'uses' => 'SettingCotroller@edit']);
+    //Route::put('setting', ['as' => 'setting.update', 'uses' => 'SettingCotroller@update']);
 
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);

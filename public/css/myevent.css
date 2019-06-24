@@ -1,0 +1,43 @@
+.save_button {
+    min-width: 140px;
+    max-width: 140px;
+}
+
+h3{
+    font-size:1em!important;
+    color:white!important;
+    display:inline-block;
+    font-family:sans-serif;
+    padding:10px 20px;
+    margin:40px;
+    transform:rotate(-20deg);
+}
+
+.stamp-text {
+    border: 10px solid white;
+    -webkit-mask-size: contain;
+    -webkit-mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
+    -o-mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
+    -moz-mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
+    -ms-mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
+    mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
+}
+
+li.promise {
+    background-color: green !important;
+}
+
+li.cancel {
+    background-color: red !important;
+}
+
+.carousel-indicators li{
+    height: 16px !important;
+    width: 16px !important;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+
+.carousel-indicators .active {
+    border: 3px solid black;
+}

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Buisness\Enum\ParticipationStatusEnum;
 use App\Buisness\Enum\RoleEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
@@ -72,7 +73,14 @@ class User extends Authenticatable
     public function events() {
         return $this->belongsToMany('App\Event')
             ->withPivot('participation_status_id', 'date_user_changed_participation_status')
+            ->orderBy('date_event_start')
             ->withTimestamps();
+    }
+
+    public function countNoAnswer() {
+        return $this->belongsToMany('App\Event')
+            ->wherePivot('participation_status_id', ParticipationStatusEnum::NoAnswer)
+            ->count();
     }
 
 }
