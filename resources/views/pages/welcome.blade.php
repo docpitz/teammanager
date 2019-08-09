@@ -6,7 +6,7 @@
             <div class="header-body text-center mb-7">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-md-9 pt-5">
-                        <h1 class="text-white">{{ __('Welcome to Argon Dashboard Pro Laravel Live Preview.') }}</h1>
+                        <h1 class="text-white">{{ __('Willkommen zum TSV Hofolding Abt. Tischtennis - Teammanager') }}</h1>
                         <h2 class="text-white">
                             {{ __('Kickstart your Laravel web app like a PRO') }}
                         </h2>

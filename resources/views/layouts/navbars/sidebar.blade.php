@@ -2,7 +2,7 @@
     <div class="scrollbar-inner">
         <div class="sidenav-header d-flex align-items-center">
             <a class="navbar-brand" href="{{ route('home') }}">
-                <img src="{{ asset('hofolding/tsvlogo.png')}}" class="navbar-brand-img" alt="...">
+                <img src="{{ asset('hofolding/teammanager-logo.png')}}" class="navbar-brand-img" alt="...">
             </a>
             <div class="ml-auto">
                 <!-- Sidenav toggler -->
