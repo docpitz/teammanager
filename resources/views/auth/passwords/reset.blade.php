@@ -9,8 +9,18 @@
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
                         <div class="text-center text-muted mb-4">
-                            <small>{{ __('Reset Password') }}</small>
+                            <small>{{ __('Passwort zurücksetzen') }}</small>
                         </div>
+                        @if ($errors->has('email'))
+                        <div class="alert alert-danger" role="alert">
+                            {{ $errors->first('email') }}
+                        </div>
+                        @endif
+                        @if ($errors->has('password'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ $errors->first('password') }}
+                            </div>
+                        @endif
                         <form role="form" method="POST" action="{{ route('password.update') }}">
                             @csrf
 
@@ -23,35 +33,26 @@
                                     </div>
                                     <input class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" type="email" name="email" value="{{ $email ?? old('email') }}" required autofocus>
                                 </div>
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
                             </div>
                             <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
                                 <div class="input-group input-group-alternative">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
-                                    <input class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ __('Password') }}" type="password" required>
+                                    <input class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ __('Neues Passwort') }}" type="password" required>
                                 </div>
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
+
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-alternative">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
-                                    <input class="form-control" placeholder="{{ __('Confirm Password') }}" type="password" name="password_confirmation" required>
+                                    <input class="form-control" placeholder="{{ __('Passwort wiederholen') }}" type="password" name="password_confirmation" required>
                                 </div>
                             </div>
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary my-4">{{ __('Reset Password') }}</button>
+                                <button type="submit" class="btn btn-primary my-4">{{ __('Passwort zurücksetzen') }}</button>
                             </div>
                         </form>
                     </div>

@@ -22,7 +22,7 @@ Route::get('/', 'Auth\LoginController@showLoginForm')->name('login');
 
 Auth::routes();
 
-Route::get('dashboard', 'HomeController@index')->name('home');
+Route::get('home', 'HomeController@index')->name('home');
 Route::get('pricing', 'PageController@pricing')->name('page.pricing');
 Route::get('lock', 'PageController@lock')->name('page.lock');
 

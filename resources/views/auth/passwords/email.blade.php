@@ -17,6 +17,11 @@
                                 {{ session('status') }}
                             </div>
                         @endif
+                        @if ($errors->has('email'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ $errors->first('email') }}
+                            </div>
+                        @endif
 
                         <form role="form" method="POST" action="{{ route('password.email') }}">
                             @csrf
@@ -28,11 +33,6 @@
                                     </div>
                                     <input class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail-Adresse') }}" type="email" name="email" value="{{ old('email') }}" required autofocus>
                                 </div>
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary my-4">{{ __('Neues Passwort anfordern') }}</button>
