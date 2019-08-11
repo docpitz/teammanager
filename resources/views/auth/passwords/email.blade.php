@@ -17,21 +17,21 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-                        @if ($errors->has('email'))
+                        @if ($errors->has('username'))
                             <div class="alert alert-danger" role="alert">
-                                {{ $errors->first('email') }}
+                                {{ $errors->first('username') }}
                             </div>
                         @endif
 
                         <form role="form" method="POST" action="{{ route('password.email') }}">
                             @csrf
 
-                            <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }} mb-3">
+                            <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }} mb-3">
                                 <div class="input-group input-group-alternative">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                                     </div>
-                                    <input class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail-Adresse') }}" type="email" name="email" value="{{ old('email') }}" required autofocus>
+                                    <input class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" placeholder="{{ __('Benutzername') }}" type="text" name="username" value="{{ old('username') }}" required autofocus>
                                 </div>
                             </div>
                             <div class="text-center">
