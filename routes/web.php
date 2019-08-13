@@ -11,7 +11,7 @@
 |
 */
 
-if(isTestSystem())
+if(App::environment('local'))
 {
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 }
@@ -53,11 +53,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 });
-
-function isTestSystem() : bool
-{
-    return strcmp(config('APP_ENV'),'local');
-}
 
 
 
