@@ -45,8 +45,7 @@ class ResetPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-            ->cc([$this->user->email_optional])
+        $mailMessage = (new MailMessage)
             ->subject('Zurücksetzen des Passwortes für ' . config('app.name'))
             ->greeting('Hallo!')
             ->line('du erhältst diese E-Mail, weil wir eine Anfrage zum Zurücksetzen des Passworts für dein Konto erhalten haben.')
@@ -54,6 +53,11 @@ class ResetPassword extends Notification
             ->line('Dieser Link zum Zurücksetzen des Passworts läuft in 60 Minuten ab.')
             ->line('Wenn du kein Passwort Reset angefordert hast, ist keine weitere Aktion erforderlich.')
             ->salutation(new HtmlString("Viele Grüße <br>".config('app.name')));
+
+        if($this->user->email_optipnal != null) {
+            $mailMessage->cc([$this->user->email_optional]);
+        }
+        return $mailMessage;
     }
 
     /**
