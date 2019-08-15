@@ -68,7 +68,7 @@ class EventController extends Controller
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
         $event['date_event_range'] = $event->date_event_start->format('d.m.Y H:i').' - '.$event->date_event_end->format('d.m.Y H:i');
-        $event['date_sign_up_range'] = $event->date_sign_up_start->format('d.m.Y').' - '.$event->date_sign_up_start->format('d.m.Y');
+        $event['date_sign_up_range'] = $event->date_sign_up_start->format('d.m.Y').' - '.$event->date_sign_up_end->format('d.m.Y');
 
         $allUserWithEventInfo = array();
         $i = 0;

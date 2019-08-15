@@ -2,7 +2,6 @@
 @section('content') 
     @component('layouts.headers.auth')
     @endcomponent
-
     <div class="container-fluid mt--6 ">
         <div class="row">
             <div class="col-xl-12 order-xl-1">
@@ -15,17 +14,17 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if(count(auth()->user()->events()->getModels()) == 0)
+                        @if(count($events) == 0)
                             <h4>Derzeit sind keine Veranstaltungen geplant.</h4>
                         @else
                             <div id="carouselEventIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
                                 <ol class="carousel-indicators">
-                                    @foreach(auth()->user()->events()->getModels() as $indexKey => $event)
+                                    @foreach($events as $indexKey => $event)
                                         <li id="indicator{{$event->id}}" data-target="#carouselEventIndicators" data-slide-to="{{$indexKey}}" class="{{$indexKey == 0 ? 'active ': ' '}} {{$event->isPromisedByUser(auth()->user()) ? 'promise' : ($event->isCanceledByUser(auth()->user()) ? 'cancel' : '') }}"></li>
                                     @endforeach
                                 </ol>
                                 <div class="carousel-inner pb-6">
-                                    @foreach(auth()->user()->events()->getModels() as $indexKey => $event)
+                                    @foreach($events as $indexKey => $event)
                                         <div class="carousel-item {{$indexKey == 0 ? 'active': ''}} align-content-center">
                                             <div class="col-lg-12">
                                                 <fieldset id="fieldset{{$event->id}}">
@@ -37,7 +36,7 @@
                                                                 <h3 id="stamp{{$event->id}}" class="{{! $event->isPromisedByUser(auth()->user()) ? 'd-none ' : ''}} stamp-text">{{__('Angemeldet')}}</h3>
                                                             </div>
                                                         </div>
-                                                        <div >
+                                                        <div>
                                                             <div class="row align-items-center ">
                                                                 <div class="col-8">
                                                                     <h5 class="h2 card-title mb-0">{{$event->name}}</h5>
@@ -76,8 +75,19 @@
                                                             </div>
                                                             <p class="card-text mt-4">{{$event->description}}</p>
                                                             <div class="btn-group center mt-3">
-                                                                <button onclick="onClickPromise({{$event->id}})" type="button" class="btn save_button btn-outline-success{{$event->isPromisedByUser(auth()->user()) ? ' active' : ''}}" id="promise{{$event->id}}"><i id="ajaxLoadPromise{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxPromise{{$event->id}}">{{ __('Teilnehmen') }}</div></button>
-                                                                <button onclick="onClickCancel({{$event->id}})" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="cancel{{$event->id}}"><i id="ajaxLoadCancel{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCancel{{$event->id}}">{{ __('Absagen') }}</div></button>
+                                                                @if($event->booking_possible)
+                                                                    <button onclick="onClickPromise({{$event->id}})" type="button" class="btn save_button btn-outline-success{{$event->isPromisedByUser(auth()->user()) ? ' active' : ''}}" id="promise{{$event->id}}"><i id="ajaxLoadPromise{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxPromise{{$event->id}}">{{ __('Teilnehmen') }}</div></button>
+                                                                    <button onclick="onClickCancel({{$event->id}})" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="cancel{{$event->id}}"><i id="ajaxLoadCancel{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCancel{{$event->id}}">{{ __('Absagen') }}</div></button>
+                                                                @else
+                                                                    @if($event->isPromisedByUser(auth()->user()))
+                                                                        <button type="button" class="btn save_button btn-success" disabled="disabled">{{ __('Zugesagt') }}</button>
+                                                                    @elseif($event->isCanceledByUser(auth()->user()))
+                                                                        <button type="button" class="btn save_button btn-danger" disabled="disabled">{{ __('Abgesagt') }}</button>
+                                                                    @else
+                                                                        <button type="button" class="btn save_button btn-dark" disabled="disabled">{{ __('Ohne Antwort') }}</button>
+                                                                    @endif
+
+                                                                @endIf
                                                             </div>
                                                         </div>
                                                     </div>

@@ -65,7 +65,7 @@
                                     @include('alerts.feedback', ['field' => 'role_name'])
                                 </div>
                                 <div class="form-group{{ $errors->has('date_event_range') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-date_event_range">{{ __('Verstaltungszeitraum') }}</label>
+                                    <label class="form-control-label" for="input-date_event_range">{{ __('Veranstaltungszeitraum') }}</label>
                                     <input type="text" name="date_event_range" id="input-date_event_range" class="form-control{{ $errors->has('date_event_range') ? ' is-invalid' : '' }}" placeholder="{{ __('Veranstaltungszeitraum') }}" value="{{ old('date_event_range', $event->date_event_range) }}" required>
                                     @include('alerts.feedback', ['field' => 'date_event_range'])
                                 </div>

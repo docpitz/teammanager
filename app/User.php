@@ -10,6 +10,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPassword;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -83,8 +85,22 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function eventsToBook() {
+        return $this->belongsToMany('App\Event')
+            ->select(DB::raw('*, date_sign_up_start <= CURRENT_DATE() AND date_sign_up_end >= CURRENT_DATE() AS booking_possible'))
+            ->whereDate('date_publication', '<', Carbon::now())
+            ->whereDate('date_event_end', '>', Carbon::now())
+            ->withPivot('participation_status_id', 'date_user_changed_participation_status')
+            ->orderBy('date_event_start')
+            ->withTimestamps();
+    }
+
     public function countNoAnswer() {
         return $this->belongsToMany('App\Event')
+            ->whereDate('date_publication', '<', Carbon::now())
+            ->whereDate('date_event_end', '>', Carbon::now())
+            ->whereDate('date_sign_up_start', '<', Carbon::now())
+            ->whereDate('date_sign_up_end', '>', Carbon::now())
             ->wherePivot('participation_status_id', ParticipationStatusEnum::NoAnswer)
             ->count();
     }

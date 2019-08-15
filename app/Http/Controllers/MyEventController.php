@@ -20,7 +20,8 @@ class MyEventController extends Controller
      */
     public function edit() {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
-        return view('events.my');
+        $events = auth()->user()->eventsToBook()->getModels();
+        return view('events.my', ['events' => $events]);
     }
 
     public function delete(MyEventRequest $request, Event $event) {
