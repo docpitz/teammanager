@@ -43,8 +43,6 @@ class EventRequest extends FormRequest
     {
         $input = $this->all();
 
-        var_dump($this->get('participation_status_id'));
-
         $dateEvent = explode(' - ',$input['date_event_range']);
         $input['date_event_start'] = Carbon::parse($dateEvent[0]);
         $input['date_event_end'] = Carbon::parse($dateEvent[1]);
