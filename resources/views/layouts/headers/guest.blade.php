@@ -5,7 +5,9 @@
                 <div class="col-lg-8 col-md-9">
                     <h1 class="text-white">{{ __('Willkommen beim') }}</h1>
                     <div class="container mt-4">
-                        <img width="260" src="{{ asset('hofolding/teammanager-logo-weiss.png')}}" class="navbar-brand-img">
+                        <a href="{{ route('login') }}">
+                            <img width="260" src="{{ asset('hofolding/teammanager-logo-weiss.png')}}" class="navbar-brand-img">
+                        </a>
                     </div>
                 </div>
             </div>
