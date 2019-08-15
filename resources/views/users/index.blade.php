@@ -14,7 +14,7 @@
                                 <h3 class="mb-0">{{ __('Teammitglieder') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="right" title="neues Teammitglied hinzufügen">
                                     <i class="fas fa-plus-circle text-white fa-2x"></i>
                                 </a>
                             </div>
@@ -54,17 +54,19 @@
                                         <form action="{{ route('user.destroy', $user) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <a href="{{ route('user.edit', $user) }}">
+                                            <a href="{{ route('user.edit', $user) }}" data-toggle="tooltip" title="bearbeiten">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @if ($user->id != auth()->id())
-                                                <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie dieses Teammitglied wirklich löschen?") }}') ? this.parentElement.submit() : ''">
+                                                <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie dieses Teammitglied wirklich löschen?") }}') ? this.parentElement.submit() : ''" data-toggle="tooltip" title="löschen">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             @else
-                                                <button type="button" class="btn btn-link" disabled="disabled">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
+                                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="löschen der eigenen Person ist nicht möglich">
+                                                    <button type="button" style="pointer-events: none;" class="btn btn-link" disabled="disabled">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </span>
                                             @endif
 
                                         </form>

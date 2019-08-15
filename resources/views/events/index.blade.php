@@ -14,7 +14,7 @@
                                 <h3 class="mb-0">{{ __('Veranstaltungen') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('event.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('event.create') }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="right" title="neue Veranstaltung hinzufügen">
                                     <i class="fas fa-plus-circle text-white fa-2x"></i>
                                 </a>
                             </div>
@@ -55,15 +55,16 @@
                                     <td class="text-right">
                                         <form action="{{ route('event.destroy', $event) }}" method="post">
                                             @csrf
-                                            @method('delete')
-                                            <a href="{{ route('event.edit', $event) }}">
-                                                <i class="fas fa-edit"></i>
+                                            <a href="{{ route('checkEvent.edit', $event) }}" data-toggle="tooltip" title="Teilnehmer einteilen">
+                                                <i style="padding: 5px" class="fas fa-user-check"></i>
                                             </a>
-                                            <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie diese Veranstaltung wirklich löschen?") }}') ? this.parentElement.submit() : ''">
+                                            <a href="{{ route('event.edit', $event) }}" data-toggle="tooltip" title="bearbeiten">
+                                                <i style="padding: 5px" class="fas fa-edit"></i>
+                                            </a>
+                                            @method('delete')
+                                            <button type="button" style="padding: 5px" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie diese Veranstaltung wirklich löschen?") }}') ? this.parentElement.submit() : ''" data-toggle="tooltip" title="löschen">
                                                 <i class="fas fa-trash"></i>
                                             </button>
-
-
                                         </form>
                                     </td>
                                 </tr>

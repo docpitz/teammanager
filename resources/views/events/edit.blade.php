@@ -14,7 +14,7 @@
                                 <h3 class="mb-0">{{ __('Veranstaltung bearbeiten') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('event.index') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('event.index') }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="right" title="zurück zur Übersicht">
                                     <i class="fas fa-level-up-alt fa-2x"></i>
                                 </a>
                             </div>

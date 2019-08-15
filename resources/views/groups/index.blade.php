@@ -14,7 +14,7 @@
                                 <h3 class="mb-0">{{ __('Gruppen') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('group.create') }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('group.create') }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="right" title="neue Gruppe hinzufügen">
                                     <i class="fas fa-plus-circle text-white fa-2x"></i>
                                 </a>
                             </div>
@@ -52,10 +52,10 @@
                                         <form action="{{ route('group.destroy', $group) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <a href="{{ route('group.edit', $group) }}">
+                                            <a href="{{ route('group.edit', $group) }}" data-toggle="tooltip" title="bearbeiten">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie diese Gruppe wirklich löschen?") }}') ? this.parentElement.submit() : ''">
+                                            <button type="button" class="btn btn-link" onclick="confirm('{{ __("Wollen Sie diese Gruppe wirklich löschen?") }}') ? this.parentElement.submit() : ''" data-toggle="tooltip" title="löschen">
                                                 <i class="fas fa-trash"></i>
                                             </button>
 
