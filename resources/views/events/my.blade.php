@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('content') 
+@section('content')
     @component('layouts.headers.auth')
     @endcomponent
     <div class="container-fluid mt--6 ">
@@ -74,11 +74,14 @@
                                                                 </div>
                                                             </div>
                                                             <p class="card-text mt-4">{{$event->description}}</p>
-                                                            <div class="btn-group center mt-3">
+
                                                                 @if($event->booking_possible)
+                                                                <div class="btn-group center mt-3 pb-4">
                                                                     <button onclick="onClickPromise({{$event->id}})" type="button" class="btn save_button btn-outline-success{{$event->isPromisedByUser(auth()->user()) ? ' active' : ''}}" id="promise{{$event->id}}"><i id="ajaxLoadPromise{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxPromise{{$event->id}}">{{ __('Teilnehmen') }}</div></button>
                                                                     <button onclick="onClickCancel({{$event->id}})" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="cancel{{$event->id}}"><i id="ajaxLoadCancel{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCancel{{$event->id}}">{{ __('Absagen') }}</div></button>
+                                                                </div>
                                                                 @else
+                                                                    <div class="text-center mt-5">
                                                                     @if($event->isPromisedByUser(auth()->user()))
                                                                         <button type="button" class="btn save_button btn-success" disabled="disabled">{{ __('Zugesagt') }}</button>
                                                                     @elseif($event->isCanceledByUser(auth()->user()))
@@ -86,9 +89,10 @@
                                                                     @else
                                                                         <button type="button" class="btn save_button btn-dark" disabled="disabled">{{ __('Ohne Antwort') }}</button>
                                                                     @endif
-
+                                                                        <br><h5>Anmeldezeitraum zwischen {{$event->date_sign_up_start->format('d.m.Y')}} und {{$event->date_sign_up_end->format('d.m.Y')}}</h5>
+                                                                    </div>
                                                                 @endIf
-                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </fieldset>
@@ -163,13 +167,13 @@
             $('#countPromises'+eventId).text(countPromises);
         }
 
-        function updateCountNoAnswer(countNoAnswer) {
-            if(countNoAnswer > 0) {
-                $('#badge_no_answer').removeClass('d-none');
-                $('#badge_no_answer').text(countNoAnswer);
+        function updateCountQuiet(countQuiet) {
+            if(countQuiet > 0) {
+                $('#badge_quiet').removeClass('d-none');
+                $('#badge_quiet').text(countQuiet);
             }
             else {
-                $('#badge_no_answer').addClass('d-none');
+                $('#badge_quiet').addClass('d-none');
             }
         }
 
@@ -189,7 +193,7 @@
                     afterAjaxCall(eventId)
                     if(result.success) {
                         updateCountPromises(eventId, result.countPromises);
-                        updateCountNoAnswer(result.countNoAnswer);
+                        updateCountQuiet(result.countQuiet);
                         if(result.promise) {
                             animationAfterAjaxCall(eventId, 'promise', 'cancel', 'heartBeat');
                         }

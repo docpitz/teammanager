@@ -44,7 +44,7 @@ class Event extends Model
 
     public function users() {
         return $this->belongsToMany('App\User')
-            ->withPivot('participation_status_id', 'date_user_changed_participation_status')
+            ->withPivot('participation_status_id', 'date_user_changed_participation_status', 'changed_by_user_id')
             ->withTimestamps();
     }
 
@@ -52,8 +52,29 @@ class Event extends Model
         return $this->users()->wherePivot('participation_status_id', ParticipationStatusEnum::Promised)->count();
     }
 
-    public function saveParticipation(User $user, int $participationStatus) {
-        $this->users()->updateExistingPivot($user->id, ['participation_status_id' => $participationStatus, 'date_user_changed_participation_status' => Carbon::now()]);
+    // select * from `users`
+    // inner join `event_user` on `users`.`id` = `event_user`.`user_id`
+    // left join `users` as `changer` on `event_user`.`changed_by_user_id` = `changer`.`id`
+    // where `event_user`.`event_id` = 1 and `event_user`.`participation_status_id` = 1
+    public function getUsersByParticipation(int $participationStatus) {
+        return $this->users()
+            ->addSelect('users.*', 'event_user.*', 'changed_by_user.firstname as changed_by_user_firstname', 'changed_by_user.surname as changed_by_user_surname')
+            ->withPivot('changed_by_user_id')
+            ->wherePivot('participation_status_id', $participationStatus)
+            ->leftJoin('users as changed_by_user', 'event_user.changed_by_user_id', '=', 'changed_by_user.id');
+
+        /*
+         * return $this->users()
+            ->join('users as changed_by_user', 'users.id', '=', 'event_user.changed_by_user_id')
+            ->addSelect(['date_user_changed_participation_status', 'users.surname', 'users.firstname', 'changed_by_user.surname as changedbyuser_surname'])
+            ->wherePivot('participation_status_id', $participationStatus)
+            ->withPivot('changed_by_user_id')
+            ;
+         */
+    }
+
+    public function saveParticipation(User $user, int $participationStatus, User $changedByUser) {
+        $this->users()->updateExistingPivot($user->id, ['participation_status_id' => $participationStatus, 'date_user_changed_participation_status' => Carbon::now(), 'changed_by_user_id' => $changedByUser->id]);
     }
 
     public function getParticipationState(User $user) {
@@ -68,8 +89,8 @@ class Event extends Model
         return $this->hasStateByUser(ParticipationStatusEnum::Canceled, $user);
     }
 
-    public function hasNoAnswerByUser(User $user) {
-        return $this->hasStateByUser(ParticipationStatusEnum::NoAnswer, $user);
+    public function hasQuietByUser(User $user) {
+        return $this->hasStateByUser(ParticipationStatusEnum::Quiet, $user);
     }
 
     private function hasStateByUser(int $participationStatus, User $user) {

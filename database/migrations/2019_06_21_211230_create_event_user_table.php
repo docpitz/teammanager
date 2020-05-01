@@ -16,6 +16,7 @@ class CreateEventUserTable extends Migration
         Schema::create('event_user', function (Blueprint $table) {
             $table->unsignedBigInteger('event_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('changed_by_user_id')->nullable();
             $table->unsignedBigInteger('participation_status_id');
             $table->timestamp('date_user_changed_participation_status')->nullable();
 
@@ -28,6 +29,11 @@ class CreateEventUserTable extends Migration
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
+
+            $table->foreign('changed_by_user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('set null');
 
             $table->foreign('participation_status_id')
                 ->references('id')

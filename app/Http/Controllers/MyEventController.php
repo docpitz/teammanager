@@ -26,14 +26,14 @@ class MyEventController extends Controller
 
     public function delete(MyEventRequest $request, Event $event) {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
-        $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Canceled);
+        $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Canceled, auth()->user());
 
-        return response()->json(['success'=> true, 'cancel' => true, 'countPromises' => $event->countPromise(), 'countNoAnswer' => auth()->user()->countNoAnswer()]);
+        return response()->json(['success'=> true, 'cancel' => true, 'countPromises' => $event->countPromise(), 'countQuiet' => auth()->user()->countQuiet()]);
     }
 
     public function save(MyEventRequest $request, Event $event) {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
-        $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Promised);
-        return response()->json(['success'=> true, 'promise' => true, 'countPromises' => $event->countPromise(), 'countNoAnswer' => auth()->user()->countNoAnswer()]);
+        $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Promised, auth()->user());
+        return response()->json(['success'=> true, 'promise' => true, 'countPromises' => $event->countPromise(), 'countQuiet' => auth()->user()->countQuiet()]);
     }
 }

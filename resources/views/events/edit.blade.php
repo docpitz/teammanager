@@ -114,6 +114,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="test" value="blalvaljkgaskjgk">
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Speichern') }}</button>
                                 </div>

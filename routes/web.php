@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('group', 'GroupController', ['except' => ['show']]);
     Route::resource('event', 'EventController', ['except' => ['show']]);
 
-    Route::resource('checkEvent', 'CheckEventController', ['except' => ['index', 'create', 'show', 'destroy', 'store']]);
+    Route::resource('checkEvent', 'CheckEventController', ['only' => ['edit', 'update']]);
 
     Route::get('myEvent', 'MyEventController@edit')->name('myEvent');
     Route::post('myEvent/{event}/ajaxCancel', 'MyEventController@delete')->name('myEvent.delete');

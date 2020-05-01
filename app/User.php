@@ -44,6 +44,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'created_at' => 'datetime',
+        'date_user_changed_participation_status' => 'datetime'
     ];
 
     public function sendPasswordResetNotification($token)
@@ -88,20 +89,20 @@ class User extends Authenticatable
     public function eventsToBook() {
         return $this->belongsToMany('App\Event')
             ->select(DB::raw('*, date_sign_up_start <= CURRENT_DATE() AND date_sign_up_end >= CURRENT_DATE() AS booking_possible'))
-            ->whereDate('date_publication', '<', Carbon::now())
+            ->whereDate('date_publication', '<=', Carbon::now())
             ->whereDate('date_event_end', '>', Carbon::now())
             ->withPivot('participation_status_id', 'date_user_changed_participation_status')
             ->orderBy('date_event_start')
             ->withTimestamps();
     }
 
-    public function countNoAnswer() {
+    public function countQuiet() {
         return $this->belongsToMany('App\Event')
             ->whereDate('date_publication', '<', Carbon::now())
             ->whereDate('date_event_end', '>', Carbon::now())
             ->whereDate('date_sign_up_start', '<', Carbon::now())
             ->whereDate('date_sign_up_end', '>', Carbon::now())
-            ->wherePivot('participation_status_id', ParticipationStatusEnum::NoAnswer)
+            ->wherePivot('participation_status_id', ParticipationStatusEnum::Quiet)
             ->count();
     }
 

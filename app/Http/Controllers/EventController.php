@@ -61,7 +61,7 @@ class EventController extends Controller
     /**
      * Show the form for editing the specified user
      *
-     * @param  \App\User  $user
+     * @param  \App\Event  $event
      * @return \Illuminate\View\View
      */
     public function edit(Event $event)

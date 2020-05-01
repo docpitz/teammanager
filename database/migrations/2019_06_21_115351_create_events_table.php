@@ -22,9 +22,9 @@ class CreateEventsTable extends Migration
             $table->string('meeting_place')->required();
             $table->timestamp('date_event_start')->nullable();
             $table->timestamp('date_event_end')->nullable();
-            $table->timestamp('date_sign_up_start')->nullable();
-            $table->timestamp('date_sign_up_end')->nullable();
-            $table->timestamp('date_publication')->nullable();
+            $table->date('date_sign_up_start')->nullable();
+            $table->date('date_sign_up_end')->nullable();
+            $table->date('date_publication')->nullable();
             $table->unsignedBigInteger('participation_status_id');
 
             $table->timestamps();

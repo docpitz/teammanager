@@ -1,5 +1,12 @@
 @extends('layouts.app', ['title' => __('Veranstaltungen')])
 
+@php
+    $promisedDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Promised)->description;
+    $quietDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Quiet)->description;
+    $canceledDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Canceled)->description
+@endphp
+
+
 @section('content')
     @component('layouts.headers.auth')
     @endcomponent
@@ -14,82 +21,98 @@
                                     <h3 class="mb-0">{{ __('Teilnehmer einteilen') }}</h3>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Disabled tooltip">
-                                    <a href="{{ route('event.index') }}" class="btn btn-sm btn-primary" id="back" title="zurück zur Übersicht" data-toggle="tooltip" data-placement="right" >
+                                    <a href="{{ route('event.index') }}" class="btn btn-sm btn-primary" id="back">
                                         <i class="fas fa-level-up-alt fa-2x"></i>
                                     </a>
-                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <h1>{{$event->name}}</h1>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div>
-                                        <h3>Zusage</h3>
-                                        <ul id="promiseMember" class="droptrue sortableItems bg-green">
-                                            @for ($i = 0; $i < 10; $i++)
-                                                <li class="ui-state-default" id='i{{$i}}'>
-                                                    <div class="row">
-                                                        <div class="col-2">
+                        <form method="post" action="{{ route('checkEvent.update', $event) }}" autocomplete="off"
+                              enctype="multipart/form-data">
+                            @csrf
+                            @method('put')
+                            <div class="card-body">
+                                <h1>{{$event->name}}</h1>
+                                <small><b>Anmeldezeitraum: </b>{{$event->date_sign_up_start->format('d.m.Y')}} bis {{$event->date_sign_up_end->format('d.m.Y')}}</small><br>
+                                <small><b>Veranstaltungszeitraum: </b>{{$event->date_event_start->format('d.m.Y H:i')}} bis {{$event->date_event_end->format('d.m.Y H:i').__(' Uhr')}}</small><br><br>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div>
+                                            <h3>Zusage (max. {{$event->max_participant}})</h3>
+                                            <ul id="{{$promisedDescription}}" class="droptrue sortableItems bg-green-pastel">
+                                                @foreach($usersPromised as $userPromised)
+                                                    <li class="ui-state-default" id='{{$userPromised->id}}'>
+                                                        <input type='hidden' name='{{$promisedDescription}}[]' value='{{$userPromised->id}}' id="hiddenInput{{$userPromised->id}}"/>
+                                                        <div class="row">
+                                                            <div class="col-2">
                                                         <span class="avatar avatar-sm rounded-circle">
-                                                            <img src="http://i.pravatar.cc/20{{$i}}">
+                                                            <img src="http://i.pravatar.cc/20{{$loop->iteration}}">
                                                         </span>
+                                                            </div>
+                                                            <div class="col-10">
+                                                                <h4 class="mb--1">{{$userPromised->firstname}} {{$userPromised->surname}}</h4><h6>zugesagt am {{$userPromised->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}} ({{$userPromised->changed_by_user_surname}}, {{$userPromised->changed_by_user_firstname}})</h6>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-10">
-                                                            <h4 class="mb--1">Karl Hammer {{$i}}</h4><h6>zugesagt am 18.09.2019 - 20:14</h6>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div>
+                                            <h3>Absage</h3>
+                                            <ul id="{{$canceledDescription}}" class="droptrue sortableItems bg-red-pastel">
+                                                @foreach($usersCanceled as $userCanceled)
+                                                    <li class="ui-state-default" id='{{$userCanceled->id}}'>
+                                                        <input type='hidden' name='{{$canceledDescription}}[]' value='{{$userCanceled->id}}' id="hiddenInput{{$userCanceled->id}}"/>
+                                                        <div class="row">
+                                                            <div class="col-2">
+                                                        <span class="avatar avatar-sm rounded-circle">
+                                                            <img src="http://i.pravatar.cc/20{{$loop->iteration}}">
+                                                        </span>
+                                                            </div>
+                                                            <div class="col-10">
+                                                                <h4 class="mb--1">{{$userCanceled->firstname}} {{$userCanceled->surname}}</h4><h6>abgesagt am {{$userCanceled->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}} ({{$userCanceled->changed_by_user_surname}}, {{$userCanceled->changed_by_user_firstname}})</h6>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </li>
-                                            @endfor
-                                        </ul>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div>
+                                            <h3>Keine Antwort</h3>
+                                            <ul id="{{$quietDescription}}" class="droptrue sortableItems">
+                                                @foreach($usersQuiet as $userQuiet)
+                                                    <li class="ui-state-default"  id='{{$userQuiet->id}}'>
+                                                        <input type='hidden' name='{{$quietDescription}}[]' value='{{$userQuiet->id}}' id="hiddenInput{{$userQuiet->id}}"/>
+                                                        <div class="row">
+                                                            <div class="col-2">
+                                                        <span class="avatar avatar-sm rounded-circle">
+                                                            <img src="http://i.pravatar.cc/20{{$loop->iteration}}">
+                                                        </span>
+                                                            </div>
+                                                            <div class="col-10">
+                                                                <h4 class="mb--1">{{$userQuiet->firstname}} {{$userQuiet->surname}}</h4>
+                                                                @if(empty($userQuiet->date_user_changed_participation_status))
+                                                                <h6>keine Antwort bis jetzt</h6>
+                                                                @else
+                                                                <h6>keine Antwort am {{$userQuiet->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}} ({{$userQuiet->changed_by_user_surname}}, {{$userQuiet->changed_by_user_firstname}})</h6>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div>
-                                        <h3>Absage</h3>
-                                        <ul id="cancelMember" class="droptrue sortableItems bg-red">
-                                            @for ($i = 10; $i < 20; $i++)
-                                                <li class="ui-state-default" id='i{{$i}}'>
-                                                    <div class="row">
-                                                        <div class="col-2">
-                                                        <span class="avatar avatar-sm rounded-circle">
-                                                            <img src="http://i.pravatar.cc/2{{$i}}">
-                                                        </span>
-                                                        </div>
-                                                        <div class="col-10">
-                                                            <h4 class="mb--1">Karl Hammer {{$i}}</h4><h6>abgesagt am 18.09.2019 - 20:14</h6>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            @endfor
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div>
-                                        <h3>Keine Antwort</h3>
-                                        <ul id="noAnswerMember" class="droptrue sortableItems bg-yellow">
-                                            @for ($i = 20; $i < 30; $i++)
-                                                <li class="ui-state-default" id='i{{$i}}'>
-                                                    <div class="row">
-                                                        <div class="col-2">
-                                                        <span class="avatar avatar-sm rounded-circle">
-                                                            <img src="http://i.pravatar.cc/2{{$i}}">
-                                                        </span>
-                                                        </div>
-                                                        <div class="col-10">
-                                                            <h4 class="mb--1">Karl Hammer {{$i}}</h4><h6>zugesagt: 18.09.2019 - 20:14</h6>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            @endfor
-                                        </ul>
-                                    </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success mt-4">{{ __('Speichern') }}</button>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -100,30 +123,47 @@
 
 @push('css')
     <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
+    <link rel="stylesheet" type="text/css" href="../../css/eventcheck.css">
 @endpush
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
+        calculateHeight();
         $(function () {
-            $(".back").title="zurück zur Übersicht";
+
+
+
+
             $(".sortableItems").sortable({
                 connectWith: ".sortableItems",
                 placeholder: "ui-state-highlight",
                 over: function(event, ui) {
-                    var maxHeight = Math.max($("#promiseMember").height(), $("#cancelMember").height(), $("#noAnswerMember").height());
-                    var paddingBottomPromiseMember = maxHeight - $("#promiseMember").height();
-                    var paddingBottomCancelMember = maxHeight - $("#cancelMember").height();
-                    var paddingBottomNoAnswerMember = maxHeight - $("#noAnswerMember").height();
-                    $("#promiseMember").css('padding-bottom', paddingBottomPromiseMember + 'px');
-                    $("#cancelMember").css('padding-bottom', paddingBottomCancelMember + 'px');
-                    $("#noAnswerMember").css('padding-bottom', paddingBottomNoAnswerMember + 'px');
-                }
-            });
+                    calculateHeight();
 
-            $("#promiseMember, #cancelMember, #noAnswerMember").disableSelection();
+                },
+                receive: function( event, ui ) {
+                    let searchFor = "#hiddenInput" + ui.item.attr('id');
+                    let hiddenInput = $(searchFor);
+                    hiddenInput.attr('name', $(this).attr('id') + '[]');
+
+                }
+
+            });
+            $("#{{$promisedDescription}}, #{{$canceledDescription}}, #{{$quietDescription}}").disableSelection();
 
         });
+
+        function calculateHeight()
+        {
+            var maxHeight = Math.max($("#{{$promisedDescription}}").height(), $("#{{$canceledDescription}}").height(), $("#{{$quietDescription}}").height());
+            var paddingBottomPromiseMember = maxHeight - $("#{{$promisedDescription}}").height();
+            var paddingBottomCancelMember = maxHeight - $("#{{$canceledDescription}}").height();
+            var paddingBottomQuietMember = maxHeight - $("#{{$quietDescription}}").height();
+            $("#{{$promisedDescription}}").css('padding-bottom', paddingBottomPromiseMember + 'px');
+            $("#{{$canceledDescription}}").css('padding-bottom', paddingBottomCancelMember + 'px');
+            $("#{{$quietDescription}}").css('padding-bottom', paddingBottomQuietMember + 'px');
+        }
 
     </script>
 @endpush
