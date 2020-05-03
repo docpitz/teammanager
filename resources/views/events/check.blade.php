@@ -36,77 +36,9 @@
                                 <small><b>Anmeldezeitraum: </b>{{$event->date_sign_up_start->format('d.m.Y')}} bis {{$event->date_sign_up_end->format('d.m.Y')}}</small><br>
                                 <small><b>Veranstaltungszeitraum: </b>{{$event->date_event_start->format('d.m.Y H:i')}} bis {{$event->date_event_end->format('d.m.Y H:i').__(' Uhr')}}</small><br><br>
                                 <div class="row">
-                                    <div class="col-sm-4">
-                                        <div>
-                                            <h3>Zusage (max. {{$event->max_participant}})</h3>
-                                            <ul id="{{$promisedDescription}}" class="droptrue sortableItems bg-green-pastel">
-                                                @foreach($usersPromised as $userPromised)
-                                                    <li class="ui-state-default" id='{{$userPromised->id}}'>
-                                                        <input type='hidden' name='{{$promisedDescription}}[]' value='{{$userPromised->id}}' id="hiddenInput{{$userPromised->id}}"/>
-                                                        <div class="row">
-                                                            <div class="col-2">
-                                                        <span class="avatar avatar-sm rounded-circle">
-                                                            <img src="http://i.pravatar.cc/20{{$loop->iteration}}">
-                                                        </span>
-                                                            </div>
-                                                            <div class="col-10">
-                                                                <h4 class="mb--1">{{$userPromised->firstname}} {{$userPromised->surname}}</h4><h6>zugesagt am {{$userPromised->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}} ({{$userPromised->changed_by_user_surname}}, {{$userPromised->changed_by_user_firstname}})</h6>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div>
-                                            <h3>Absage</h3>
-                                            <ul id="{{$canceledDescription}}" class="droptrue sortableItems bg-red-pastel">
-                                                @foreach($usersCanceled as $userCanceled)
-                                                    <li class="ui-state-default" id='{{$userCanceled->id}}'>
-                                                        <input type='hidden' name='{{$canceledDescription}}[]' value='{{$userCanceled->id}}' id="hiddenInput{{$userCanceled->id}}"/>
-                                                        <div class="row">
-                                                            <div class="col-2">
-                                                        <span class="avatar avatar-sm rounded-circle">
-                                                            <img src="http://i.pravatar.cc/20{{$loop->iteration}}">
-                                                        </span>
-                                                            </div>
-                                                            <div class="col-10">
-                                                                <h4 class="mb--1">{{$userCanceled->firstname}} {{$userCanceled->surname}}</h4><h6>abgesagt am {{$userCanceled->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}} ({{$userCanceled->changed_by_user_surname}}, {{$userCanceled->changed_by_user_firstname}})</h6>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div>
-                                            <h3>Keine Antwort</h3>
-                                            <ul id="{{$quietDescription}}" class="droptrue sortableItems">
-                                                @foreach($usersQuiet as $userQuiet)
-                                                    <li class="ui-state-default"  id='{{$userQuiet->id}}'>
-                                                        <input type='hidden' name='{{$quietDescription}}[]' value='{{$userQuiet->id}}' id="hiddenInput{{$userQuiet->id}}"/>
-                                                        <div class="row">
-                                                            <div class="col-2">
-                                                        <span class="avatar avatar-sm rounded-circle">
-                                                            <img src="http://i.pravatar.cc/20{{$loop->iteration}}">
-                                                        </span>
-                                                            </div>
-                                                            <div class="col-10">
-                                                                <h4 class="mb--1">{{$userQuiet->firstname}} {{$userQuiet->surname}}</h4>
-                                                                @if(empty($userQuiet->date_user_changed_participation_status))
-                                                                <h6>keine Antwort bis jetzt</h6>
-                                                                @else
-                                                                <h6>keine Antwort am {{$userQuiet->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}} ({{$userQuiet->changed_by_user_surname}}, {{$userQuiet->changed_by_user_firstname}})</h6>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    @include('events.participation_status_check', ['participationDescription' => $promisedDescription, 'users' => $usersPromised, 'color' => 'green'])
+                                    @include('events.participation_status_check', ['participationDescription' => $canceledDescription, 'users' => $usersCanceled, 'color' => 'red'])
+                                    @include('events.participation_status_check', ['participationDescription' => $quietDescription, 'users' => $usersQuiet, 'color' => ''])
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Speichern') }}</button>

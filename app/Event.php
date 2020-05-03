@@ -1,13 +1,30 @@
 <?php
+declare(strict_types=1);
 
 namespace App;
 
+use Altek\Accountant\Contracts\Recordable;
+use Altek\Eventually\Eventually;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
-class Event extends Model
+class Event extends Model implements Recordable
 {
+    use \Altek\Accountant\Recordable;
+    use Eventually;
+
+    /**
+     * Recordable events.
+     *
+     * @var array
+     */
+    protected $recordableEvents = [
+        'existingPivotUpdated',
+        'attached',
+        'detached'
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -52,25 +69,28 @@ class Event extends Model
         return $this->users()->wherePivot('participation_status_id', ParticipationStatusEnum::Promised)->count();
     }
 
-    // select * from `users`
-    // inner join `event_user` on `users`.`id` = `event_user`.`user_id`
-    // left join `users` as `changer` on `event_user`.`changed_by_user_id` = `changer`.`id`
-    // where `event_user`.`event_id` = 1 and `event_user`.`participation_status_id` = 1
     public function getUsersByParticipation(int $participationStatus) {
         return $this->users()
             ->addSelect('users.*', 'event_user.*', 'changed_by_user.firstname as changed_by_user_firstname', 'changed_by_user.surname as changed_by_user_surname')
             ->withPivot('changed_by_user_id')
             ->wherePivot('participation_status_id', $participationStatus)
             ->leftJoin('users as changed_by_user', 'event_user.changed_by_user_id', '=', 'changed_by_user.id');
+    }
 
-        /*
-         * return $this->users()
-            ->join('users as changed_by_user', 'users.id', '=', 'event_user.changed_by_user_id')
-            ->addSelect(['date_user_changed_participation_status', 'users.surname', 'users.firstname', 'changed_by_user.surname as changedbyuser_surname'])
-            ->wherePivot('participation_status_id', $participationStatus)
-            ->withPivot('changed_by_user_id')
-            ;
-         */
+    public function getParticipationChanges(): Array
+    {
+        $ledger = $this->ledgers()->whereIn('event', [
+            'existingPivotUpdated',
+            'attached',
+        ]);
+
+        $count = $ledger->count();
+        $all = array();
+        for ($k = 0; $k < $count; $k++) {
+            $all[] = $ledger->latest()->offset($k)->take(1)->get("*")->first()->getPivotData()["properties"];
+        }
+        return collect($all)->collapse()->groupBy('user_id')->all();
+        //return $this->ledgers()->getPivotData();
     }
 
     public function saveParticipation(User $user, int $participationStatus, User $changedByUser) {

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Altek\Accountant\Contracts\Identifiable;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use App\Buisness\Enum\RoleEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,10 +14,12 @@ use App\Notifications\ResetPassword;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Identifiable
 {
     use Notifiable;
     use HasRoles;
+
+
 
     /**
      * The attributes that are mass assignable.
@@ -106,4 +109,11 @@ class User extends Authenticatable
             ->count();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier()
+    {
+        return $this->getKey();
+    }
 }

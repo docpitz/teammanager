@@ -9,6 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "altek/accountant": "^2.0",
+        "altek/eventually": "^1.0",
         "bensampo/laravel-enum": "^1.37",
         "fideloper/proxy": "^4.3",
         "laravel/framework": "7.9.*",

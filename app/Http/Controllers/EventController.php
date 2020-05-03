@@ -53,7 +53,9 @@ class EventController extends Controller
         $createdModel = $model->create($request->all());
         $arrayOfUserIds = $request->get('event_users');
         $createdModel->users()->attach($arrayOfUserIds,
-            ['participation_status_id' => $request->get('participation_status_id')]);
+            ['participation_status_id' => $request->get('participation_status_id'),
+                'changed_by_user_id' => auth()->user()->getIdentifier(),
+                'date_user_changed_participation_status' => Carbon::now() ]);
 
         return redirect()->route('event.index')->withStatus(__('Veranstaltung erfolgreich erstellt.'));
     }
@@ -111,9 +113,11 @@ class EventController extends Controller
         $arrayOfUserIds = $request->get('event_users');
         $arrayDeleted = array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
         $arrayAdded = array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
-        $event->users()->detach($arrayDeleted);
+        $event->users()->update($arrayDeleted);
         $event->users()->attach($arrayAdded,
-            ['participation_status_id' => $request->get('participation_status_id')]);
+            ['participation_status_id' => $request->get('participation_status_id'),
+                'changed_by_user_id' => auth()->user()->getIdentifier(),
+                'date_user_changed_participation_status' => Carbon::now()]);
 
         return redirect()->route('event.index')->withStatus(__('Veranstaltung erfolgreich geändert.'));
 
