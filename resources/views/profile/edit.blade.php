@@ -63,59 +63,72 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('profile.update') }}" autocomplete="off" enctype="multipart/form-data">
-                            @csrf
-                            @method('put')
 
-                            <h6 class="heading-small text-muted mb-4">{{ __('Spielerprofil') }}</h6>
 
-                            @include('alerts.success')
-                            @include('alerts.error_self_update', ['key' => 'not_allow_profile'])
+
+                        <h6 class="heading-small text-muted mb-4">{{ __('Profilbild') }}</h6>
+                        @include('alerts.success')
+                        @include('alerts.error_self_update', ['key' => 'not_allow_profile'])
+
 
                             <div class="pl-lg-4">
-                                <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-username">{{ __('Benutzername') }}</label>
-                                    <input type="text" name="username" id="input-username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" placeholder="{{ __('Benutzername') }}" value="{{ old('username', auth()->user()->username) }}" required autofocus>
+                                <form enctype="multipart/form-data" method="POST" action="{{ route('profile.avatar') }}">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-auto">
 
-                                    @include('alerts.feedback', ['field' => 'username'])
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-fistname">{{ __('Vorname') }}</label>
-                                    <input disabled="disabled" type="text" id="input-firstname" class="form-control" value="{{ auth()->user()->firstname }}">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-surname">{{ __('Nachname') }}</label>
-                                    <input disabled="disabled" type="text" id="input-surname" class="form-control"  value="{{ auth()->user()->surname }}" >
-                                </div>
-                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email">{{ __('E-Mail-Adresse') }}</label>
-                                    <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail-Adresse') }}" value="{{ old('email', auth()->user()->email) }}" required>
+                                    <span class="avatar avatar-xxl rounded-circle">
+                                        <img src="{{'/files/avatar/'.auth()->user()->avatar}}">
+                                    </span>
+                                        </div>
+                                        <div class="col">
+                                            <h4>Profilbild aktualisieren</h4>
+                                            <input type="file" class="small" name="avatar"><br>
+                                            <input type="submit" class="btn btn-sm btn-success mt-4" value="Hochladen">
 
-                                    @include('alerts.feedback', ['field' => 'email'])
-                                </div>
-                                <div class="form-group{{ $errors->has('email_optional') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email_optional">{{ __('Weitere E-Mail') }}</label>
-                                    <input type="email" name="email_optional" id="input-email_optional" class="form-control{{ $errors->has('email_optional') ? ' is-invalid' : '' }}" placeholder="{{ __('Weitere E-Mail-Adresse') }}" value="{{ old('email_optional', auth()->user()->email_optional) }}">
-
-                                    @include('alerts.feedback', ['field' => 'email_optional'])
-                                </div>
-
-                                <!--
-                                <div class="form-group{{ $errors->has('photo') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-name">{{ __('Profile photo') }}</label>
-                                    <div class="custom-file">
-                                        <input type="file" name="photo" class="custom-file-input{{ $errors->has('photo') ? ' is-invalid' : '' }}" id="input-picture" accept="image/*">
-                                        <label class="custom-file-label" for="input-picture">{{ __('Select profile photo') }}</label>
+                                        </div>
                                     </div>
-
-                                    @include('alerts.feedback', ['field' => 'photo'])
-                                </div>
-                                -->
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-success mt-4">{{ __('Speichern') }}</button>
-                                </div>
+                                </form>
                             </div>
-                        </form>
+                                <hr class="my-4" />
+                        <h6 class="heading-small text-muted mb-4">{{ __('Spielerprofil') }}</h6>
+                        <div class="pl-lg-4">
+
+                                <form method="post" action="{{ route('profile.update') }}" autocomplete="off" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('put')
+
+                                    <div class="form-group{{ $errors->has('username') ? ' has-danger' : '' }}">
+                                        <label class="form-control-label" for="input-username">{{ __('Benutzername') }}</label>
+                                        <input type="text" name="username" id="input-username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" placeholder="{{ __('Benutzername') }}" value="{{ old('username', auth()->user()->username) }}" required autofocus>
+
+                                        @include('alerts.feedback', ['field' => 'username'])
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-fistname">{{ __('Vorname') }}</label>
+                                        <input disabled="disabled" type="text" id="input-firstname" class="form-control" value="{{ auth()->user()->firstname }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-surname">{{ __('Nachname') }}</label>
+                                        <input disabled="disabled" type="text" id="input-surname" class="form-control"  value="{{ auth()->user()->surname }}" >
+                                    </div>
+                                    <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                                        <label class="form-control-label" for="input-email">{{ __('E-Mail-Adresse') }}</label>
+                                        <input type="email" name="email" id="input-email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail-Adresse') }}" value="{{ old('email', auth()->user()->email) }}" required>
+
+                                        @include('alerts.feedback', ['field' => 'email'])
+                                    </div>
+                                    <div class="form-group{{ $errors->has('email_optional') ? ' has-danger' : '' }}">
+                                        <label class="form-control-label" for="input-email_optional">{{ __('Weitere E-Mail') }}</label>
+                                        <input type="email" name="email_optional" id="input-email_optional" class="form-control{{ $errors->has('email_optional') ? ' is-invalid' : '' }}" placeholder="{{ __('Weitere E-Mail-Adresse') }}" value="{{ old('email_optional', auth()->user()->email_optional) }}">
+
+                                        @include('alerts.feedback', ['field' => 'email_optional'])
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-success mt-4">{{ __('Speichern') }}</button>
+                                    </div>
+                                </form>
+                            </div>
                         <hr class="my-4" />
                         <form method="post" action="{{ route('profile.password') }}" autocomplete="off">
                             @csrf
@@ -155,3 +168,7 @@
         @include('layouts.footers.auth')
     </div>
 @endsection
+
+@push('css')
+    <link rel="stylesheet" type="text/css" href="../../css/avatar.css" />
+@endpush

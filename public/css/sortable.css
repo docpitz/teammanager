@@ -1,2 +1,10 @@
 .sortableItems { list-style-type: none; margin: 0; padding: 0; margin-right: 10px; background: ghostwhite; border:solid 1px black; }
-.sortableItems li { margin: 5px; padding: 5px 0px 10px 10px; width: auto; height: 50px; background: floralwhite; border:solid 1px Gray; }
+.sortableItems li { margin: 5px; padding: 5px 5px 5px 10px; width: auto; height: auto; min-height: 50px; background: floralwhite; border:solid 1px Gray; }
+.col-2 .col-2-small-padding {
+    vertical-align: center;
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 5px;
+    padding-left: 5px;
+}

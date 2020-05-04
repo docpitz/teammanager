@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App;
 
 use Altek\Accountant\Contracts\Recordable;
+use Altek\Accountant\Models\Ledger;
 use Altek\Eventually\Eventually;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use Illuminate\Database\Eloquent\Model;
@@ -79,18 +80,18 @@ class Event extends Model implements Recordable
 
     public function getParticipationChanges(): Array
     {
-        $ledger = $this->ledgers()->whereIn('event', [
+        $ledgers = $this->ledgers()->whereIn('event', [
             'existingPivotUpdated',
             'attached',
-        ]);
+        ])->latest()->get();
 
-        $count = $ledger->count();
-        $all = array();
-        for ($k = 0; $k < $count; $k++) {
-            $all[] = $ledger->latest()->offset($k)->take(1)->get("*")->first()->getPivotData()["properties"];
-        }
-        return collect($all)->collapse()->groupBy('user_id')->all();
-        //return $this->ledgers()->getPivotData();
+        $history = $ledgers->map(function (Ledger $ledger) {
+
+            // TODO: Brauchen wir die Metdadaten noch?
+            $ledger->getMetadata();
+            return $ledger->getPivotData()["properties"];
+        });
+        return collect($history)->collapse()->groupBy('user_id')->all();
     }
 
     public function saveParticipation(User $user, int $participationStatus, User $changedByUser) {

@@ -74,7 +74,7 @@ class User extends Authenticatable implements Identifiable
 
     public function profilePicture() : String
     {
-        return 'http://i.pravatar.cc/200';
+        return '/files/avatar/'.$this->avatar;
     }
 
     public function groups() {

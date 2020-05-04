@@ -1,24 +1,24 @@
 <div class="col-sm-4">
     <div>
-        <h3>Zusage (max. {{$event->max_participant}})</h3>
+        <h3>{{$header}}</h3>
         <ul id="{{$participationDescription}}" class="droptrue sortableItems bg-{{$color}}-pastel">
             @foreach($users as $user)
                 <li class="ui-state-default" id='{{$user->id}}'>
                     <input type='hidden' name='{{$participationDescription}}[]' value='{{$user->id}}' id="hiddenInput{{$user->id}}"/>
+                    <div class="container">
                     <div class="row">
-                        <div class="col-2">
+                        <div class="col-2-small-padding justify-content-center align-self-center">
                             <span class="avatar avatar-sm rounded-circle">
-                                <img src="http://i.pravatar.cc/20{{$loop->iteration}}">
+                                <img src="/files/avatar/{{$user->avatar}}">
                             </span>
                         </div>
-                        <div class="col-8">
-
+                        <div class="col-9">
                             <h4 class="mb--1">{{$user->firstname}} {{$user->surname}}</h4>
-                            <h6>zugesagt am {{$user->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}} ({{$user->changed_by_user_surname}}, {{$user->changed_by_user_firstname}})</h6>
-
+                            <h6 class="mb--1">{{$user->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}}</h6>
+                            <h6>({{$user->changed_by_user_surname}}, {{$user->changed_by_user_firstname}})</h6>
                         </div>
-                        <div class="col-2">
-                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#history{{$user->id}}">
+                        <div class="col-2-small-padding align-self-center text-left">
+                            <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#history{{$user->id}}">
                                 i
                             </button>
                             <!-- Modal -->
@@ -43,7 +43,6 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody class="list">
-
                                                         @foreach($user->changes as $change)
                                                             <tr>
                                                                 <td>{{$change['changed_date_formatted']}}</td>
@@ -63,6 +62,7 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </li>
             @endforeach
