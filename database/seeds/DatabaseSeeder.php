@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {
@@ -32,6 +33,6 @@ class DatabaseSeeder extends Seeder
 
     private function isTestSystem() : bool
     {
-        return strcmp(config('app.env'),'local');
+        return App::environment('local');
     }
 }
