@@ -32,6 +32,6 @@ class DatabaseSeeder extends Seeder
 
     private function isTestSystem() : bool
     {
-        return strcmp(config('APP_ENV'),'local');
+        return strcmp(config('app.env'),'local');
     }
 }
