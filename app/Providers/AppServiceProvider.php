@@ -6,7 +6,9 @@ use App\Item;
 use App\User;
 use App\Observers\ItemObserver;
 use App\Observers\UserObserver;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         User::observe(UserObserver::class);
+        if(Str::startsWith(config("APP_URL"), "https"))
+        {
+            URL::forceScheme("https");
+        }
     }
 
     /**
