@@ -100,14 +100,16 @@
                                         </div>
                                     @endforeach
                                 </div>
-                                <a class="carousel-control-prev" href="#carouselEventIndicators" role="button" data-slide="prev">
-                                    <span class="carousel-control-prev-icon"></span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                                <a class="carousel-control-next" href="#carouselEventIndicators" role="button" data-slide="next">
-                                    <span class="carousel-control-next-icon"></span>
-                                    <span class="sr-only">Next</span>
-                                </a>
+                                @if(count($events) > 1)
+                                    <a class="carousel-control-prev" href="#carouselEventIndicators" role="button" data-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselEventIndicators" role="button" data-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                @endif
                             </div>
                         @endif
                     </div>
