@@ -81,8 +81,7 @@ class EventController extends Controller
             $allUserWithEventInfo[$i]["firstname"] = $user->firstname;
             $allUserWithEventInfo[$i]["groups"] = implode(', ', array_column($user->groups()->getModels(['name']),'name'));
             $selected = false;
-            foreach($event->users()
-                        ->getModels() as $userFoundInEvent) {
+            foreach($event->users()->getModels() as $userFoundInEvent) {
                 if($user->id == $userFoundInEvent->id) {
                     $selected = true;
                     continue;
