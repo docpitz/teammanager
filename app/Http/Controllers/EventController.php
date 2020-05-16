@@ -112,7 +112,7 @@ class EventController extends Controller
         $arrayOfUserIds = $request->get('event_users');
         $arrayDeleted = array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
         $arrayAdded = array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
-        $event->users()->update($arrayDeleted);
+        $event->users()->detach($arrayDeleted);
         $event->users()->attach($arrayAdded,
             ['participation_status_id' => $request->get('participation_status_id'),
                 'changed_by_user_id' => auth()->user()->getIdentifier(),
