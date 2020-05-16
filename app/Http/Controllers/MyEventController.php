@@ -25,15 +25,24 @@ class MyEventController extends Controller
     }
 
     public function delete(MyEventRequest $request, Event $event) {
-        $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
-        $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Canceled, auth()->user());
-
-        return response()->json(['success'=> true, 'cancel' => true, 'countPromises' => $event->countPromise(), 'countQuiet' => auth()->user()->countQuiet()]);
+        $success = false;
+        if($event->getParticipationState(auth()->user()) != ParticipationStatusEnum::Canceled)
+        {
+            $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
+            $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Canceled, auth()->user());
+            $success = true;
+        }
+        return response()->json(['success'=> $success, 'cancel' => true, 'countPromises' => $event->countPromise(), 'countQuiet' => auth()->user()->countQuiet()]);
     }
 
     public function save(MyEventRequest $request, Event $event) {
-        $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
-        $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Promised, auth()->user());
-        return response()->json(['success'=> true, 'promise' => true, 'countPromises' => $event->countPromise(), 'countQuiet' => auth()->user()->countQuiet()]);
+        $success = false;
+        if($event->getParticipationState(auth()->user()) != ParticipationStatusEnum::Promised)
+        {
+            $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
+            $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Promised, auth()->user());
+            $success = true;
+        }
+        return response()->json(['success'=> $success, 'promise' => true, 'countPromises' => $event->countPromise(), 'countQuiet' => auth()->user()->countQuiet()]);
     }
 }
