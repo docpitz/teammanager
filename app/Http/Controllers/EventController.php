@@ -6,6 +6,7 @@ use App\Buisness\Enum\PermissionEnum;
 use App\Event;
 use App\Http\Requests\EventRequest;
 use App\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -110,8 +111,8 @@ class EventController extends Controller
         // Users that have been deleted will simply be deleted.
         $arrayEventUsersFromDB = array_column($event->users()->getModels(['id']), 'id');
         $arrayOfUserIds = $request->get('event_users');
-        $arrayDeleted = array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
-        $arrayAdded = array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
+        $arrayDeleted = is_null($arrayOfUserIds) ? $arrayEventUsersFromDB : array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
+        $arrayAdded = is_null($arrayOfUserIds) ? [] : array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
         $event->users()->detach($arrayDeleted);
         $event->users()->attach($arrayAdded,
             ['participation_status_id' => $request->get('participation_status_id'),
