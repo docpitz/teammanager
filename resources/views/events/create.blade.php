@@ -68,7 +68,7 @@
                                     @include('alerts.feedback', ['field' => 'date_event_range'])
                                 </div>
                                 <div class="form-group{{ $errors->has('date_sign_up_range') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-date_sign_up_rangee">{{ __('Anmeldezeitraum') }}</label>
+                                    <label class="form-control-label" for="input-date_sign_up_range">{{ __('Anmeldezeitraum') }}</label>
                                     <input type="text" name="date_sign_up_range" id="input-date_date_sign_up_range" class="form-control{{ $errors->has('date_sign_up_range') ? ' is-invalid' : '' }}" placeholder="{{ __('Anmeldezeitraum') }}" value="{{ old('date_sign_up_range') }}" required>
                                     @include('alerts.feedback', ['field' => 'date_sign_up_range'])
                                 </div>
@@ -146,23 +146,7 @@
             showISOWeekNumbers: true,
             timePickerIncrement: 15,
             autoUpdateInput: false,
-            locale: {
-                "format": "DD.MM.YYYY HH:mm",
-                "separator": " bis ",
-                "applyLabel": "Annehmen",
-                "cancelLabel": "Löschen",
-                "fromLabel": "von",
-                "toLabel": "bis",
-                "daysOfWeek": [
-                "So",
-                "Mo",
-                "Di",
-                "Mi",
-                "Do",
-                "Fr",
-                "Sa"
-                ],
-            }
+            @include('events.daterangepicker.js_locale')
         });
 
         $('input[name="date_event_range"]').on('apply.daterangepicker', function(ev, picker) {
@@ -181,23 +165,7 @@
             drops: "up",
             showISOWeekNumbers: true,
             autoUpdateInput: false,
-            locale: {
-                "format": "DD.MM.YYYY",
-                "separator": " bis ",
-                "applyLabel": "Annehmen",
-                "cancelLabel": "Löschen",
-                "fromLabel": "von",
-                "toLabel": "bis",
-                "daysOfWeek": [
-                    "So",
-                    "Mo",
-                    "Di",
-                    "Mi",
-                    "Do",
-                    "Fr",
-                    "Sa"
-                ],
-            }
+            @include('events.daterangepicker.js_locale')
         });
 
         $('input[name="date_sign_up_range"]').on('apply.daterangepicker', function(ev, picker) {
@@ -216,23 +184,7 @@
             showISOWeekNumbers: true,
             singleDatePicker: true,
             autoUpdateInput: false,
-            locale: {
-                "format": "DD.MM.YYYY",
-                "separator": " bis ",
-                "applyLabel": "Annehmen",
-                "cancelLabel": "Löschen",
-                "fromLabel": "von",
-                "toLabel": "bis",
-                "daysOfWeek": [
-                    "So",
-                    "Mo",
-                    "Di",
-                    "Mi",
-                    "Do",
-                    "Fr",
-                    "Sa"
-                ],
-            }
+            @include('events.daterangepicker.js_locale')
         });
         $('input[name="date_publication"]').on('apply.daterangepicker', function(ev, picker) {
             $(this).val(picker.startDate.format('DD.MM.YYYY'));
