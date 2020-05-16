@@ -68,13 +68,13 @@
                                 </div>
                                 <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-password">{{ __('Passwort') }}</label>
-                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ __('Passwort') }}" value="" required autocomplete="off">
+                                    <input type="password" name="password" id="input-password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ __('Passwort') }}" value="" autocomplete="off">
 
                                     @include('alerts.feedback', ['field' => 'password'])
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-password-confirmation">{{ __('Passwort wiederholen') }}</label>
-                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control" placeholder="{{ __('Passwort wiederholen') }}" value="" required autocomplete="off">
+                                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control" placeholder="{{ __('Passwort wiederholen') }}" value="" autocomplete="off">
                                 </div>
 
                                 <div class="text-center">

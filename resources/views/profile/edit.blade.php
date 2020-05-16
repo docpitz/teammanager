@@ -2,9 +2,9 @@
 
 @section('content')
     @include('forms.header', [
-        'title' => __('Hallo') . ' '. auth()->user()->name,
+        'title' => __('Hallo') . ' '. auth()->user()->firstname,
         'description' => __('Das ist deine Profilseite. Wir werden sie in der nächsten Zeit weiter ausbauen.'),
-        'class' => 'col-lg-9'
+        'class' => 'col-lg-12'
     ])
 
     <div class="container-fluid mt--6">

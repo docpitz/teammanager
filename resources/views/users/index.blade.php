@@ -37,7 +37,8 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">{{ __('Name') }}</th>
-                                <th scope="col">{{ __('E-Mail') }}</th>
+                                <th scope="col">{{ __('1. E-Mail') }}</th>
+                                <th scope="col">{{ __('2. E-Mail') }}</th>
                                 <th scope="col">{{ __('Berechtigung') }}</th>
                                 <th scope="col"></th>
                             </tr>
@@ -48,6 +49,9 @@
                                     <td>{{ $user->surname }} {{ $user->firstname }}</td>
                                     <td>
                                         <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="mailto:{{ $user->email_optional }}">{{ $user->email_optional }}</a>
                                     </td>
                                     <td>{{ $user->getRole()->getFormattedName() }}</td>
                                     <td class="text-right">

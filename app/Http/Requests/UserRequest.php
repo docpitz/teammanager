@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
             'surname' => 'required|min:3',
             'email' => 'required|email|different:email_optional',
             'email_optional' => 'nullable|email|different:email',
-            'password' => [$this->route()->user ? 'nullable' : 'required', 'confirmed', 'min:6'],
+            'password' => 'nullable|confirmed|min:6',
             'role_name' => 'required',
         ];
     }

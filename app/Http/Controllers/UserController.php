@@ -6,6 +6,7 @@ use App\Buisness\Enum\PermissionEnum;
 use App\User;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -48,7 +49,12 @@ class UserController extends Controller
     public function store(UserRequest $request, User $model)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
-        $createdModel = $model->create($request->merge(['password' => Hash::make($request->get('password'))])->all());
+        $password = $request->get('password');
+        if(Str::of($password)->trim()->isNotEmpty())
+        {
+            $request = $request->merge(['password' => Hash::make($password)]);
+        }
+        $createdModel = $model->create($request->all());
         $createdModel->roles()->sync(Role::findByName($request['role_name']));
         return redirect()->route('user.index')->withStatus(__('Teammitglied erfolgreich erstellt.'));
     }

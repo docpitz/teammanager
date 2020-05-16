@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Support\Arr;
 
 class ResetPasswordController extends Controller
 {
@@ -18,7 +19,9 @@ class ResetPasswordController extends Controller
     |
     */
 
-    use ResetsPasswords;
+    use ResetsPasswords {
+        rules as frameworkRules;
+    }
 
     /**
      * Where to redirect users after resetting their password.
@@ -35,5 +38,11 @@ class ResetPasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    protected function rules()
+    {
+        $rules = $this->frameworkRules();
+        return Arr::set($rules, 'password', 'required|confirmed|min:6');
     }
 }

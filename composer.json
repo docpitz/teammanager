@@ -12,6 +12,7 @@
         "altek/accountant": "^2.0",
         "altek/eventually": "^1.0",
         "bensampo/laravel-enum": "^1.37",
+        "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.3",
         "intervention/image": "^2.5",
         "laravel/framework": "7.9.*",
