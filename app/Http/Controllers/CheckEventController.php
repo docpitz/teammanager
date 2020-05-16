@@ -29,7 +29,6 @@ class CheckEventController extends Controller
         $usersCanceled = $checkEvent->getUsersByParticipation(ParticipationStatusEnum::Canceled)->getModels();
         $usersQuiet = $checkEvent->getUsersByParticipation(ParticipationStatusEnum::Quiet)->getModels();
         $changes = $checkEvent->getParticipationChanges();
-        $changes = $this->upgradeChanges($changes);
         $this->addChanges($usersPromised, $changes);
         $this->addChanges($usersCanceled, $changes);
         $this->addChanges($usersQuiet, $changes);
@@ -65,23 +64,6 @@ class CheckEventController extends Controller
             }
         }
 
-    }
-
-    private function upgradeChanges(Array $changesByUser)
-    {
-        return collect($changesByUser)->map(function ($changes)
-        {
-            return collect($changes)->map(function($change)
-            {
-                $carbon = new Carbon($change['date_user_changed_participation_status']);
-                $formatedTime = $carbon->format('d.m.Y H:i');
-                Arr::set($change, 'user', User::find($change['changed_by_user_id']));
-                Arr::set($change, 'participation_status', ParticipationStatus::find($change['participation_status_id']));
-                Arr::set($change, 'changed_date_formatted', $formatedTime);
-                return $change;
-            }
-            );
-        })->toArray();
     }
 
     private function addChanges(Array $participations, Array $changes)

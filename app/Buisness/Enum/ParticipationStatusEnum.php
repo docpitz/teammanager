@@ -10,7 +10,7 @@ class ParticipationStatusEnum extends Enum
     const Promised  = 2;
     const Canceled  = 3;
 
-    public function getModel() : Role
+    public function getModel() : ParticipationStatus
     {
         return ParticipationStatus::findByName($this->key);
     }

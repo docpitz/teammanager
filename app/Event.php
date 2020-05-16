@@ -8,6 +8,7 @@ use Altek\Accountant\Models\Ledger;
 use Altek\Eventually\Eventually;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
 class Event extends Model implements Recordable
@@ -83,13 +84,36 @@ class Event extends Model implements Recordable
         $ledgers = $this->ledgers()->whereIn('event', [
             'existingPivotUpdated',
             'attached',
+            'detached'
         ])->latest()->get();
 
         $history = $ledgers->map(function (Ledger $ledger) {
+            $properties = $ledger->getPivotData()["properties"];
+            $metadata = $ledger->getMetadata();
+            $collection = collect($properties);
+            $properties = $collection->map(function (Array $property) use($metadata) {
+                if($metadata['ledger_event'] == "detached")
+                {
+                    Arr::set($property, 'participation_status_name', 'Removed');
+                    Arr::set($property, 'date_user_changed_participation_status', $metadata['ledger_updated_at']);
+                    Arr::set($property, 'changed_by_user_id', $metadata['user_id']);
+                }
+                else
+                {
+                    if(Arr::has($property, 'participation_status_id'))
+                    {
+                        Arr::set($property, 'participation_status_name', ParticipationStatus::find($property['participation_status_id'])->getModel()->name);
+                    }
+                }
+                $dateUserChangedParticipationStatus = $property['date_user_changed_participation_status'];
+                $carbon = new Carbon($dateUserChangedParticipationStatus);
+                $formatedTime = $carbon->format('d.m.Y H:i');
+                Arr::set($property, 'changed_date_formatted', $formatedTime);
 
-            // TODO: Brauchen wir die Metdadaten noch?
-            $ledger->getMetadata();
-            return $ledger->getPivotData()["properties"];
+                Arr::set($property, 'user', User::find($property['changed_by_user_id']));
+                return $property;
+            });
+            return $properties->toArray();
         });
         return collect($history)->collapse()->groupBy('user_id')->all();
     }

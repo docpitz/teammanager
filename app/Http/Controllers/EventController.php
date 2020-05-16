@@ -113,12 +113,16 @@ class EventController extends Controller
         $arrayOfUserIds = $request->get('event_users');
         $arrayDeleted = is_null($arrayOfUserIds) ? $arrayEventUsersFromDB : array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
         $arrayAdded = is_null($arrayOfUserIds) ? [] : array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
-        $event->users()->detach($arrayDeleted);
-        $event->users()->attach($arrayAdded,
-            ['participation_status_id' => $request->get('participation_status_id'),
-                'changed_by_user_id' => auth()->user()->getIdentifier(),
-                'date_user_changed_participation_status' => Carbon::now()]);
+        if(count($arrayDeleted) > 0) {
+            $event->users()->detach($arrayDeleted);
+        }
+        if(count($arrayAdded) > 0) {
+            $event->users()->attach($arrayAdded,
+                ['participation_status_id' => $request->get('participation_status_id'),
+                    'changed_by_user_id' => auth()->user()->getIdentifier(),
+                    'date_user_changed_participation_status' => Carbon::now()]);
 
+        }
         return redirect()->route('event.index')->withStatus(__('Veranstaltung erfolgreich geändert.'));
 
     }

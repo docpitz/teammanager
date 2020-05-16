@@ -38,7 +38,7 @@
                                                         <thead class="thead-light">
                                                         <tr>
                                                             <th scope="col">Änderungszeit</th>
-                                                            <th scope="col">neuer Status</th>
+                                                            <th scope="col">Status</th>
                                                             <th scope="col">geändert durch</th>
                                                         </tr>
                                                         </thead>
@@ -46,7 +46,7 @@
                                                         @foreach($user->changes as $change)
                                                             <tr>
                                                                 <td>{{$change['changed_date_formatted']}}</td>
-                                                                <td>{{$change['participation_status']->name}}</td>
+                                                                <td>{{$change['participation_status_name']}}</td>
                                                                 <td>{{$change['user']->surname}}, {{$change['user']->firstname}}</td>
                                                             </tr>
                                                         @endforeach
