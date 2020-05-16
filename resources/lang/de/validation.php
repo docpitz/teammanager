@@ -144,6 +144,37 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+
+        // general
+        'name' => 'Name',
+        'description' => 'Beschreibung',
+        // group, role
+
+        // user
+        'username' => 'Benutzername',
+        'firstname' => 'Vorname',
+        'surname' => 'Nachname',
+        'email' => 'E-Mail-Adresse',
+        'email_optional' => 'Weitere E-Mail-Adresse',
+        'password' => 'Passwort',
+        'role_name' => 'Nutzerrolle',
+
+        // profile
+        'photo' => 'nullable|image',
+        'old_password' => 'Aktuelles Passwort',
+        'password_confirmation' => 'Passwort wiederholen',
+
+        // event
+        'score' => 'Mitmachpunkte',
+        'max_participant' => 'Max. Teilnehmerzahl',
+        'meeting_place' => 'Treffpunkt',
+        'date_event_range' => 'Veranstaltungszeitraum',
+        'date_sign_up_range' => 'Anmeldezeitraum',
+        'date_publication' => 'Veröffentlichungsdatum',
+
+
+
+    ],
 
 ];
