@@ -27,19 +27,22 @@
                         </a>
                     </li>
                 </ul>
-
-
+                @canany(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::UserOwn)->key,
+                \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key)
                 <!-- Divider -->
                 <hr class="my-3">
                 <!-- Heading -->
                 <h6 class="navbar-heading p-0 text-muted">{{ __('Eigenes') }}</h6>
                 <ul class="navbar-nav mb-md-3">
+                    @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::UserOwn)->key)
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('profile.edit') }}">
                             <i class="fas fa-address-card text-primary"></i>
                             <span class="nav-link-text">{{ __('Mein Profil') }}</span>
                         </a>
                     </li>
+                    @endcan
+                    @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key)
                     <li class="nav-item">
                         @if(auth()->user()->countQuiet() > 0)
                         <span id="badge_quiet" class="badge badge-pill badge-warning" style="float:right;margin-bottom:-23px;">{{auth()->user()->countQuiet()}}</span>
@@ -49,7 +52,9 @@
                             <span class="nav-link-text">{{ __('Meine Veranstaltungen') }}</span>
                         </a>
                     </li>
+                    @endcan
                 </ul>
+                @endcan
                 @canany(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::UserManagement)->key,
                 \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::GroupManagement)->key,
                 \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventManagement)->key,
