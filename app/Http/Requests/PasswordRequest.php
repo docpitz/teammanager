@@ -30,16 +30,4 @@ class PasswordRequest extends FormRequest
             'password_confirmation' => ['required', 'min:6'],
         ];
     }
-
-    /**
-     * Get the validation attributes that apply to the request.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'old_password' => __('current password'),
-        ];
-    }
 }

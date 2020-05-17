@@ -161,7 +161,7 @@ return [
         'role_name' => 'Nutzerrolle',
 
         // profile
-        'photo' => 'nullable|image',
+        'photo' => 'Foto',
         'old_password' => 'Aktuelles Passwort',
         'password_confirmation' => 'Passwort wiederholen',
 
