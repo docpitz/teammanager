@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use Gate;
-use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Requests\PasswordRequest;
 
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
-use Ramsey\Uuid\Uuid;
+
 
 class ProfileController extends Controller
 {
@@ -60,18 +57,10 @@ class ProfileController extends Controller
         if($request->hasFile('avatar'))
         {
             $avatar = $request->file('avatar');
-            $newFilename = Uuid::uuid4().".".$avatar->getClientOriginalExtension();
-            $newCompleteFilename = public_path('/files/avatar/'.$newFilename);
-            Image::make($avatar)->resize(400,null, function ($constraint) {
-                $constraint->aspectRatio();
-            })->crop(300,300)->save($newCompleteFilename);
             $user = Auth::user();
-            $oldCompleteFilename = public_path('/files/avatar/'.$user->avatar);
-            $oldUuid4 = explode(".", $user->avatar)[0];
-            if(!is_null($user->avatar) && File::exists($oldCompleteFilename) && Uuid::isValid($oldUuid4))
-            {
-                File::delete($oldCompleteFilename);
-            }
+            $newFilename = $user->saveProfilePicture($avatar);
+            $user->deleteProfilePicture();
+
             $user->avatar = $newFilename;
             $user->save();
             return back()->withStatus(__('Profilbild erfolgreich aktualisiert'));

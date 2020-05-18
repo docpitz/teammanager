@@ -103,6 +103,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
+        $user->deleteProfilePicture();
         $user->delete();
         return redirect()->route('user.index')->withStatus(__('Teammitglied erfolgreich gelöscht'));
     }

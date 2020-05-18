@@ -6,13 +6,19 @@ use Altek\Accountant\Contracts\Identifiable;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use App\Buisness\Enum\RoleEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\File;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPassword;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable implements Identifiable
 {
@@ -80,6 +86,26 @@ class User extends Authenticatable implements Identifiable
             $avatar = '/files/avatar/'.$this->avatar;
         }
         return $avatar;
+    }
+
+    public function saveProfilePicture(UploadedFile $avatar): String
+    {
+        $newFilename = Uuid::uuid4().".".$avatar->getClientOriginalExtension();
+        $newCompleteFilename = public_path('/files/avatar/'.$newFilename);
+        Image::make($avatar)->resize(400,null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->crop(300,300)->save($newCompleteFilename);
+        return $newFilename;
+    }
+
+    public function deleteProfilePicture()
+    {
+        $oldCompleteFilename = public_path('/files/avatar/'.$this->avatar);
+        $oldUuid4 = explode(".", $this->avatar)[0];
+        if(!is_null($this->avatar) && File::exists($oldCompleteFilename) && Uuid::isValid($oldUuid4))
+        {
+            File::delete($oldCompleteFilename);
+        }
     }
 
     public function groups() {
