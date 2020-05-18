@@ -15,7 +15,11 @@
                         <div class="col-9">
                             <h4 class="mb--1">{{$user->firstname}} {{$user->surname}}</h4>
                             <h6 class="mb--1">{{$user->date_user_changed_participation_status->format('d.m.Y H:i').__(' Uhr')}}</h6>
-                            <h6>({{$user->changed_by_user_surname}}, {{$user->changed_by_user_firstname}})</h6>
+                            @if(is_null($user->changed_by_user_surname))
+                                <h6>({{__("User unbekannt (gelöscht)")}})</h6>
+                            @else
+                                <h6>({{$user->changed_by_user_surname}}, {{$user->changed_by_user_firstname}})</h6>
+                            @endif
                         </div>
                         <div class="col-2-small-padding align-self-center text-left">
                             <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#history{{$user->id}}">
@@ -47,7 +51,11 @@
                                                             <tr>
                                                                 <td>{{$change['changed_date_formatted']}}</td>
                                                                 <td>{{$change['participation_status_name']}}</td>
+                                                                @if (is_null($change['user']))
+                                                                    <td>{{__("User unbekannt (gelöscht)")}}</td>
+                                                                @else
                                                                 <td>{{$change['user']->surname}}, {{$change['user']->firstname}}</td>
+                                                                @endif
                                                             </tr>
                                                         @endforeach
                                                         </tbody>
