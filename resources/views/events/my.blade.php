@@ -31,7 +31,7 @@
                                                     <div >
                                                         <!-- Card image -->
                                                         <div style="position: relative; text-align: center;color: white;">
-                                                            <img class="card-img" src="{{ asset('hofolding') }}/tt-event.jpg" alt="Image placeholder">
+                                                            <img class="card-img" src="{{ asset('hofolding') }}/tt-event.jpg" alt="Veranstaltungsbild">
                                                             <div style="position: absolute; bottom: 15px; right: -20px;">
                                                                 <h3 id="stamp{{$event->id}}" class="{{! $event->isPromisedByUser(auth()->user()) ? 'd-none ' : ''}} stamp-text">{{__('Angemeldet')}}</h3>
                                                             </div>

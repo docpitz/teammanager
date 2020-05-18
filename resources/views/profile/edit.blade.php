@@ -78,7 +78,7 @@
                                         <div class="col-auto">
 
                                     <span class="avatar avatar-xxl rounded-circle">
-                                        <img src="{{'/files/avatar/'.auth()->user()->avatar}}">
+                                        <img src="{{auth()->user()->profilePicture()}}">
                                     </span>
                                         </div>
                                         <div class="col">

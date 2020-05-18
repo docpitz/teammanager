@@ -16,11 +16,11 @@ h3{
 .stamp-text {
     border: 10px solid white;
     -webkit-mask-size: contain;
-    -webkit-mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
-    -o-mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
-    -moz-mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
-    -ms-mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
-    mask-image: url("../hofolding/crack-grunge-texture-PNG-thumb24.png");
+    -webkit-mask-image: url("../images/crack-grunge-texture-PNG-thumb24.png");
+    -o-mask-image: url("../images/crack-grunge-texture-PNG-thumb24.png");
+    -moz-mask-image: url("../images/crack-grunge-texture-PNG-thumb24.png");
+    -ms-mask-image: url("../images/crack-grunge-texture-PNG-thumb24.png");
+    mask-image: url("../images/crack-grunge-texture-PNG-thumb24.png");
 }
 
 li.promise {

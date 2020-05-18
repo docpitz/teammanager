@@ -68,7 +68,7 @@ class ProfileController extends Controller
             $user = Auth::user();
             $oldCompleteFilename = public_path('/files/avatar/'.$user->avatar);
             $oldUuid4 = explode(".", $user->avatar)[0];
-            if(File::exists($oldCompleteFilename) && Uuid::isValid($oldUuid4))
+            if(!is_null($user->avatar) && File::exists($oldCompleteFilename) && Uuid::isValid($oldUuid4))
             {
                 File::delete($oldCompleteFilename);
             }

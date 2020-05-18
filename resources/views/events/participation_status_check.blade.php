@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-2-small-padding justify-content-center align-self-center">
                             <span class="avatar avatar-sm rounded-circle">
-                                <img src="/files/avatar/{{$user->avatar}}">
+                                <img src="{{$user->profilePicture()}}">
                             </span>
                         </div>
                         <div class="col-9">
