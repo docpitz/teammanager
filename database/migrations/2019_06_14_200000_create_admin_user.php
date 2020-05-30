@@ -1,18 +1,17 @@
 <?php
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Migrations\Migration;
 use App\User;
 use App\Buisness\Enum\RoleEnum;
 
-class UsersTableSeeder extends Seeder
+class CreateAdminUser extends Migration
 {
     /**
-     * Run the database seeds.
+     * Run the migrations.
      *
      * @return void
      */
-    public function run()
+    public function up()
     {
         $admin = new User([
             'username' => 'Admin',
@@ -28,8 +27,15 @@ class UsersTableSeeder extends Seeder
 
         $admin->assignRole(RoleEnum::getInstance(RoleEnum::SuperAdmin)->getModel());
         $admin->save();
+    }
 
-
-
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        User::truncate();
     }
 }
