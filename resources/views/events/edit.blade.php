@@ -52,7 +52,7 @@
                                     @include('alerts.feedback', ['field' => 'max_participant'])
                                 </div>
                                 <div class="form-group{{ $errors->has('meeting_place') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-meeting_place">{{ __('Treffpunkt') }}</label>
+                                    <label class="form-control-label" for="input-meeting_place">{{ __('Veranstaltungsort / Treffpunkt') }}</label>
                                     <input type="text" name="meeting_place" id="input-meeting_place" class="form-control{{ $errors->has('meeting_place') ? ' is-invalid' : '' }}" placeholder="{{ __('Treffpunkt') }}" value="{{ old('meeting_place', $event->meeting_place) }}" required>
                                     @include('alerts.feedback', ['field' => 'meeting_place'])
                                 </div>

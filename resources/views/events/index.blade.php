@@ -45,7 +45,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($events as $event)
+                            @forelse ($events as $event)
                                 <tr>
                                     <td>{{ $event->name }}</td>
                                     <td>{{ $event->countPromise() }} / {{ $event->max_participant }} / {{ count($event->users) }}</td>
@@ -68,7 +68,9 @@
                                         </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr><td colspan="6">{{__("Derzeit sind keine Veranstaltungen vorhanden.")}}</td></tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>

@@ -8,6 +8,7 @@ use App\Event;
 use App\Http\Requests\MyEventRequest;
 use App\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 
 class MyEventController extends Controller
@@ -24,25 +25,40 @@ class MyEventController extends Controller
         return view('events.my', ['events' => $events]);
     }
 
-    public function delete(MyEventRequest $request, Event $event) {
-        $success = false;
-        if($event->getParticipationState(auth()->user()) != ParticipationStatusEnum::Canceled)
-        {
-            $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
-            $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Canceled, auth()->user());
-            $success = true;
-        }
-        return response()->json(['success'=> $success, 'cancel' => true, 'countPromises' => $event->countPromise(), 'countQuiet' => auth()->user()->countQuiet()]);
+    public function canceled(MyEventRequest $request, Event $event) {
+        $success = $this->changeParticipation($event, ParticipationStatusEnum::Canceled);
+        return $this->createResponse($success, $event);
     }
 
-    public function save(MyEventRequest $request, Event $event) {
-        $success = false;
-        if($event->getParticipationState(auth()->user()) != ParticipationStatusEnum::Promised)
-        {
-            $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
-            $event->saveParticipation(auth()->user(), ParticipationStatusEnum::Promised, auth()->user());
-            $success = true;
-        }
-        return response()->json(['success'=> $success, 'promise' => true, 'countPromises' => $event->countPromise(), 'countQuiet' => auth()->user()->countQuiet()]);
+    public function promised(MyEventRequest $request, Event $event) {
+        $success = $this->changeParticipation($event, ParticipationStatusEnum::Promised);
+        return $this->createResponse($success, $event);
+    }
+
+    public function waitlist(MyEventRequest $request, Event $event) {
+        $success = $this->changeParticipation($event, ParticipationStatusEnum::Waitlist);
+        return $this->createResponse($success, $event);
+    }
+
+    private function createResponse(bool $success, Event $event) {
+        return response()->json(['success'=> $success,
+            'hideParticipationStatus' => $this->getHideParticipationStatusForAjaxResponse($event),
+            'participationStatus' => $this->getParticipationStatusForAjaxResponse($event),
+            $this->getParticipationStatusForAjaxResponse($event) => true,
+            'countPromises' => $event->countPromise(),
+            'countQuiet' => auth()->user()->countQuiet()]);
+    }
+
+    private function changeParticipation(Event $event, int $participationStatus) {
+        $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
+        return $event->saveParticipation(auth()->user(), $participationStatus, auth()->user());
+    }
+
+    private function getParticipationStatusForAjaxResponse($event) {
+        return Str::lower(ParticipationStatusEnum::getDescription($event->getParticipationState(auth()->user())));
+    }
+
+    private function getHideParticipationStatusForAjaxResponse($event) {
+        return Str::lower(ParticipationStatusEnum::getDescription($event->getHideParticipationState(auth()->user())));
     }
 }

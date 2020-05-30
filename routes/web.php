@@ -35,8 +35,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('checkEvent', 'CheckEventController', ['only' => ['edit', 'update']]);
 
     Route::get('myEvent', 'MyEventController@edit')->name('myEvent');
-    Route::post('myEvent/{event}/ajaxCancel', 'MyEventController@delete')->name('myEvent.delete');
-    Route::post('myEvent/{event}/ajaxPromise', 'MyEventController@save')->name('myEvent.save');
+    Route::post('myEvent/{event}/ajaxCanceled', 'MyEventController@canceled')->name('myEvent.canceled');
+    Route::post('myEvent/{event}/ajaxPromised', 'MyEventController@promised')->name('myEvent.promised');
+    Route::post('myEvent/{event}/ajaxWaitlist', 'MyEventController@waitlist')->name('myEvent.waitlist');
 
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);

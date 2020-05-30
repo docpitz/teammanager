@@ -119,15 +119,48 @@ class Event extends Model implements Recordable
     }
 
     public function saveParticipation(User $user, int $participationStatus, User $changedByUser) {
-        $this->users()->updateExistingPivot($user->id, ['participation_status_id' => $participationStatus, 'date_user_changed_participation_status' => Carbon::now(), 'changed_by_user_id' => $changedByUser->id]);
+        $success = false;
+        $participationStatus = $this->calculatePossibleParticipationStatus($participationStatus, $user);
+        if($this->getParticipationState($user) != $participationStatus)
+        {
+            $this->users()->updateExistingPivot($user->id, ['participation_status_id' => $participationStatus, 'date_user_changed_participation_status' => Carbon::now(), 'changed_by_user_id' => $changedByUser->id]);
+            $success = true;
+        }
+        return $success;
+    }
+
+    public function getHideParticipationState(User $user) {
+        $activeStatus = $this->getParticipationState($user);
+        if($activeStatus == ParticipationStatusEnum::Canceled || $activeStatus == ParticipationStatusEnum::Quiet) {
+            if($this->isPromisedPossible()) {
+                return ParticipationStatusEnum::Waitlist;
+            }
+            else {
+                return ParticipationStatusEnum::Promised;
+            }
+        }
+        else if($activeStatus == ParticipationStatusEnum::Promised) {
+            return ParticipationStatusEnum::Waitlist;
+        }
+        else if($activeStatus == ParticipationStatusEnum::Waitlist) {
+            return ParticipationStatusEnum::Promised;
+        }
     }
 
     public function getParticipationState(User $user) {
         return $this->users()->whereKey($user->id)->first()->pivot->participation_status_id;
     }
 
+    public function isPromisedPossible() {
+        return $this->countPromise() < $this->max_participant;
+    }
+
     public function isPromisedByUser(User $user) {
         return $this->hasStateByUser(ParticipationStatusEnum::Promised, $user);
+    }
+
+    public function isWaitlistByUser(User $user) {
+        return $this->hasStateByUser(ParticipationStatusEnum::Waitlist, $user);
     }
 
     public function isCanceledByUser(User $user) {
@@ -140,5 +173,16 @@ class Event extends Model implements Recordable
 
     private function hasStateByUser(int $participationStatus, User $user) {
         return $this->getParticipationState($user) == $participationStatus;
+    }
+
+    private function calculatePossibleParticipationStatus(int $participationStatus, User $user) {
+        if($participationStatus == ParticipationStatusEnum::Promised || $participationStatus == ParticipationStatusEnum::Waitlist)
+        {
+            $participationStatus = ParticipationStatusEnum::Waitlist;
+            if($this->isPromisedPossible() || $this->isPromisedByUser($user)) {
+                $participationStatus = ParticipationStatusEnum::Promised;
+            }
+        }
+        return $participationStatus;
     }
 }

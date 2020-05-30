@@ -42,7 +42,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($groups as $group)
+                            @forelse ($groups as $group)
                                 <tr>
                                     <td>{{ $group->name }}</td>
                                     <td>
@@ -62,7 +62,9 @@
                                         </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr><td colspan="3">{{__("Derzeit sind keine Gruppen vorhanden.")}}</td></tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>

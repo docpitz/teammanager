@@ -168,7 +168,7 @@ return [
         // event
         'score' => 'Mitmachpunkte',
         'max_participant' => 'Max. Teilnehmerzahl',
-        'meeting_place' => 'Treffpunkt',
+        'meeting_place' => 'Veranstaltungsort / Treffpunkt',
         'date_event_range' => 'Veranstaltungszeitraum',
         'date_sign_up_range' => 'Anmeldezeitraum',
         'date_publication' => 'Veröffentlichungsdatum',
