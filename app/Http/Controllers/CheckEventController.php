@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Arr;
+use App\Helper\UserCache;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use App\Buisness\Enum\PermissionEnum;
 use App\Http\Requests\CheckEventRequest;
-use App\ParticipationStatus;
 use App\User;
 use App\Event;
-use Illuminate\Support\Carbon;
 
 class CheckEventController extends Controller
 {
+    protected $userCache;
     public function __construct()
     {
+        $this->userCache = new UserCache();
     }
     /**
      * Show the form for editing the specified user
@@ -25,14 +25,18 @@ class CheckEventController extends Controller
     public function edit(Event $checkEvent)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
-        $usersPromised = $checkEvent->getUsersByParticipation(ParticipationStatusEnum::Promised)->getModels();
-        $usersCanceled = $checkEvent->getUsersByParticipation(ParticipationStatusEnum::Canceled)->getModels();
-        $usersQuiet = $checkEvent->getUsersByParticipation(ParticipationStatusEnum::Quiet)->getModels();
-        $changes = $checkEvent->getParticipationChanges();
-        $this->addChanges($usersPromised, $changes);
-        $this->addChanges($usersCanceled, $changes);
-        $this->addChanges($usersQuiet, $changes);
-        return view('events.check', ['event' => $checkEvent, 'usersPromised' => $usersPromised, 'usersCanceled' => $usersCanceled, 'usersQuiet' => $usersQuiet]);
+
+        $usersPromised = $this->getUsersByParticipation($checkEvent, ParticipationStatusEnum::Promised);
+        $usersCanceled = $this->getUsersByParticipation($checkEvent, ParticipationStatusEnum::Canceled);
+        $usersQuiet = $this->getUsersByParticipation($checkEvent, ParticipationStatusEnum::Quiet);
+        $usersWaitlist = $this->getUsersByParticipation($checkEvent, ParticipationStatusEnum::Waitlist);
+
+        $history = $checkEvent->getParticipationHistory();
+        $this->addChanges($usersPromised, $history);
+        $this->addChanges($usersCanceled, $history);
+        $this->addChanges($usersQuiet, $history);
+        $this->addChanges($usersWaitlist, $history);
+        return view('events.check', ['event' => $checkEvent, 'usersPromised' => $usersPromised, 'usersCanceled' => $usersCanceled, 'usersQuiet' => $usersQuiet, 'usersWaitlist' => $usersWaitlist]);
     }
 
     public function update(CheckEventRequest $request, Event $checkEvent)
@@ -42,6 +46,7 @@ class CheckEventController extends Controller
         $this->updateParticipation($checkEvent, $request, ParticipationStatusEnum::Promised);
         $this->updateParticipation($checkEvent, $request, ParticipationStatusEnum::Canceled);
         $this->updateParticipation($checkEvent, $request, ParticipationStatusEnum::Quiet);
+        $this->updateParticipation($checkEvent, $request, ParticipationStatusEnum::Waitlist);
 
         return redirect()->route('event.index')->withStatus(__('Teilnehmer an Veranstaltung erfolgreich geändert.'));
     }
@@ -56,11 +61,11 @@ class CheckEventController extends Controller
         }
         foreach ($userIds as $userId)
         {
-            $user = User::findOrFail($userId);
+            $user = $this->userCache->getUserById($userId);
             $oldParticipationStatusEnum = ParticipationStatusEnum::getInstance($checkEvent->getParticipationState($user));
             if(! $newParticipationStatusEnum->is($oldParticipationStatusEnum))
             {
-                $checkEvent->saveParticipation($user, $newParticipationStatus, auth()->user());
+                $checkEvent->saveParticipation($user, $newParticipationStatus, auth()->user(), true);
             }
         }
 
@@ -72,5 +77,18 @@ class CheckEventController extends Controller
         {
             $participation->changes = $changes[$participation->id];
         }
+    }
+
+    private function getUsersByParticipation(Event $checkEvent, int $participationStatus) {
+        $validatorfails = !empty(old("_token"));
+        $oldUserIds = old(ParticipationStatusEnum::getInstance($participationStatus)->description);
+        $users = [];
+        if(!$validatorfails) {
+            $users = $checkEvent->getUsersByParticipation($participationStatus)->getModels();
+        }
+        elseif (!empty($oldUserIds)) {
+            $users = $checkEvent->getUsersParticipationByUserIds($oldUserIds)->getModels();
+        }
+        return $users;
     }
 }

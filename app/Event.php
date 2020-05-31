@@ -7,6 +7,7 @@ use Altek\Accountant\Contracts\Recordable;
 use Altek\Accountant\Models\Ledger;
 use Altek\Eventually\Eventually;
 use App\Buisness\Enum\ParticipationStatusEnum;
+use App\Helper\UserCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -67,19 +68,32 @@ class Event extends Model implements Recordable
             ->withTimestamps();
     }
 
+    public function getUsersParticipation() {
+        return $this->users()
+            ->addSelect('users.*', 'event_user.*', 'changed_by_user.firstname as changed_by_user_firstname', 'changed_by_user.surname as changed_by_user_surname')
+            ->withPivot('changed_by_user_id')
+            ->leftJoin('users as changed_by_user', 'event_user.changed_by_user_id', '=', 'changed_by_user.id');
+    }
+
+    public function getUsersParticipationByUserIds(array $userIds) {
+        return $this->getUsersParticipation()
+            ->whereIn("users.id", $userIds);
+    }
+
+    public function getUsersByParticipation(int $participationStatus) {
+        return $this->getUsersParticipation()
+            ->wherePivot('participation_status_id', $participationStatus);
+    }
+
     public function countPromise() {
         return $this->users()->wherePivot('participation_status_id', ParticipationStatusEnum::Promised)->count();
     }
 
-    public function getUsersByParticipation(int $participationStatus) {
-        return $this->users()
-            ->addSelect('users.*', 'event_user.*', 'changed_by_user.firstname as changed_by_user_firstname', 'changed_by_user.surname as changed_by_user_surname')
-            ->withPivot('changed_by_user_id')
-            ->wherePivot('participation_status_id', $participationStatus)
-            ->leftJoin('users as changed_by_user', 'event_user.changed_by_user_id', '=', 'changed_by_user.id');
+    public function countWaitlist() {
+        return $this->users()->wherePivot('participation_status_id', ParticipationStatusEnum::Waitlist)->count();
     }
 
-    public function getParticipationChanges(): Array
+    public function getParticipationHistory(): Array
     {
         $ledgers = $this->ledgers()->whereIn('event', [
             'existingPivotUpdated',
@@ -87,11 +101,13 @@ class Event extends Model implements Recordable
             'detached'
         ])->latest()->get();
 
-        $history = $ledgers->map(function (Ledger $ledger) {
+
+        $userCache = new UserCache();
+        $history = $ledgers->map(function (Ledger $ledger) use($userCache) {
             $properties = $ledger->getPivotData()["properties"];
             $metadata = $ledger->getMetadata();
             $collection = collect($properties);
-            $properties = $collection->map(function (Array $property) use($metadata) {
+            $properties = $collection->map(function (Array $property) use($metadata, $userCache) {
                 if($metadata['ledger_event'] == "detached")
                 {
                     Arr::set($property, 'participation_status_name', 'Removed');
@@ -102,7 +118,7 @@ class Event extends Model implements Recordable
                 {
                     if(Arr::has($property, 'participation_status_id'))
                     {
-                        Arr::set($property, 'participation_status_name', ParticipationStatus::find($property['participation_status_id'])->getModel()->name);
+                        Arr::set($property, 'participation_status_name', ParticipationStatusEnum::getInstance((int)$property['participation_status_id'])->description);
                     }
                 }
                 $dateUserChangedParticipationStatus = $property['date_user_changed_participation_status'];
@@ -110,7 +126,7 @@ class Event extends Model implements Recordable
                 $formatedTime = $carbon->format('d.m.Y H:i');
                 Arr::set($property, 'changed_date_formatted', $formatedTime);
 
-                Arr::set($property, 'user', User::find($property['changed_by_user_id']));
+                Arr::set($property, 'user', $userCache->getUserById($property['changed_by_user_id']));
                 return $property;
             });
             return $properties->toArray();
@@ -118,10 +134,12 @@ class Event extends Model implements Recordable
         return collect($history)->collapse()->groupBy('user_id')->all();
     }
 
-    public function saveParticipation(User $user, int $participationStatus, User $changedByUser) {
+    public function saveParticipation(User $user, int $participationStatus, User $changedByUser, bool $force = false) {
         $success = false;
-        $participationStatus = $this->calculatePossibleParticipationStatus($participationStatus, $user);
-        if($this->getParticipationState($user) != $participationStatus)
+        if(!$force) {
+            $participationStatus = $this->calculatePossibleParticipationStatus($participationStatus, $user);
+        }
+        if($this->getParticipationState($user) != $participationStatus || $force)
         {
             $this->users()->updateExistingPivot($user->id, ['participation_status_id' => $participationStatus, 'date_user_changed_participation_status' => Carbon::now(), 'changed_by_user_id' => $changedByUser->id]);
             $success = true;

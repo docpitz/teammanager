@@ -6,10 +6,7 @@ use App\Buisness\Enum\PermissionEnum;
 use App\Event;
 use App\Http\Requests\EventRequest;
 use App\User;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class EventController extends Controller
 {
@@ -75,6 +72,8 @@ class EventController extends Controller
 
         $allUserWithEventInfo = array();
         $i = 0;
+        $eventFromUser = $event->users()->getModels();
+
         foreach(User::orderBy('surname')->orderBy('firstname')->get() as $user) {
 
             $allUserWithEventInfo[$i]["id"] = $user->id;
@@ -82,7 +81,7 @@ class EventController extends Controller
             $allUserWithEventInfo[$i]["firstname"] = $user->firstname;
             $allUserWithEventInfo[$i]["groups"] = implode(', ', array_column($user->groups()->getModels(['name']),'name'));
             $selected = false;
-            foreach($event->users()->getModels() as $userFoundInEvent) {
+            foreach($eventFromUser as $userFoundInEvent) {
                 if($user->id == $userFoundInEvent->id) {
                     $selected = true;
                     continue;
