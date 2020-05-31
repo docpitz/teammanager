@@ -56,7 +56,9 @@
                                     <select name="participation_status_id" id="input-participation_status_id" class="form-control{{ $errors->has('participation_status_id') ? ' is-invalid' : '' }}" placeholder="{{ __('Voreingestellte Antwort') }}" required>
                                         <option value="">-</option>
                                         @foreach (\App\Buisness\Enum\ParticipationStatusEnum::getInstances() as $participationStatus)
-                                            <option value="{{ $participationStatus->value }}" {{ $participationStatus->value == old('participation_status_id') ? 'selected' : ''}}>{{ $participationStatus->key }} </option>
+                                            @if ($participationStatus->isNot(\App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Waitlist)))
+                                                <option value="{{ $participationStatus->value }}" {{ $participationStatus->value == old('participation_status_id') ? 'selected' : ''}}>{{ $participationStatus->key }} </option>
+                                            @endif
                                         @endforeach
                                     </select>
 
