@@ -31,7 +31,6 @@
                             </div>
                         @endif
                     </div>
-
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
@@ -48,14 +47,14 @@
                             @forelse ($events as $event)
                                 <tr>
                                     <td>{{ $event->name }}</td>
-                                    <td>{{ __("frei: ").($event->countPromise() - $event->max_participant) }} / {{__("wartend: ").$event->countWaitlist() }} / {{__("max: ").count($event->users) }}</td>
+                                    <td>{{ __("frei: ").($event->max_participant - $event->countPromise()) }} / {{__("wartend: ").$event->countWaitlist() }} / {{__("max: ").count($event->users) }}</td>
                                     <td>{{ $event->date_event_start->format('d.m.Y H:i') }}</td>
                                     <td>{{ $event->date_publication->format('d.m.Y') }}</td>
                                     <td>{{ $event->date_sign_up_end->format('d.m.Y') }}</td>
                                     <td class="text-right">
                                         <form action="{{ route('event.destroy', $event) }}" method="post">
                                             @csrf
-                                            <a href="{{ route('checkEvent.edit', $event) }}" data-toggle="tooltip" title="Teilnehmer einteilen">
+                                            <a href="{{ route('eventBookingOverview.edit', $event) }}" data-toggle="tooltip" title="Teilnehmer einteilen">
                                                 <i style="padding: 5px" class="fas fa-user-check"></i>
                                             </a>
                                             <a href="{{ route('event.edit', $event) }}" data-toggle="tooltip" title="bearbeiten">

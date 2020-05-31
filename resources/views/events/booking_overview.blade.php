@@ -34,7 +34,7 @@
                             @include('alerts.errors')
                         </div>
                         <div class="card-body">
-                        <form method="post" action="{{ route('checkEvent.update', $event) }}" autocomplete="off"
+                        <form method="post" action="{{ route('eventBookingOverview.update', $event) }}" autocomplete="off"
                               enctype="multipart/form-data">
                             @csrf
                             @method('put')
@@ -44,15 +44,15 @@
                                 <small><b>Veranstaltungszeitraum: </b>{{$event->date_event_start->format('d.m.Y H:i')}} bis {{$event->date_event_end->format('d.m.Y H:i').__(' Uhr')}}</small><br><br>
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        @include('events.participation_status_check', ['header'=> $headerPromised, 'participationDescription' => $promisedDescription, 'users' => old('usersPromised', $usersPromised), 'color' => 'green'])
+                                        @include('events.booking_overview_participation_status', ['header'=> $headerPromised, 'participationDescription' => $promisedDescription, 'users' => old('usersPromised', $usersPromised), 'color' => 'green'])
                                         <br>
-                                        @include('events.participation_status_check', ['header'=> 'Warteliste', 'participationDescription' => $waitlistDescription, 'users' => old('usersWaitlist', $usersWaitlist), 'color' => 'blue'])
+                                        @include('events.booking_overview_participation_status', ['header'=> 'Warteliste', 'participationDescription' => $waitlistDescription, 'users' => old('usersWaitlist', $usersWaitlist), 'color' => 'blue'])
                                     </div>
                                     <div class="col-sm-4">
-                                        @include('events.participation_status_check', ['header'=> 'Absage', 'participationDescription' => $canceledDescription, 'users' => old('usersCanceled', $usersCanceled), 'color' => 'red'])
+                                        @include('events.booking_overview_participation_status', ['header'=> 'Absage', 'participationDescription' => $canceledDescription, 'users' => old('usersCanceled', $usersCanceled), 'color' => 'red'])
                                     </div>
                                     <div class="col-sm-4">
-                                        @include('events.participation_status_check', ['header'=> 'Keine Antwort', 'participationDescription' => $quietDescription, 'users' => old('usersQuiet', $usersQuiet), 'color' => ''])
+                                        @include('events.booking_overview_participation_status', ['header'=> 'Keine Antwort', 'participationDescription' => $quietDescription, 'users' => old('usersQuiet', $usersQuiet), 'color' => ''])
                                     </div>
                                 </div>
                                 <div class="text-center">

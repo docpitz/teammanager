@@ -32,7 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('group', 'GroupController', ['except' => ['show']]);
     Route::resource('event', 'EventController', ['except' => ['show']]);
 
-    Route::resource('checkEvent', 'CheckEventController', ['only' => ['edit', 'update']]);
+    Route::resource('eventBookingOverview', 'EventBookingOverviewController', ['only' => ['edit', 'update']]);
 
     Route::get('myEvent', 'MyEventController@edit')->name('myEvent');
     Route::post('myEvent/{event}/ajaxCanceled', 'MyEventController@canceled')->name('myEvent.canceled');

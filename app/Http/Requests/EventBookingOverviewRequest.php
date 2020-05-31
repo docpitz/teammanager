@@ -7,7 +7,7 @@ namespace App\Http\Requests;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CheckEventRequest extends FormRequest
+class EventBookingOverviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
