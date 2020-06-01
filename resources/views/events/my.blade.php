@@ -264,5 +264,5 @@
 
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/animate.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/myevent.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/event_my.css">
 @endpush
