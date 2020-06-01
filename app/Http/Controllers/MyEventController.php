@@ -26,27 +26,41 @@ class MyEventController extends Controller
     }
 
     public function canceled(MyEventRequest $request, Event $event) {
-        $success = $this->changeParticipation($event, ParticipationStatusEnum::Canceled);
-        return $this->createResponse($success, $event);
+        $isConsultationNecessary = false;
+        $success = false;
+
+        // empty(confirmDelete)  == false
+        // confirmDelete = false == false
+        // confirmDelete = true  == true
+
+        if((!empty($request["confirmDelete"]) && $request["confirmDelete"] === "false") || empty($request["confirmDelete"])) {
+            $isConsultationNecessary = $event->countWaitlist() > 0;
+        }
+        if(!$isConsultationNecessary) {
+            // now we can save, confirm question not necessary or already done
+            $success = $this->changeParticipation($event, ParticipationStatusEnum::Canceled);
+        }
+        return $this->createResponse($success, $isConsultationNecessary, $event);
     }
 
     public function promised(MyEventRequest $request, Event $event) {
         $success = $this->changeParticipation($event, ParticipationStatusEnum::Promised);
-        return $this->createResponse($success, $event);
+        return $this->createResponse($success, false, $event);
     }
 
     public function waitlist(MyEventRequest $request, Event $event) {
         $success = $this->changeParticipation($event, ParticipationStatusEnum::Waitlist);
-        return $this->createResponse($success, $event);
+        return $this->createResponse($success, false, $event);
     }
 
-    private function createResponse(bool $success, Event $event) {
+    private function createResponse(bool $success, bool $isConsulationNecessaryByCanceled, Event $event) {
         return response()->json(['success'=> $success,
             'hideParticipationStatus' => $this->getHideParticipationStatusForAjaxResponse($event),
             'participationStatus' => $this->getParticipationStatusForAjaxResponse($event),
-            $this->getParticipationStatusForAjaxResponse($event) => true,
+            $this->getParticipationStatusForAjaxResponse($event) => true, // the new state
             'countPromises' => $event->countPromise(),
-            'countQuiet' => auth()->user()->countQuiet()]);
+            'countQuiet' => auth()->user()->countQuiet(),
+            'isConsulationNecessaryByCanceled' => $isConsulationNecessaryByCanceled]);
     }
 
     private function changeParticipation(Event $event, int $participationStatus) {

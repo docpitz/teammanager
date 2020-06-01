@@ -25,6 +25,25 @@
                                 </ol>
                                 <div class="carousel-inner pb-6">
                                     @foreach($events as $indexKey => $event)
+                                        <div class="modal fade" id="cancelDialog{{$event->id}}" tabindex="-1" role="dialog" aria-labelledby="cancelDialogModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="cancelDialogModalLongTitle">Achtung</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Es befinden sich weitere Personen auf der Warteliste. Durch deine Absage wird dein Platz frei bzw. wirst du aus der Warteliste entfernt und anschließend automatisch anderweitig vergeben. <br><br>Willst du wirklich absagen?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="onClickCanceled({{$event->id}}, true)">Absagen</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="carousel-item {{$indexKey == 0 ? 'active': ''}} align-content-center">
                                             <div class="col-lg-12">
                                                 <fieldset id="fieldset{{$event->id}}">
@@ -82,7 +101,7 @@
                                                                 <div class="btn-group center mt-3 pb-4 ">
                                                                     <button onclick="onClickPromised({{$event->id}})" type="button" class="btn save_button btn-outline-success{{$event->isPromisedByUser(auth()->user()) ? ' active' : ''}}{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Promised ? ' d-none ' : ''}}" id="promised{{$event->id}}"><i id="ajaxLoadPromised{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxPromised{{$event->id}}">{{ __('Teilnehmen') }}</div></button>
                                                                     <button onclick="onClickWaitlist({{$event->id}})" type="button" class="btn save_button btn-outline-info{{$event->isWaitlistByUser(auth()->user()) ? ' active' : ''}}{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Waitlist ? ' d-none ' : ''}}" id="waitlist{{$event->id}}"><i id="ajaxLoadWaitlist{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxWaitlist{{$event->id}}">{{ __('Warteliste') }}</div></button>
-                                                                    <button onclick="onClickCanceled({{$event->id}})" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="canceled{{$event->id}}"><i id="ajaxLoadCanceled{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCanceled{{$event->id}}">{{ __('Absagen') }}</div></button>
+                                                                    <button onclick="onClickCanceled({{$event->id}}, false)" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="canceled{{$event->id}}"><i id="ajaxLoadCanceled{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCanceled{{$event->id}}">{{ __('Absagen') }}</div></button>
                                                                 </div>
                                                                 @else
                                                                     <div class="text-center mt-5">
@@ -133,15 +152,15 @@
 
         function onClickPromised(eventId){
             beforeAjaxCall(eventId);
-            ajaxCall(eventId, 'Promised');
+            ajaxCall(eventId, 'Promised', false);
         };
         function onClickWaitlist(eventId){
             beforeAjaxCall(eventId);
-            ajaxCall(eventId, 'Waitlist');
+            ajaxCall(eventId, 'Waitlist', false);
         };
-        function onClickCanceled(eventId){
+        function onClickCanceled(eventId, confirmDelete){
             beforeAjaxCall(eventId);
-            ajaxCall(eventId, 'Canceled');
+            ajaxCall(eventId, 'Canceled', confirmDelete);
         };
 
         function recalculateButtons() {
@@ -155,8 +174,6 @@
                 'border-bottom-right-radius': '4px',
             });
         }
-
-
 
         function beforeAjaxCall(eventId) {
             $("#fieldset"+eventId).attr('disabled', 'disabled');
@@ -222,7 +239,7 @@
             }
         }
 
-        function ajaxCall(eventId, method){
+        function ajaxCall(eventId, method, confirmDelete){
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -233,14 +250,18 @@
                 method: 'post',
                 data: {
                     id: eventId,
+                    confirmDelete: confirmDelete,
                 },
                 success: function(result){
                     afterAjaxCall(eventId)
                     updateCountPromises(eventId, result.countPromises);
                     updateCountQuiet(result.countQuiet);
-                    if(result.promised) {
+                    if(result.isConsulationNecessaryByCanceled) {
+                        $('#cancelDialog'+eventId).modal()
+                    }
+                    else if(result.promised) {
                         recalculateEvent(eventId, 'promised', result.hideParticipationStatus);
-                        if(result.success) {
+                        if (result.success) {
                             animationAfterAjaxCall(eventId, 'promised', 'heartBeat');
                         }
                     }
