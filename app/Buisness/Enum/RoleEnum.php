@@ -10,6 +10,7 @@ class RoleEnum extends Enum
     const Organisator   = 2;
     const TeamIntern    = 3;
     const TeamExtern    = 4;
+    const System        = 5;
 
     public function getModel() : Role
     {

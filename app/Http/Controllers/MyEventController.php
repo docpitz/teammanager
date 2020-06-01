@@ -28,17 +28,21 @@ class MyEventController extends Controller
     public function canceled(MyEventRequest $request, Event $event) {
         $isConsultationNecessary = false;
         $success = false;
-
-        // empty(confirmDelete)  == false
-        // confirmDelete = false == false
-        // confirmDelete = true  == true
+        $isSomeoneOnWait = $event->countWaitlist() > 0;
+        $isUserPromised = $event->getParticipationState(auth()->user()) == ParticipationStatusEnum::Promised;
 
         if((!empty($request["confirmDelete"]) && $request["confirmDelete"] === "false") || empty($request["confirmDelete"])) {
-            $isConsultationNecessary = $event->countWaitlist() > 0;
+            $isConsultationNecessary = $isSomeoneOnWait;
         }
         if(!$isConsultationNecessary) {
             // now we can save, confirm question not necessary or already done
             $success = $this->changeParticipation($event, ParticipationStatusEnum::Canceled);
+        }
+        if($success && $isSomeoneOnWait && $isUserPromised) {
+            // update next user from waitlist to promis
+            $userFromWaitListToPromise = User::find($event->waitlistOrderbyHighestWish()->first()->getModel()->id)->getModel();
+            $systemUser = User::getSystemUser()->getModel();
+            $event->saveParticipation($userFromWaitListToPromise, ParticipationStatusEnum::Promised, $systemUser);
         }
         return $this->createResponse($success, $isConsultationNecessary, $event);
     }

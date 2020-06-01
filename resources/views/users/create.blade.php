@@ -60,7 +60,9 @@
                                     <select name="role_name" id="input-role" class="form-control{{ $errors->has('role_name') ? ' is-invalid' : '' }}" placeholder="{{ __('Role') }}" required>
                                         <option value="">-</option>
                                         @foreach (\App\Buisness\Enum\RoleEnum::getInstances() as $role)
-                                            <option value="{{ $role->key }}" {{ $role->key == old('role_name') ? 'selected' : ''}}>{{ $role->getFormattedName() }} </option>
+                                            @if($role->value != \App\Buisness\Enum\RoleEnum::System)
+                                                <option value="{{ $role->key }}" {{ $role->key == old('role_name') ? 'selected' : ''}}>{{ $role->getFormattedName() }} </option>
+                                            @endif
                                         @endforeach
                                     </select>
 

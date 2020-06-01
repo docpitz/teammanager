@@ -33,7 +33,7 @@
                                     @include('alerts.feedback', ['field' => 'name'])
                                 </div>
                                 <select multiple="multiple" size="10" name="group_users[]" title="users">
-                                    @foreach (\App\User::orderBy('surname')->orderBy('firstname')->get() as $user)
+                                    @foreach ($users as $user)
                                         <option value="{{$user->id}}" {{ in_array($user->id, ! is_null(old("group_users")) ? old("group_users") : array() ) ? "selected":"" }}>
                                             {{$user->surname}} {{$user->firstname}}
                                         </option>

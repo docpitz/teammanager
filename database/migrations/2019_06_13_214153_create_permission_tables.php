@@ -109,6 +109,7 @@ class CreatePermissionTables extends Migration
         $rOrganisator = RoleEnum::getInstance(RoleEnum::Organisator)->getModel();
         $rTeamIntern = RoleEnum::getInstance(RoleEnum::TeamIntern)->getModel();
         $rTeamExtern = RoleEnum::getInstance(RoleEnum::TeamExtern)->getModel();
+        $rSystem = RoleEnum::getInstance(RoleEnum::System)->getModel();
 
         $rSuperAdmin->givePermissionTo($pUserManagement,
             $pUserOwn,
@@ -128,6 +129,8 @@ class CreatePermissionTables extends Migration
 
         $rTeamExtern->givePermissionTo($pUserOwn,
             $pEventBookingDelayed);
+
+        $rSystem->givePermissionTo();
     }
 
     /**

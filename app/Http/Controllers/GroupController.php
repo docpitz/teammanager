@@ -34,7 +34,7 @@ class GroupController extends Controller
     public function create()
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::GroupManagement)->key, User::class);
-        return view('groups.create');
+        return view('groups.create', ['users' => User::allUserSorted()->getModels()]);
     }
 
     /**
@@ -65,7 +65,7 @@ class GroupController extends Controller
 
         $allUserWithGroupInfo = array();
         $i = 0;
-        foreach(User::orderBy('surname')->orderBy('firstname')->get() as $user) {
+        foreach(User::allUserSorted()->getModels() as $user) {
 
             $allUserWithGroupInfo[$i]["id"] = $user->id;
             $allUserWithGroupInfo[$i]["surname"] = $user->surname;

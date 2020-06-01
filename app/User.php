@@ -33,7 +33,7 @@ class User extends Authenticatable implements Identifiable
      * @var array
      */
     protected $fillable = [
-        'username','firstname','surname', 'email', 'email_optional', 'password',
+        'username','firstname','surname', 'email', 'email_optional', 'password', 'visible',
     ];
 
     /**
@@ -55,6 +55,18 @@ class User extends Authenticatable implements Identifiable
         'created_at' => 'datetime',
         'date_user_changed_participation_status' => 'datetime'
     ];
+
+    public static function getSystemUser() {
+
+        return User::whereHas("roles", function($q) {
+            $systemRoleString = RoleEnum::getInstance(RoleEnum::System)->description;
+            $q->where("name", $systemRoleString);
+        })->first();
+    }
+
+    public static function allUserSorted() {
+        return User::where('visible', true)->orderBy('surname')->orderBy('firstname');
+    }
 
     public function sendPasswordResetNotification($token)
     {
