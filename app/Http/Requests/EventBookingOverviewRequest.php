@@ -28,9 +28,11 @@ class EventBookingOverviewRequest extends FormRequest
     {
         $max_participant = $this->request->get('max_participant');
         $waitlist = $this->request->get('Waitlist');
-        $rules = [
-            ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description => 'array|max:'.$max_participant,
-        ];
+        $rules = [];
+
+        if($max_participant > 0) {
+            $rules[ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description] = 'array|max:'.$max_participant;
+        }
         if(!empty($waitlist) && count($waitlist) > 0 ) {
             $rules[ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description] = 'array|size:'.$max_participant;
         }

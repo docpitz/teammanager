@@ -5,7 +5,7 @@
         $waitlistDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Waitlist)->description;
         $quietDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Quiet)->description;
         $canceledDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Canceled)->description;
-        $headerPromised = 'Zusage (max. '.$event->max_participant.' Teilnehmer)';
+        $headerPromised = $event->max_participant > 0 ? 'Zusage (max. '.$event->max_participant.' Teilnehmer)' : 'Zusage';
     @endphp
     @component('layouts.headers.auth')
     @endcomponent
@@ -70,7 +70,7 @@
 
 @push('css')
     <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
-    <link rel="stylesheet" type="text/css" href="../../css/eventcheck.css">
+    <link rel="stylesheet" type="text/css" href="../../css/event_booking_overview.css">
 @endpush
 
 @push('js')
