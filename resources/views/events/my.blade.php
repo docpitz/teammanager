@@ -44,7 +44,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="carousel-item {{$indexKey == 0 ? 'active': ''}} align-content-center">
+                                        <div id="item{{$event->id}}" class="carousel-item {{$indexKey == 0 ? 'active': ''}} align-content-center">
                                             <div class="col-lg-12">
                                                 <fieldset id="fieldset{{$event->id}}">
                                                     <div >
@@ -147,8 +147,19 @@
 @push('js')
     <script src="../../js/jquery.bcswipe.js"></script>
     <script>
-        $('#carouselEventIndicators').bcSwipe({ threshold: 50 });
-        recalculateButtons();
+        $(document).ready(function(){
+            let eventIds = [
+                @foreach($events as $indexKey => $event)
+                '{{$event->id}}',
+                @endforeach
+            ];
+            let positionInCarousel = eventIds.indexOf(window.location.hash.substring(1));
+            if(positionInCarousel != -1) {
+                $('#carouselEventIndicators').carousel(positionInCarousel);
+            }
+            $('#carouselEventIndicators').bcSwipe({ threshold: 151 });
+            recalculateButtons();
+        });
 
         function onClickPromised(eventId){
             beforeAjaxCall(eventId);

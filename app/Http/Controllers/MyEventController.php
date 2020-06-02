@@ -43,6 +43,7 @@ class MyEventController extends Controller
             $userFromWaitListToPromise = User::find($event->waitlistOrderbyHighestWish()->first()->getModel()->id)->getModel();
             $systemUser = User::getSystemUser()->getModel();
             $event->saveParticipation($userFromWaitListToPromise, ParticipationStatusEnum::Promised, $systemUser);
+            $userFromWaitListToPromise->sendWaitlistToActivNotification($event);
         }
         return $this->createResponse($success, $isConsultationNecessary, $event);
     }

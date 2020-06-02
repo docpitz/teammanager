@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\WaitlistToActiv;
 use Avatar;
 use Altek\Accountant\Contracts\Identifiable;
 use App\Buisness\Enum\ParticipationStatusEnum;
@@ -22,8 +23,6 @@ class User extends Authenticatable implements Identifiable
 {
     use Notifiable;
     use HasRoles;
-
-
 
     /**
      * The attributes that are mass assignable.
@@ -69,6 +68,11 @@ class User extends Authenticatable implements Identifiable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token, $this));
+    }
+
+    public function sendWaitlistToActivNotification(Event $event)
+    {
+        $this->notify(new WaitlistToActiv($this, $event));
     }
 
     public function getRole() : ?RoleEnum {
