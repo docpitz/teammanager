@@ -14,7 +14,7 @@
                                 <h3 class="mb-0">{{ __('Veranstaltung bearbeiten') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('checkEvent.edit', $event) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="right" title="Teilnehmer einteilen">
+                                <a href="{{ route('eventBookingOverview.edit', $event) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="right" title="Teilnehmer einteilen">
                                     <i class="fas fa-user-check fa-2x"></i>
                                 </a>
                                 <a href="{{ route('event.index') }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="right" title="zurück zur Übersicht">
@@ -22,6 +22,10 @@
                                 </a>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-12 mt-2">
+                        @include('alerts.success')
+                        @include('alerts.errors')
                     </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('event.update', $event) }}" autocomplete="off"
@@ -52,7 +56,7 @@
                                     @include('alerts.feedback', ['field' => 'max_participant'])
                                 </div>
                                 <div class="form-group{{ $errors->has('meeting_place') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-meeting_place">{{ __('Treffpunkt') }}</label>
+                                    <label class="form-control-label" for="input-meeting_place">{{ __('Veranstaltungsort / Treffpunkt') }}</label>
                                     <input type="text" name="meeting_place" id="input-meeting_place" class="form-control{{ $errors->has('meeting_place') ? ' is-invalid' : '' }}" placeholder="{{ __('Treffpunkt') }}" value="{{ old('meeting_place', $event->meeting_place) }}" required>
                                     @include('alerts.feedback', ['field' => 'meeting_place'])
                                 </div>
@@ -61,7 +65,9 @@
                                     <select name="participation_status_id" id="input-participation_status_id" class="form-control{{ $errors->has('participation_status_id') ? ' is-invalid' : '' }}" placeholder="{{ __('Voreingestellte Antwort') }}" required>
                                         <option value="">-</option>
                                         @foreach (\App\Buisness\Enum\ParticipationStatusEnum::getInstances() as $participationStatus)
+                                            @if ($participationStatus->isNot(\App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Waitlist)))
                                             <option value="{{ $participationStatus->value }}" {{ $participationStatus->value == old('participation_status_id', $event->participation_status_id) ? 'selected' : ''}}>{{ $participationStatus->key }} </option>
+                                            @endif
                                         @endforeach
                                     </select>
 
@@ -82,7 +88,7 @@
                                     <input type="text" name="date_publication" id="input-date_publication" class="form-control{{ $errors->has('date_publication') ? ' is-invalid' : '' }}" placeholder="{{ __('Veröffentlichungsdatum') }}" value="{{ old('date_publication', $event->date_publication->format('d.m.Y')) }}" required>
                                     @include('alerts.feedback', ['field' => 'date_publication'])
                                 </div>
-                                <div class="form-group{{ $errors->has('event_users') ? ' has-danger' : '' }}">
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-event_user">{{ __('Teilnehmer') }}
                                         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-info"></i></button>
                                     </label>

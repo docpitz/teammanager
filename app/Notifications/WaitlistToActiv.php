@@ -2,30 +2,32 @@
 
 namespace App\Notifications;
 
+use App\Event;
+use App\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\HtmlString;
-use App\User;
 
-class ResetPassword extends Notification
+class WaitlistToActiv extends Notification
 {
     use Queueable;
 
-    protected $token;
     protected $user;
+    protected $event;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($token, User $user)
+    public function __construct(User $user, Event $event)
     {
-        $this->token = $token;
         $this->user = $user;
+        $this->event = $event;
     }
+
     /**
      * Get the notification's delivery channels.
      *
@@ -46,12 +48,14 @@ class ResetPassword extends Notification
     public function toMail($notifiable)
     {
         $mailMessage = (new MailMessage)
-            ->subject('Zurücksetzen des Passwortes für ' . config('app.name'))
+            ->subject('Du darfst teilnehmen bei '. $this->event->name)
             ->greeting('Hallo!')
-            ->line('du erhältst diese E-Mail, weil wir eine Anfrage zum Zurücksetzen des Passworts für dein Konto erhalten haben.')
-            ->action('Passwort zurücksetzen', url(config('app.url').route('password.reset', [$this->token, 'email='.$notifiable->email], false)))
-            ->line('Dieser Link zum Zurücksetzen des Passworts läuft in 60 Minuten ab.')
-            ->line('Wenn du kein Passwort Reset angefordert hast, ist keine weitere Aktion erforderlich.')
+            ->line(new HtmlString('du erhältst diese E-Mail, weil du, liebe(r) <strong>'.$this->user->firstname.'</strong> von der Warteliste zu den Teilnehmer gerutscht bist.'))
+            ->line(new HtmlString('<center>Die Veranstaltung</center>'))
+            ->line(new HtmlString('<p><center><strong>'.$this->event->name.'</strong></center></p>'))
+            ->line(new HtmlString('<p><center>findet am <strong>'.$this->event->date_event_start->format('d.m.Y').' um '.$this->event->date_event_start->format('H:i').' Uhr</strong> statt.</center></p>'))
+            ->action('Alle Infos zur Veranstaltung', url(config('app.url').route('myEvent', ['#'.$this->event->id], false)))
+            ->line('Wir wünschen dir viel Spaß und freuen uns dich dort zu sehen!')
             ->salutation(new HtmlString("Viele Grüße <br>".config('app.name')));
 
         if(! empty($this->user->email_optional)) {

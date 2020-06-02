@@ -2,13 +2,13 @@
 
 namespace App;
 
+use App\Notifications\WaitlistToActiv;
+use Avatar;
 use Altek\Accountant\Contracts\Identifiable;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use App\Buisness\Enum\RoleEnum;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\File;
 use Spatie\Permission\Traits\HasRoles;
@@ -16,7 +16,6 @@ use App\Notifications\ResetPassword;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Ramsey\Uuid\Uuid;
 
@@ -25,15 +24,13 @@ class User extends Authenticatable implements Identifiable
     use Notifiable;
     use HasRoles;
 
-
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'username','firstname','surname', 'email', 'email_optional', 'password',
+        'username','firstname','surname', 'email', 'email_optional', 'password', 'visible',
     ];
 
     /**
@@ -56,9 +53,26 @@ class User extends Authenticatable implements Identifiable
         'date_user_changed_participation_status' => 'datetime'
     ];
 
+    public static function getSystemUser() {
+
+        return User::whereHas("roles", function($q) {
+            $systemRoleString = RoleEnum::getInstance(RoleEnum::System)->description;
+            $q->where("name", $systemRoleString);
+        })->first();
+    }
+
+    public static function allUserSorted() {
+        return User::where('visible', true)->orderBy('surname')->orderBy('firstname');
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token, $this));
+    }
+
+    public function sendWaitlistToActivNotification(Event $event)
+    {
+        $this->notify(new WaitlistToActiv($this, $event));
     }
 
     public function getRole() : ?RoleEnum {
@@ -78,9 +92,9 @@ class User extends Authenticatable implements Identifiable
         return NULL;
     }
 
-    public function profilePicture() : String
+    public function profilePicture()
     {
-        $avatar = '/images/avatar.png';
+        $avatar = Avatar::create($this->firstname." ".$this->surname)->toBase64();
         if(! is_null($this->avatar))
         {
             $avatar = '/files/avatar/'.$this->avatar;

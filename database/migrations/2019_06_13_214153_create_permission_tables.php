@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Buisness\Enum\PermissionEnum;
+use App\Buisness\Enum\RoleEnum;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class CreatePermissionTables extends Migration
 {
@@ -82,6 +86,51 @@ class CreatePermissionTables extends Migration
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
+
+        foreach (PermissionEnum::getInstances() as $permission)
+        {
+            Permission::create(["name" => $permission->key]);
+        }
+
+        foreach (RoleEnum::getInstances() as $role)
+        {
+            Role::create(["name" => $role->key]);
+        }
+        $pUserManagement = PermissionEnum::getInstance(PermissionEnum::UserManagement)->getModel();
+        $pUserOwn = PermissionEnum::getInstance(PermissionEnum::UserOwn)->getModel();
+        $pEventManagment = PermissionEnum::getInstance(PermissionEnum::EventManagement)->getModel();
+        $pEventBookingImmediate = PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->getModel();
+        $pEventBookingDelayed = PermissionEnum::getInstance(PermissionEnum::EventBookingDelayed)->getModel();
+        $pGroupManagement = PermissionEnum::getInstance(PermissionEnum::GroupManagement)->getModel();
+        $pSettings = PermissionEnum::getInstance(PermissionEnum::Settings)->getModel();
+
+
+        $rSuperAdmin = RoleEnum::getInstance(RoleEnum::SuperAdmin)->getModel();
+        $rOrganisator = RoleEnum::getInstance(RoleEnum::Organisator)->getModel();
+        $rTeamIntern = RoleEnum::getInstance(RoleEnum::TeamIntern)->getModel();
+        $rTeamExtern = RoleEnum::getInstance(RoleEnum::TeamExtern)->getModel();
+        $rSystem = RoleEnum::getInstance(RoleEnum::System)->getModel();
+
+        $rSuperAdmin->givePermissionTo($pUserManagement,
+            $pUserOwn,
+            $pEventManagment,
+            $pEventBookingImmediate,
+            $pGroupManagement,
+            $pSettings);
+
+        $rOrganisator->givePermissionTo($pUserManagement,
+            $pUserOwn,
+            $pEventManagment,
+            $pEventBookingImmediate,
+            $pGroupManagement);
+
+        $rTeamIntern->givePermissionTo($pUserOwn,
+            $pEventBookingImmediate);
+
+        $rTeamExtern->givePermissionTo($pUserOwn,
+            $pEventBookingDelayed);
+
+        $rSystem->givePermissionTo();
     }
 
     /**

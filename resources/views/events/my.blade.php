@@ -20,12 +20,31 @@
                             <div id="carouselEventIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
                                 <ol class="carousel-indicators">
                                     @foreach($events as $indexKey => $event)
-                                        <li id="indicator{{$event->id}}" data-target="#carouselEventIndicators" data-slide-to="{{$indexKey}}" class="{{$indexKey == 0 ? 'active ': ' '}} {{$event->isPromisedByUser(auth()->user()) ? 'promise' : ($event->isCanceledByUser(auth()->user()) ? 'cancel' : '') }}"></li>
+                                        <li id="indicator{{$event->id}}" data-target="#carouselEventIndicators" data-slide-to="{{$indexKey}}" class="{{$indexKey == 0 ? 'active ': ' '}} {{ Illuminate\Support\Str::lower(\App\Buisness\Enum\ParticipationStatusEnum::getDescription($event->getParticipationState(auth()->user()))) }}"></li>
                                     @endforeach
                                 </ol>
                                 <div class="carousel-inner pb-6">
                                     @foreach($events as $indexKey => $event)
-                                        <div class="carousel-item {{$indexKey == 0 ? 'active': ''}} align-content-center">
+                                        <div class="modal fade" id="cancelDialog{{$event->id}}" tabindex="-1" role="dialog" aria-labelledby="cancelDialogModalCenterTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="cancelDialogModalLongTitle">Achtung</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Es befinden sich weitere Personen auf der Warteliste. Durch deine Absage wird dein Platz frei bzw. wirst du aus der Warteliste entfernt und anschließend automatisch anderweitig vergeben. <br><br>Willst du wirklich absagen?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="onClickCanceled({{$event->id}}, true)">Absagen</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="item{{$event->id}}" class="carousel-item {{$indexKey == 0 ? 'active': ''}} align-content-center">
                                             <div class="col-lg-12">
                                                 <fieldset id="fieldset{{$event->id}}">
                                                     <div >
@@ -33,7 +52,10 @@
                                                         <div style="position: relative; text-align: center;color: white;">
                                                             <img class="card-img" src="{{ asset('hofolding') }}/tt-event.jpg" alt="Veranstaltungsbild">
                                                             <div style="position: absolute; bottom: 15px; right: -20px;">
-                                                                <h3 id="stamp{{$event->id}}" class="{{! $event->isPromisedByUser(auth()->user()) ? 'd-none ' : ''}} stamp-text">{{__('Angemeldet')}}</h3>
+                                                                <h3 id="stamp{{$event->id}}" class="{{ $event->isCanceledByUser(auth()->user()) || $event->hasQuietByUser(auth()->user()) ? 'd-none ' : ''}} stamp-text">
+                                                                    <div class="{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Promised ? ' d-none ' : ''}}" id="stamp{{$event->id}}promised">{{__('Angemeldet')}}</div>
+                                                                    <div class="{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Waitlist ? ' d-none ' : ''}}" id="stamp{{$event->id}}waitlist">{{__('Warteliste')}}</div>
+                                                                </h3>
                                                             </div>
                                                         </div>
                                                         <div>
@@ -44,7 +66,7 @@
                                                                 </div>
                                                                 <div class="col-4 text-right">
                                                                     <h5 class="h2 card-title mb-0">&nbsp;</h5>
-                                                                    <small class="text-muted">{{$event->score.__(' TWM-Points - ')}}<span id="countPromises{{$event->id}}">{{$event->countPromise()}}</span>{{__(' von max. ').$event->max_participant.__(' Teilnehmer')}}</small>
+                                                                    <small class="text-muted">{{!empty($event->score) ? $event->score.__(' TWM-Points - ') : ''}}<span id="countPromises{{$event->id}}">{{$event->countPromise()}}</span>{{__(' von max. ').$event->max_participant.__(' Teilnehmer')}}</small>
                                                                 </div>
                                                             </div>
                                                             <div class="row mt--2">
@@ -68,7 +90,7 @@
                                                                     <div class="card-profile-stats d-flex justify-content-center mb--5">
                                                                         <div>
                                                                             <span class="heading">{{$event->meeting_place}}</span>
-                                                                            <span class="description">Treffpunkt</span>
+                                                                            <span class="description">Veranstaltungsort / Treffpunkt</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -76,9 +98,10 @@
                                                             <p class="card-text mt-4">{{$event->description}}</p>
 
                                                                 @if($event->booking_possible)
-                                                                <div class="btn-group center mt-3 pb-4">
-                                                                    <button onclick="onClickPromise({{$event->id}})" type="button" class="btn save_button btn-outline-success{{$event->isPromisedByUser(auth()->user()) ? ' active' : ''}}" id="promise{{$event->id}}"><i id="ajaxLoadPromise{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxPromise{{$event->id}}">{{ __('Teilnehmen') }}</div></button>
-                                                                    <button onclick="onClickCancel({{$event->id}})" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="cancel{{$event->id}}"><i id="ajaxLoadCancel{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCancel{{$event->id}}">{{ __('Absagen') }}</div></button>
+                                                                <div class="btn-group center mt-3 pb-4 ">
+                                                                    <button onclick="onClickPromised({{$event->id}})" type="button" class="btn save_button btn-outline-success{{$event->isPromisedByUser(auth()->user()) ? ' active' : ''}}{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Promised ? ' d-none ' : ''}}" id="promised{{$event->id}}"><i id="ajaxLoadPromised{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxPromised{{$event->id}}">{{ __('Teilnehmen') }}</div></button>
+                                                                    <button onclick="onClickWaitlist({{$event->id}})" type="button" class="btn save_button btn-outline-info{{$event->isWaitlistByUser(auth()->user()) ? ' active' : ''}}{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Waitlist ? ' d-none ' : ''}}" id="waitlist{{$event->id}}"><i id="ajaxLoadWaitlist{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxWaitlist{{$event->id}}">{{ __('Warteliste') }}</div></button>
+                                                                    <button onclick="onClickCanceled({{$event->id}}, false)" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="canceled{{$event->id}}"><i id="ajaxLoadCanceled{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCanceled{{$event->id}}">{{ __('Absagen') }}</div></button>
                                                                 </div>
                                                                 @else
                                                                     <div class="text-center mt-5">
@@ -124,41 +147,89 @@
 @push('js')
     <script src="../../js/jquery.bcswipe.js"></script>
     <script>
-        $('#carouselEventIndicators').bcSwipe({ threshold: 50 });
+        $(document).ready(function(){
+            let eventIds = [
+                @foreach($events as $indexKey => $event)
+                '{{$event->id}}',
+                @endforeach
+            ];
+            let positionInCarousel = eventIds.indexOf(window.location.hash.substring(1));
+            if(positionInCarousel != -1) {
+                $('#carouselEventIndicators').carousel(positionInCarousel);
+            }
+            $('#carouselEventIndicators').bcSwipe({ threshold: 151 });
+            recalculateButtons();
+        });
 
-        function onClickPromise(eventId){
+        function onClickPromised(eventId){
             beforeAjaxCall(eventId);
-            ajaxCall(eventId, 'Promise');
+            ajaxCall(eventId, 'Promised', false);
         };
-        function onClickCancel(eventId){
+        function onClickWaitlist(eventId){
             beforeAjaxCall(eventId);
-            ajaxCall(eventId, 'Cancel');
+            ajaxCall(eventId, 'Waitlist', false);
         };
+        function onClickCanceled(eventId, confirmDelete){
+            beforeAjaxCall(eventId);
+            ajaxCall(eventId, 'Canceled', confirmDelete);
+        };
+
+        function recalculateButtons() {
+            $('.btn-group').has('.btn:hidden').find('.btn').css('border-radius', 0);
+            $('.btn-group').has('.btn:hidden').find('.btn:visible:first').css({
+                'border-top-left-radius': '4px',
+                'border-bottom-left-radius': '4px',
+            });
+            $('.btn-group').has('.btn:hidden').find('.btn:visible:last').css({
+                'border-top-right-radius': '4px',
+                'border-bottom-right-radius': '4px',
+            });
+        }
 
         function beforeAjaxCall(eventId) {
             $("#fieldset"+eventId).attr('disabled', 'disabled');
-            $("#ajaxLoadPromise"+eventId).removeClass('d-none');
-            $("#ajaxLoadCancel"+eventId).removeClass('d-none');
-            $("#noAjaxPromise"+eventId).addClass('d-none');
-            $("#noAjaxCancel"+eventId).addClass('d-none');
+            $("#ajaxLoadPromised"+eventId).removeClass('d-none');
+            $("#ajaxLoadWaitlist"+eventId).removeClass('d-none');
+            $("#ajaxLoadCanceled"+eventId).removeClass('d-none');
+            $("#noAjaxPromised"+eventId).addClass('d-none');
+            $("#noAjaxWaitlist"+eventId).addClass('d-none');
+            $("#noAjaxCanceled"+eventId).addClass('d-none');
         }
 
         function afterAjaxCall(eventId) {
             $("#fieldset"+eventId).removeAttr('disabled');
-            $("#ajaxLoadPromise"+eventId).addClass('d-none');
-            $("#ajaxLoadCancel"+eventId).addClass('d-none');
-            $("#noAjaxPromise"+eventId).removeClass('d-none');
-            $("#noAjaxCancel"+eventId).removeClass('d-none');
+            $("#ajaxLoadPromised"+eventId).addClass('d-none');
+            $("#ajaxLoadCanceled"+eventId).addClass('d-none');
+            $("#ajaxLoadWaitlist"+eventId).addClass('d-none');
+            $("#noAjaxPromised"+eventId).removeClass('d-none');
+            $("#noAjaxCanceled"+eventId).removeClass('d-none');
+            $("#noAjaxWaitlist"+eventId).removeClass('d-none');
         }
 
-        function animationAfterAjaxCall(eventId, method, theOtherMethod, animation) {
-            $("#"+theOtherMethod+eventId).removeClass("active");
+        function recalculateEvent(eventId, method, hideMethod) {
+            $("#canceled"+eventId).removeClass("active");
+            $("#waitlist"+eventId).removeClass("active");
+            $("#promised"+eventId).removeClass("active");
             $("#"+method+eventId).addClass("active");
-            $("#indicator"+eventId).removeClass(theOtherMethod);
+
+            $("#waitlist"+eventId).removeClass("d-none");
+            $("#promised"+eventId).removeClass("d-none");
+            $("#"+hideMethod+eventId).addClass("d-none");
+
+            $("#indicator"+eventId).removeClass('canceled');
+            $("#indicator"+eventId).removeClass('waitlist');
+            $("#indicator"+eventId).removeClass('promised');
             $("#indicator"+eventId).addClass(method);
+
+            $("#stamp"+eventId+"promised").removeClass("d-none");
+            $("#stamp"+eventId+"waitlist").removeClass("d-none");
+            $("#stamp"+eventId+hideMethod).addClass("d-none");
+        }
+
+        function animationAfterAjaxCall(eventId, method, animation) {
             $("#stamp"+eventId).removeClass().addClass('stamp-text ' + animation + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
                 var stampClass = 'stamp-text';
-                if(method == 'cancel') {
+                if(method == 'canceled') {
                     stampClass = stampClass + ' d-none';
                 }
                 $(this).removeClass().addClass(stampClass);
@@ -179,7 +250,7 @@
             }
         }
 
-        function ajaxCall(eventId, method){
+        function ajaxCall(eventId, method, confirmDelete){
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -190,19 +261,34 @@
                 method: 'post',
                 data: {
                     id: eventId,
+                    confirmDelete: confirmDelete,
                 },
                 success: function(result){
                     afterAjaxCall(eventId)
-                    if(result.success) {
-                        updateCountPromises(eventId, result.countPromises);
-                        updateCountQuiet(result.countQuiet);
-                        if(result.promise) {
-                            animationAfterAjaxCall(eventId, 'promise', 'cancel', 'heartBeat');
-                        }
-                        else if(result.cancel) {
-                            animationAfterAjaxCall(eventId, 'cancel', 'promise', 'medium flash');
+                    updateCountPromises(eventId, result.countPromises);
+                    updateCountQuiet(result.countQuiet);
+                    if(result.isConsulationNecessaryByCanceled) {
+                        $('#cancelDialog'+eventId).modal()
+                    }
+                    else if(result.promised) {
+                        recalculateEvent(eventId, 'promised', result.hideParticipationStatus);
+                        if (result.success) {
+                            animationAfterAjaxCall(eventId, 'promised', 'heartBeat');
                         }
                     }
+                    else if(result.waitlist) {
+                        recalculateEvent(eventId, 'waitlist', result.hideParticipationStatus, 'heartBeat');
+                        if(result.success) {
+                            animationAfterAjaxCall(eventId, 'waitlist', 'heartBeat');
+                        }
+                    }
+                    else if(result.canceled) {
+                        recalculateEvent(eventId, 'canceled', result.hideParticipationStatus, 'medium flash');
+                        if(result.success) {
+                            animationAfterAjaxCall(eventId, 'canceled', 'medium flash');
+                        }
+                    }
+                    recalculateButtons();
                 }});
         };
     </script>
@@ -210,5 +296,5 @@
 
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/animate.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/myevent.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/event_my.css">
 @endpush

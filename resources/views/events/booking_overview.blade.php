@@ -2,9 +2,10 @@
 @section('content')
     @php
         $promisedDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Promised)->description;
+        $waitlistDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Waitlist)->description;
         $quietDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Quiet)->description;
         $canceledDescription = \App\Buisness\Enum\ParticipationStatusEnum::getInstance(\App\Buisness\Enum\ParticipationStatusEnum::Canceled)->description;
-        $headerPromised = 'Zusage (max. '.$event->max_participant.' Teilnehmer)';
+        $headerPromised = $event->max_participant > 0 ? 'Zusage (max. '.$event->max_participant.' Teilnehmer)' : 'Zusage';
     @endphp
     @component('layouts.headers.auth')
     @endcomponent
@@ -28,18 +29,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 mt-2">
+                            @include('alerts.success')
+                            @include('alerts.errors')
+                        </div>
                         <div class="card-body">
-                        <form method="post" action="{{ route('checkEvent.update', $event) }}" autocomplete="off"
+                        <form method="post" action="{{ route('eventBookingOverview.update', $event) }}" autocomplete="off"
                               enctype="multipart/form-data">
                             @csrf
                             @method('put')
+                            <input type="hidden" name="max_participant" value="{{$event->max_participant}}">
                                 <h1>{{$event->name}}</h1>
                                 <small><b>Anmeldezeitraum: </b>{{$event->date_sign_up_start->format('d.m.Y')}} bis {{$event->date_sign_up_end->format('d.m.Y')}}</small><br>
                                 <small><b>Veranstaltungszeitraum: </b>{{$event->date_event_start->format('d.m.Y H:i')}} bis {{$event->date_event_end->format('d.m.Y H:i').__(' Uhr')}}</small><br><br>
                                 <div class="row">
-                                    @include('events.participation_status_check', ['header'=> $headerPromised, 'participationDescription' => $promisedDescription, 'users' => $usersPromised, 'color' => 'green'])
-                                    @include('events.participation_status_check', ['header'=> 'Absage', 'participationDescription' => $canceledDescription, 'users' => $usersCanceled, 'color' => 'red'])
-                                    @include('events.participation_status_check', ['header'=> 'Keine Antwort', 'participationDescription' => $quietDescription, 'users' => $usersQuiet, 'color' => ''])
+                                    <div class="col-sm-4">
+                                        @include('events.booking_overview_participation_status', ['header'=> $headerPromised, 'participationDescription' => $promisedDescription, 'users' => old('usersPromised', $usersPromised), 'color' => 'green'])
+                                        <br>
+                                        @include('events.booking_overview_participation_status', ['header'=> 'Warteliste', 'participationDescription' => $waitlistDescription, 'users' => old('usersWaitlist', $usersWaitlist), 'color' => 'blue'])
+                                    </div>
+                                    <div class="col-sm-4">
+                                        @include('events.booking_overview_participation_status', ['header'=> 'Absage', 'participationDescription' => $canceledDescription, 'users' => old('usersCanceled', $usersCanceled), 'color' => 'red'])
+                                    </div>
+                                    <div class="col-sm-4">
+                                        @include('events.booking_overview_participation_status', ['header'=> 'Keine Antwort', 'participationDescription' => $quietDescription, 'users' => old('usersQuiet', $usersQuiet), 'color' => ''])
+                                    </div>
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Speichern') }}</button>
@@ -56,17 +70,24 @@
 
 @push('css')
     <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
-    <link rel="stylesheet" type="text/css" href="../../css/eventcheck.css">
+    <link rel="stylesheet" type="text/css" href="../../css/event_booking_overview.css">
 @endpush
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
-        calculateHeight();
+        $( document ).ready(function() {
+            calculateHeight();
+            calculateHeight();
+        });
         $(function () {
             $(".sortableItems").sortable({
                 connectWith: ".sortableItems",
                 placeholder: "ui-state-highlight",
+                forcePlaceholderSize: true,
+                cursor: "move",
+                delay: 100,
+                opacity: 0.85,
                 over: function(event, ui) {
                     calculateHeight();
                 },
@@ -77,16 +98,21 @@
                     calculateHeight();
                 }
             });
-            $("#{{$promisedDescription}}, #{{$canceledDescription}}, #{{$quietDescription}}").disableSelection();
+            $("#{{$promisedDescription}},#{{$waitlistDescription}}, #{{$canceledDescription}}, #{{$quietDescription}}").disableSelection();
 
         });
 
         function calculateHeight()
         {
-            var maxHeight = Math.max($("#{{$promisedDescription}}").height(), $("#{{$canceledDescription}}").height(), $("#{{$quietDescription}}").height());
-            var paddingBottomPromiseMember = maxHeight - $("#{{$promisedDescription}}").height();
-            var paddingBottomCancelMember = maxHeight - $("#{{$canceledDescription}}").height();
-            var paddingBottomQuietMember = maxHeight - $("#{{$quietDescription}}").height();
+            $("#{{$waitlistDescription}}").css('min-height', '30');
+
+            var heightWaitlistHeader = 60;
+            var heightPromisedAndWaitlist = $("#{{$promisedDescription}}").height() + $("#{{$waitlistDescription}}").height() + heightWaitlistHeader;
+            var maxHeightComplete = Math.max(heightPromisedAndWaitlist, $("#{{$canceledDescription}}").height() , $("#{{$quietDescription}}").height());
+
+            var paddingBottomPromiseMember = maxHeightComplete - $("#{{$promisedDescription}}").height() - $("#{{$waitlistDescription}}").height() - heightWaitlistHeader;
+            var paddingBottomCancelMember = maxHeightComplete - $("#{{$canceledDescription}}").height();
+            var paddingBottomQuietMember = maxHeightComplete - $("#{{$quietDescription}}").height();
             $("#{{$promisedDescription}}").css('padding-bottom', paddingBottomPromiseMember + 'px');
             $("#{{$canceledDescription}}").css('padding-bottom', paddingBottomCancelMember + 'px');
             $("#{{$quietDescription}}").css('padding-bottom', paddingBottomQuietMember + 'px');

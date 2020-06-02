@@ -23,11 +23,15 @@ h3{
     mask-image: url("../images/crack-grunge-texture-PNG-thumb24.png");
 }
 
-li.promise {
+li.promised {
     background-color: green !important;
 }
 
-li.cancel {
+li.waitlist {
+    background-color: #52addb !important;
+}
+
+li.canceled {
     background-color: red !important;
 }
 
@@ -46,3 +50,4 @@ li.cancel {
 .carousel-control-next{
     bottom: 90% !important;
 }
+

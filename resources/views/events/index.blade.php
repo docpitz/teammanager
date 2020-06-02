@@ -31,13 +31,12 @@
                             </div>
                         @endif
                     </div>
-
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">{{ __('Name') }}</th>
-                                <th scope="col">{{ __('Teilnehmer(ange./max./mögl.)') }}</th>
+                                <th scope="col">{{ __('Teilnehmer') }}</th>
                                 <th scope="col">{{ __('Veranstaltungsbeginn') }}</th>
                                 <th scope="col">{{ __('Veröffentlichung') }}</th>
                                 <th scope="col">{{ __('Anmeldeschluss') }}</th>
@@ -45,17 +44,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($events as $event)
+                            @forelse ($events as $event)
                                 <tr>
                                     <td>{{ $event->name }}</td>
-                                    <td>{{ $event->countPromise() }} / {{ $event->max_participant }} / {{ count($event->users) }}</td>
+                                    <td>{{__("Teilnehmer: ".$event->countPromise())}} <br> {{__("frei: ")}}{!! $event->max_participant > 0 ? ($event->max_participant - $event->countPromise()) : "&infin;" !!} / {{__("wartend: ")}}{{$event->max_participant > 0 ? $event->countWaitlist() : "-" }} / {{__("angefragt: ").count($event->users) }}</td>
                                     <td>{{ $event->date_event_start->format('d.m.Y H:i') }}</td>
                                     <td>{{ $event->date_publication->format('d.m.Y') }}</td>
                                     <td>{{ $event->date_sign_up_end->format('d.m.Y') }}</td>
                                     <td class="text-right">
                                         <form action="{{ route('event.destroy', $event) }}" method="post">
                                             @csrf
-                                            <a href="{{ route('checkEvent.edit', $event) }}" data-toggle="tooltip" title="Teilnehmer einteilen">
+                                            <a href="{{ route('eventBookingOverview.edit', $event) }}" data-toggle="tooltip" title="Teilnehmer einteilen">
                                                 <i style="padding: 5px" class="fas fa-user-check"></i>
                                             </a>
                                             <a href="{{ route('event.edit', $event) }}" data-toggle="tooltip" title="bearbeiten">
@@ -68,7 +67,9 @@
                                         </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr><td colspan="6">{{__("Derzeit sind keine Veranstaltungen vorhanden.")}}</td></tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
