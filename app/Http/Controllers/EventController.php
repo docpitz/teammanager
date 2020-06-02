@@ -77,7 +77,7 @@ class EventController extends Controller
         $i = 0;
         $eventFromUser = $event->users()->getModels();
 
-        foreach(User::orderBy('surname')->orderBy('firstname')->get() as $user) {
+        foreach(User::allUserSorted()->get() as $user) {
 
             $allUserWithEventInfo[$i]["id"] = $user->id;
             $allUserWithEventInfo[$i]["surname"] = $user->surname;

@@ -90,7 +90,7 @@
                                     <select multiple="multiple" size="10" name="event_users[]" title="users">
 
 
-                                        @foreach (\App\User::orderBy('surname')->orderBy('firstname')->get() as $user)
+                                        @foreach (\App\User::allUserSorted()->get() as $user)
                                             <option value="{{$user->id}}" {{ in_array($user->id, ! is_null(old("event_users")) ? old("event_users") : array() ) ? "selected":"" }}>
                                                 {{$user->surname}} {{$user->firstname}} ({{implode(', ', array_column($user->groups()->getModels(['name']),'name'))}})
                                             </option>
