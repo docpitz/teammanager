@@ -20,6 +20,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 mt-2">
+                        @include('alerts.success')
+                        @include('alerts.errors')
+                    </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('event.store') }}" autocomplete="off"
                               enctype="multipart/form-data">
@@ -79,13 +83,15 @@
                                     <input type="text" name="date_publication" id="input-date_publication" class="form-control{{ $errors->has('date_publication') ? ' is-invalid' : '' }}" placeholder="{{ __('Veröffentlichungsdatum') }}" value="{{ old('date_publication') }}" required>
                                     @include('alerts.feedback', ['field' => 'date_publication'])
                                 </div>
-                                <div class="form-group{{ $errors->has('event_users') ? ' has-danger' : '' }}">
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-event_user">{{ __('Teilnehmer') }}
                                         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-info"></i></button>
                                     </label>
                                     <select multiple="multiple" size="10" name="event_users[]" title="users">
+
+
                                         @foreach (\App\User::orderBy('surname')->orderBy('firstname')->get() as $user)
-                                            <option value="{{$user->id}}" {{ in_array($user->id, ! is_null(old("group_users")) ? old("group_users") : array() ) ? "selected":"" }}>
+                                            <option value="{{$user->id}}" {{ in_array($user->id, ! is_null(old("event_users")) ? old("event_users") : array() ) ? "selected":"" }}>
                                                 {{$user->surname}} {{$user->firstname}} ({{implode(', ', array_column($user->groups()->getModels(['name']),'name'))}})
                                             </option>
                                         @endforeach

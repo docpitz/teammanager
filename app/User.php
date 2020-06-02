@@ -5,10 +5,8 @@ namespace App;
 use Altek\Accountant\Contracts\Identifiable;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use App\Buisness\Enum\RoleEnum;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\File;
 use Spatie\Permission\Traits\HasRoles;
@@ -16,7 +14,6 @@ use App\Notifications\ResetPassword;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Ramsey\Uuid\Uuid;
 

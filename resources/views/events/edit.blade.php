@@ -23,6 +23,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 mt-2">
+                        @include('alerts.success')
+                        @include('alerts.errors')
+                    </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('event.update', $event) }}" autocomplete="off"
                               enctype="multipart/form-data">
@@ -84,7 +88,7 @@
                                     <input type="text" name="date_publication" id="input-date_publication" class="form-control{{ $errors->has('date_publication') ? ' is-invalid' : '' }}" placeholder="{{ __('Veröffentlichungsdatum') }}" value="{{ old('date_publication', $event->date_publication->format('d.m.Y')) }}" required>
                                     @include('alerts.feedback', ['field' => 'date_publication'])
                                 </div>
-                                <div class="form-group{{ $errors->has('event_users') ? ' has-danger' : '' }}">
+                                <div class="form-group">
                                     <label class="form-control-label" for="input-event_user">{{ __('Teilnehmer') }}
                                         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-info"></i></button>
                                     </label>
