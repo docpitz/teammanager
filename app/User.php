@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Avatar;
 use Altek\Accountant\Contracts\Identifiable;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use App\Buisness\Enum\RoleEnum;
@@ -87,9 +88,9 @@ class User extends Authenticatable implements Identifiable
         return NULL;
     }
 
-    public function profilePicture() : String
+    public function profilePicture()
     {
-        $avatar = '/images/avatar.png';
+        $avatar = Avatar::create($this->firstname." ".$this->surname)->toBase64();
         if(! is_null($this->avatar))
         {
             $avatar = '/files/avatar/'.$this->avatar;
