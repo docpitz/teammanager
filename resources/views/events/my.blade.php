@@ -66,7 +66,7 @@
                                                                 </div>
                                                                 <div class="col-4 text-right">
                                                                     <h5 class="h2 card-title mb-0">&nbsp;</h5>
-                                                                    <small class="text-muted">{{$event->score.__(' TWM-Points - ')}}<span id="countPromises{{$event->id}}">{{$event->countPromise()}}</span>{{__(' von max. ').$event->max_participant.__(' Teilnehmer')}}</small>
+                                                                    <small class="text-muted">{{!empty($event->score) ? $event->score.__(' TWM-Points - ') : ''}}<span id="countPromises{{$event->id}}">{{$event->countPromise()}}</span>{{__(' von max. ').$event->max_participant.__(' Teilnehmer')}}</small>
                                                                 </div>
                                                             </div>
                                                             <div class="row mt--2">
