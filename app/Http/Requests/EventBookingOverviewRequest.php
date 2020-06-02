@@ -33,8 +33,13 @@ class EventBookingOverviewRequest extends FormRequest
         if($max_participant > 0) {
             $rules[ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description] = 'array|max:'.$max_participant;
         }
-        if(!empty($waitlist) && count($waitlist) > 0 ) {
-            $rules[ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description] = 'array|size:'.$max_participant;
+        if(!empty($waitlist) && count($waitlist) > 0) {
+            if(empty($rules)) {
+                $rules[ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description] = 'array|size:'.$max_participant;
+            }
+            else {
+                $rules[ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description] = 'array|max:'.$max_participant.'|min:'.$max_participant;
+            }
         }
         return $rules;
     }
@@ -43,7 +48,7 @@ class EventBookingOverviewRequest extends FormRequest
     {
         return [
             ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description.'.max' => 'Es dürfen maximal :max Mitglieder teilnehmen.',
-            ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description.'.size' => 'Die max. erlaubten Teilnehmer sind noch nicht ausgeschöpft. Es dürfen somit keine Personen in die Warteliste.',
+            ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description.'.min' => 'Die max. erlaubten Teilnehmer sind noch nicht ausgeschöpft. Es dürfen somit keine Personen in die Warteliste.',
         ];
     }
 }
