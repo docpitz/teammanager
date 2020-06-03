@@ -75,7 +75,7 @@ class EventRequest extends FormRequest
             }
 
         }
-        else if (! $isNew) {
+        else if (! $isNew && $max_participant > 0) {
             $id = $routeEvent->id;
             $event = Event::where('id', $id)->first();
             $rules['max_participant'] = 'numeric|min:'.$event->countPromise();
