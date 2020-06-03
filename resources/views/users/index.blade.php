@@ -48,10 +48,10 @@
                                 <tr>
                                     <td>{{ $user->surname }} {{ $user->firstname }}</td>
                                     <td>
-                                        <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                                        <a href="mailto:{{ $user->email }}">{{ \App\Helper\Email::replaceUmlauts($user->email) }}</a>
                                     </td>
                                     <td>
-                                        <a href="mailto:{{ $user->email_optional }}">{{ $user->email_optional }}</a>
+                                        <a href="mailto:{{ $user->email_optional }}">{{ \App\Helper\Email::replaceUmlauts($user->email_optional) }}</a>
                                     </td>
                                     <td>{{ $user->getRole()->getFormattedName() }}</td>
                                     <td class="text-right">
