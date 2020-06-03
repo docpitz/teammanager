@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('eventBookingOverview', 'EventBookingOverviewController', ['only' => ['edit', 'update']]);
 
     Route::get('myEvent', 'MyEventController@edit')->name('myEvent');
+    Route::get('showEvent/{event}', 'MyEventController@edit')->name('showEvent');
     Route::post('myEvent/{event}/ajaxCanceled', 'MyEventController@canceled')->name('myEvent.canceled');
     Route::post('myEvent/{event}/ajaxPromised', 'MyEventController@promised')->name('myEvent.promised');
     Route::post('myEvent/{event}/ajaxWaitlist', 'MyEventController@waitlist')->name('myEvent.waitlist');

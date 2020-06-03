@@ -153,7 +153,7 @@
                 '{{$event->id}}',
                 @endforeach
             ];
-            let positionInCarousel = eventIds.indexOf(window.location.hash.substring(1));
+            let positionInCarousel = eventIds.indexOf(window.location.href.split("/").pop());
             if(positionInCarousel != -1) {
                 $('#carouselEventIndicators').carousel(positionInCarousel);
             }

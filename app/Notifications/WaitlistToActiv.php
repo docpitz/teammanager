@@ -54,7 +54,7 @@ class WaitlistToActiv extends Notification
             ->line(new HtmlString('<center>Die Veranstaltung</center>'))
             ->line(new HtmlString('<p><center><strong>'.$this->event->name.'</strong></center></p>'))
             ->line(new HtmlString('<p><center>findet am <strong>'.$this->event->date_event_start->format('d.m.Y').' um '.$this->event->date_event_start->format('H:i').' Uhr</strong> statt.</center></p>'))
-            ->action('Alle Infos zur Veranstaltung', url(config('app.url').route('myEvent', ['#'.$this->event->id], false)))
+            ->action('Alle Infos zur Veranstaltung', url(config('app.url').route('showEvent', [$this->event->id], false)))
             ->line('Wir wünschen dir viel Spaß und freuen uns dich dort zu sehen!')
             ->salutation(new HtmlString("Viele Grüße <br>".config('app.name')));
 
