@@ -50,7 +50,7 @@
                                     @include('alerts.feedback', ['field' => 'email'])
                                 </div>
                                 <div class="form-group{{ $errors->has('email_optional') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-email_optional">{{ __('Weitere E-Mail-Adresse') }}</label>
+                                    <label class="form-control-label" for="input-email_optional">{{ __('Weitere E-Mail-Adresse (nur Infomails, kein Passwort zurücksetzen)') }}</label>
                                     <input type="email" name="email_optional" id="input-email_optional" class="form-control{{ $errors->has('email_optional') ? ' is-invalid' : '' }}" placeholder="{{ __('Weitere E-Mail-Adresse') }}" value="{{ old('email_optional') }}" autocomplete="off">
 
                                     @include('alerts.feedback', ['field' => 'email'])
