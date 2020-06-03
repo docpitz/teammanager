@@ -35,6 +35,7 @@ return [
     'date_equals' => ':attribute muss der :date sein.',
     'date_format' => ':attribute stimmt nicht mit dem :format Format überein.',
     'different' => ':attribute und :other müssen unterschiedlich sein.',
+    'different_ignore_case' => ':attribute und :other müssen unterschiedlich sein.',
     'digits' => ':attribute muss aus :digits Ziffern bestehen.',
     'digits_between' => ':attribute muss zwischen :min und :max Ziffern lang sein.',
     'dimensions' => ':attribute hat eine ungültige Bildgröße.',

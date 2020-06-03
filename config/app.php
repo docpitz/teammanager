@@ -186,6 +186,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        \App\Providers\ValidationRuleProvider::class,
         Altek\Accountant\AccountantServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class
 
