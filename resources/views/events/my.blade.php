@@ -157,7 +157,7 @@
             if(positionInCarousel != -1) {
                 $('#carouselEventIndicators').carousel(positionInCarousel);
             }
-            $('#carouselEventIndicators').bcSwipe({ threshold: 151 });
+            $('#carouselEventIndicators').bcSwipe({ threshold: 50 });
             recalculateButtons();
         });
 

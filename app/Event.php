@@ -177,7 +177,7 @@ class Event extends Model implements Recordable
     }
 
     public function isPromisedPossible() {
-        return $this->countPromise() < $this->max_participant;
+        return $this->countPromise() < $this->max_participant || $this->max_participant == 0;
     }
 
     public function isPromisedByUser(User $user) {
