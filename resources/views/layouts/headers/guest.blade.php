@@ -5,7 +5,7 @@
                 <div class="col-lg-8 col-md-9">
                     <div class="container">
                         <a href="{{ route('login') }}">
-                            <img width="420" src="{{ asset('hofolding/teammanager-logo-weiss.png')}}" class="navbar-brand-img">
+                            <img width="420" src="{{ asset('hofolding/teammanager-logo-weiss.png')}}" class="navbar-brand-img img-fluid">
                         </a>
                     </div>
                 </div>
