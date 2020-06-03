@@ -103,8 +103,15 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::UserManagement)->key, User::class);
-        $user->deleteProfilePicture();
-        $user->delete();
-        return redirect()->route('user.index')->withStatus(__('Teammitglied erfolgreich gelöscht'));
+        $countFuturePromisedAndWaitlistEvents = $user->countFuturePromisedAndWaitlistEvents();
+        if($countFuturePromisedAndWaitlistEvents == 0) {
+            $user->deleteProfilePicture();
+            $user->delete();
+            return redirect()->route('user.index')->withStatus(__('Teammitglied erfolgreich gelöscht'));
+        } else {
+            return redirect()->route('user.index')->withErrors("Das Teammitglied hat noch ".$countFuturePromisedAndWaitlistEvents." zukünftige Veranstaltung mit 'Promised' oder 'Waitlist' und kann deshalb nicht gelöscht werden");
+        }
+
+
     }
 }

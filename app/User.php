@@ -11,6 +11,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPassword;
 use Illuminate\Support\Carbon;
@@ -150,8 +151,16 @@ class User extends Authenticatable implements Identifiable
             ->whereDate('date_event_end', '>', Carbon::now())
             ->whereDate('date_sign_up_start', '<', Carbon::now())
             ->whereDate('date_sign_up_end', '>', Carbon::now())
-            ->wherePivot('participation_status_id', ParticipationStatusEnum::Quiet)
+            ->wherePivot('participation_status_id',"=", ParticipationStatusEnum::Quiet)
             ->count();
+    }
+
+    public function countFuturePromisedAndWaitlistEvents() {
+         $query = $this->belongsToMany('App\Event')
+             ->whereDate('date_event_end', '>', Carbon::now())
+             ->withPivot('participation_status_id')
+             ->wherePivotIn('participation_status_id',  [ParticipationStatusEnum::Promised, ParticipationStatusEnum::Waitlist]);
+        return $query->count();
     }
 
     /**

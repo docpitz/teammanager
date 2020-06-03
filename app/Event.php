@@ -82,12 +82,12 @@ class Event extends Model implements Recordable
 
     public function getUsersByParticipation(int $participationStatus) {
         return $this->getUsersParticipation()
-            ->wherePivot('participation_status_id', $participationStatus)
+            ->wherePivot('participation_status_id', '=', $participationStatus)
             ->orderBy('event_user.date_user_changed_participation_status', 'asc');
     }
 
     public function countPromise() {
-        return $this->users()->wherePivot('participation_status_id', ParticipationStatusEnum::Promised)->count();
+        return $this->users()->wherePivot('participation_status_id','=', ParticipationStatusEnum::Promised)->count();
     }
 
     public function countWaitlist() {
@@ -96,7 +96,7 @@ class Event extends Model implements Recordable
 
     public function waitlistOrderbyHighestWish() {
         return $this->users()
-            ->wherePivot('participation_status_id', ParticipationStatusEnum::Waitlist)
+            ->wherePivot('participation_status_id','=', ParticipationStatusEnum::Waitlist)
             ->orderBy('event_user.date_user_changed_participation_status', 'asc');
     }
 
