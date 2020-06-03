@@ -28,8 +28,9 @@ class MyEventController extends Controller
     public function canceled(MyEventRequest $request, Event $event) {
         $isConsultationNecessary = false;
         $success = false;
-        $isSomeoneOnWait = $event->countWaitlist() > 0;
-        $isUserPromised = $event->getParticipationState(auth()->user()) == ParticipationStatusEnum::Promised;
+        $isUserPromised = $event->isPromisedByUser(auth()->user());
+        $isUserOnWaitlist = $event->isWaitlistByUser(auth()->user());
+        $isSomeoneOnWait = $event->countWaitlist() > 0 && $isUserPromised || $event->countWaitlist() > 1 && $isUserOnWaitlist;
 
         if((!empty($request["confirmDelete"]) && $request["confirmDelete"] === "false") || empty($request["confirmDelete"])) {
             $isConsultationNecessary = $isSomeoneOnWait;
