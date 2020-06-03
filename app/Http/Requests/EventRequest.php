@@ -75,6 +75,11 @@ class EventRequest extends FormRequest
             }
 
         }
+        else if (! $isNew) {
+            $id = $routeEvent->id;
+            $event = Event::where('id', $id)->first();
+            $rules['max_participant'] = 'numeric|min:'.$event->countPromise();
+        }
         return $rules;
     }
 
@@ -84,7 +89,10 @@ class EventRequest extends FormRequest
             'event_users.max' => "Es dürfen an dieser Veranstaltung maximal :max Mitglied(er) teilnehmen.
             Durch die voreingestellte Teilnahme mit 'Promise' ist die Gesamtteilnehmerzahl bereits überschritten.
             Bitte ändere entweder die 'maximale Teilnehmerzahl', die Anzahl der teilnehmenden Mitglieder
-            oder die 'voreingestellte Antwort'",
+            oder die 'voreingestellte Antwort'.",
+            'max_participant.min' => "Die aktuelle Zahl an aktiven Teilnehmern darf nicht unterschritten werden.
+             Wenn die Teilnehmerzahl gesenkt werden soll, müssen zunächst die nicht mehr gewünschten Teilnehmer
+             anders eingeteilt werden und danach können die maximalen Teilnehmer geändert werden."
         ];
     }
 
