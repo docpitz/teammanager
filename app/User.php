@@ -145,12 +145,12 @@ class User extends Authenticatable implements Identifiable
             ->withTimestamps();
     }
 
-    public function countQuiet() {
+    public function countFutureQuietEvents() {
         return $this->belongsToMany('App\Event')
-            ->whereDate('date_publication', '<', Carbon::now())
+            ->whereDate('date_publication', '<=', Carbon::now())
             ->whereDate('date_event_end', '>', Carbon::now())
-            ->whereDate('date_sign_up_start', '<', Carbon::now())
-            ->whereDate('date_sign_up_end', '>', Carbon::now())
+            ->whereDate('date_sign_up_start', '<=', Carbon::now())
+            ->whereDate('date_sign_up_end', '>=', Carbon::now())
             ->wherePivot('participation_status_id',"=", ParticipationStatusEnum::Quiet)
             ->count();
     }

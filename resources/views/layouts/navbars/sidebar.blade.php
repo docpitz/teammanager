@@ -44,8 +44,8 @@
                     @endcan
                     @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key)
                     <li class="nav-item">
-                        @if(auth()->user()->countQuiet() > 0)
-                        <span id="badge_quiet" class="badge badge-pill badge-warning" style="float:right;margin-bottom:-23px;">{{auth()->user()->countQuiet()}}</span>
+                        @if(auth()->user()->countFutureQuietEvents() > 0)
+                        <span id="badge_quiet" class="badge badge-pill badge-warning" style="float:right;margin-bottom:-23px;">{{auth()->user()->countFutureQuietEvents()}}</span>
                         @endif
                         <a class="nav-link" href="{{ route('myEvent') }}">
                             <i class="fas fa-table-tennis text-primary"></i>

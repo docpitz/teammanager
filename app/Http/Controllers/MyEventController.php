@@ -65,7 +65,7 @@ class MyEventController extends Controller
             'participationStatus' => $this->getParticipationStatusForAjaxResponse($event),
             $this->getParticipationStatusForAjaxResponse($event) => true, // the new state
             'countPromises' => $event->countPromise(),
-            'countQuiet' => auth()->user()->countQuiet(),
+            'countQuiet' => auth()->user()->countFutureQuietEvents(),
             'isConsulationNecessaryByCanceled' => $isConsulationNecessaryByCanceled]);
     }
 
