@@ -44,41 +44,36 @@ class EventRequest extends FormRequest
 
         $routeEvent = $this->route('event');
         $isNew = empty($routeEvent);
+        $maxParticipant = $this->request->get('max_participant');
+        $participantStatusId = $this->request->get('participation_status_id');
 
-        $max_participant = $this->request->get('max_participant');
-        $participant_status_id = $this->request->get('participation_status_id');
-
-        if($max_participant > 0 && $participant_status_id == ParticipationStatusEnum::Promised) {
-            if (! $isNew) {
-                $id = $routeEvent->id;
-                $event = Event::where('id', $id);
-                $event = $event->first();
-                $arrayPromisedEventUsersFromDB = array_column($event->getUsersByParticipation(ParticipationStatusEnum::Promised)->getModels(['id']), 'id'); // ids from all promised users for this event
-
-                // add new users
-                $arrayEventUsersFromDB = array_column($event->users()->getModels(['id']), 'id'); // ids from all users for this event
-                $arrayOfUserIds = $this->request->get('event_users');
-                $arrayAdded = is_null($arrayOfUserIds) ? [] : array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
-                $arrayPromisedEventUsersFromDB = array_merge($arrayPromisedEventUsersFromDB, $arrayAdded);
-
-                // remove old users
-                $arrayDeleted = is_null($arrayOfUserIds) ? $arrayEventUsersFromDB : array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
-                Arr::forget($arrayPromisedEventUsersFromDB, $arrayDeleted);
-
-                $currentCountPromises = count($arrayPromisedEventUsersFromDB);
-                if($currentCountPromises > $max_participant) {
-                    $rules['event_users'] = 'array|max:'.$max_participant;
-                }
+        if($isNew) {
+            // create
+            if($maxParticipant > 0 && $participantStatusId == ParticipationStatusEnum::Promised) {
+                // more users than maximum allowed
+                $rules['event_users'] = 'array|max:'.$maxParticipant;
             }
-            else {
-                $rules['event_users'] = 'array|max:'.$max_participant;
-            }
-
         }
-        else if (! $isNew && $max_participant > 0) {
+        else {
+            // update
             $id = $routeEvent->id;
             $event = Event::where('id', $id)->first();
-            $rules['max_participant'] = 'numeric|min:'.$event->countPromise();
+            $currentCountWaitlist = $event->countWaitlist();
+            $currentCountPromises = $this->getCurrentCountPromises($event, $participantStatusId);
+
+            if ($maxParticipant > 0) {
+                if($maxParticipant < $currentCountPromises) {
+                    // empty waiting list, but too many active participants
+                    $rules['max_participant'] = 'numeric|min:'.$currentCountPromises;
+                }
+                else if ($currentCountWaitlist > 0 && $maxParticipant != $currentCountPromises) {
+                    // full waiting list, although participants not exhausted
+                    $rules['event_users'] = 'array|size:'.$maxParticipant;
+                }
+            } else if ($maxParticipant == 0 && $currentCountWaitlist > 0) {
+                // full waiting list, although infinitely many participants
+                $rules['max_participant'] = 'numeric|size:'.$currentCountPromises;
+            }
         }
         return $rules;
     }
@@ -86,13 +81,9 @@ class EventRequest extends FormRequest
     public function messages()
     {
         return [
-            'event_users.max' => "Es dürfen an dieser Veranstaltung maximal :max Mitglied(er) teilnehmen.
-            Durch die voreingestellte Teilnahme mit 'Promise' ist die Gesamtteilnehmerzahl bereits überschritten.
-            Bitte ändere entweder die 'maximale Teilnehmerzahl', die Anzahl der teilnehmenden Mitglieder
-            oder die 'voreingestellte Antwort'.",
-            'max_participant.min' => "Die aktuelle Zahl an aktiven Teilnehmern darf nicht unterschritten werden.
-             Wenn die Teilnehmerzahl gesenkt werden soll, müssen zunächst die nicht mehr gewünschten Teilnehmer
-             anders eingeteilt werden und danach können die maximalen Teilnehmer geändert werden."
+            'event_users.size' => "Aktuell sind Teilnehmer in der Warteliste, aber die max. Teilnehmerzahl noch nicht ausgeschöpft.",
+            'max_participant.min' => "Aktuell sind :min Teilnehmer gemeldet. Die max. Teilnehmerzahl darf nicht darunter liegen.",
+            'max_participant.size' => "Aktuell sind Teilnehmer in der Warteliste, aber die max. Teilnehmerzahl ist unendlich. "
         ];
     }
 
@@ -110,6 +101,23 @@ class EventRequest extends FormRequest
 
         $input['date_publication'] = Carbon::parse($input['date_publication']);
         $this->replace($input);
+    }
+
+    private function getCurrentCountPromises(Event $event, int $participant_status_id) : int {
+        // add new users
+        $arrayEventUsersFromDB = array_column($event->users()->getModels(['id']), 'id'); // ids from all users for this event
+        $arrayOfUserIds = $this->request->get('event_users');
+
+        // ids from all promised users for this event
+        $arrayPromisedEventUsersFromDB = array_column($event->getUsersByParticipation(ParticipationStatusEnum::Promised)->getModels(['id']), 'id');
+        if($participant_status_id == ParticipationStatusEnum::Promised) {
+            $arrayAdded = is_null($arrayOfUserIds) ? [] : array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
+            $arrayPromisedEventUsersFromDB = array_merge($arrayPromisedEventUsersFromDB, $arrayAdded);
+        }
+        // remove old users
+        $arrayDeleted = is_null($arrayOfUserIds) ? $arrayEventUsersFromDB : array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
+        $arrayPromisedEventUsersFromDB = is_null($arrayDeleted) ? $arrayPromisedEventUsersFromDB : array_diff($arrayPromisedEventUsersFromDB, $arrayDeleted);
+        return count($arrayPromisedEventUsersFromDB);
     }
 
 }
