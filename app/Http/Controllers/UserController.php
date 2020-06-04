@@ -111,7 +111,5 @@ class UserController extends Controller
         } else {
             return redirect()->route('user.index')->withErrors("Das Teammitglied hat noch ".$countFuturePromisedAndWaitlistEvents." zukünftige Veranstaltung mit 'Promised' oder 'Waitlist' und kann deshalb nicht gelöscht werden");
         }
-
-
     }
 }

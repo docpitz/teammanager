@@ -130,7 +130,7 @@ class Event extends Model implements Recordable
                 }
                 $dateUserChangedParticipationStatus = $property['date_user_changed_participation_status'];
                 $carbon = new Carbon($dateUserChangedParticipationStatus);
-                $formatedTime = $carbon->format('d.m.Y H:i');
+                $formatedTime = $carbon->format('d.m.Y H:i:s');
                 Arr::set($property, 'changed_date_formatted', $formatedTime);
 
                 Arr::set($property, 'user', $userCache->getUserById($property['changed_by_user_id']));
