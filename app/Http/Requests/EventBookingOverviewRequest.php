@@ -58,7 +58,7 @@ class EventBookingOverviewRequest extends FormRequest
                     }
 
                     if($max_participant == 0 && !empty($waitList) && count($waitList) > 0) {
-                        array_push($errorMessage, "Es dürfen unbegrentzt Mitglieder teilnehmen. Es dürfen somit keine Personen in die Warteliste.");
+                        array_push($errorMessage, "Es dürfen unbegrenzt Mitglieder teilnehmen. Es dürfen somit keine Personen in die Warteliste.");
                     }
 
                     if(!empty($errorMessage)) {
