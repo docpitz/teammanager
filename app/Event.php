@@ -11,6 +11,7 @@ use App\Helper\UserCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 
 class Event extends Model implements Recordable
 {
@@ -130,7 +131,7 @@ class Event extends Model implements Recordable
                 }
                 $dateUserChangedParticipationStatus = $property['date_user_changed_participation_status'];
                 $carbon = new Carbon($dateUserChangedParticipationStatus);
-                $formatedTime = $carbon->format('d.m.Y H:i:s');
+                $formatedTime = $carbon->timezone(config('app.timezone'))->format('d.m.Y H:i:s');
                 Arr::set($property, 'changed_date_formatted', $formatedTime);
 
                 Arr::set($property, 'user', $userCache->getUserById($property['changed_by_user_id']));
