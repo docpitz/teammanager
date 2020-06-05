@@ -90,13 +90,43 @@
                     </li>
                     @endcan
                     @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::Settings)->key)
-                        <li class="nav-item">
-                            <a class="nav-link" href="">
-                                <i class="fas fa-cogs text-primary"></i>
-                                <span class="nav-link-text">{{ __('Einstellungen') }}</span>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-cogs text-primary"></i>
+                            <span class="nav-link-text">{{ __('Einstellungen') }}</span>
+                        </a>
+                    </li>
                     @endcan
+                </ul>
+                <hr class="my-3">
+                <!-- Heading -->
+                <h6 class="navbar-heading p-0 text-muted">{{ __('Links') }}</h6>
+
+                <ul class="navbar-nav mb-md-3">
+                    <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="http://www.tsvhofolding.de/index.php?abt=Tischtennis">
+                            <i class="fas fa-home text-primary"></i>
+                            <span class="nav-link-text">{{ __('Homepage') }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="http://tt-foto.tsvhofolding.de">
+                            <i class="fas fa-images text-primary"></i>
+                            <span class="nav-link-text">{{ __('Interne Fotogalerie') }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="https://www.facebook.com/TSVHofoldingTischtennis/">
+                            <i class="fab fa-facebook text-primary"></i>
+                            <span class="nav-link-text">{{ __('Facebook') }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_blank" href="https://www.instagram.com/tsvhofoldingtischtennis/?hl=de">
+                            <i class="fab fa-instagram text-primary"></i>
+                            <span class="nav-link-text">{{ __('Instagram') }}</span>
+                        </a>
+                    </li>
                 </ul>
                 @endcan
             </div>
