@@ -7,6 +7,12 @@ namespace App\Helper;
 class Email
 {
     static function replaceUmlauts($emailAdress) {
-        return str_replace(["xn--4ca","xn--nda","xn--tda"], ["ä","ö", "ü"], $emailAdress);
+        if(!empty($emailAdress))
+        {
+            $emailExplode = explode("@", $emailAdress);
+            if(count($emailExplode) == 2) {
+                return $emailExplode[0]."@".idn_to_utf8($emailExplode[1],IDNA_DEFAULT,INTL_IDNA_VARIANT_UTS46 );
+            }
+        }
     }
 }
