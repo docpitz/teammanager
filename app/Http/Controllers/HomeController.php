@@ -21,6 +21,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard');
+        $user = auth()->user();
+        $countFutureQuietEvents = $user->countFutureQuietEvents();
+        $countFuturePromisedAndWaitlistEvents = $user->countFuturePromisedAndWaitlistEvents();
+        return view('home.index', ['countFutureQuietEvents' => $countFutureQuietEvents, 'countFuturePromisedAndWaitlistEvents' => $countFuturePromisedAndWaitlistEvents]);
     }
 }

@@ -2,7 +2,7 @@
 <nav class="navbar navbar-top navbar-expand border-bottom {{ $navClass ?? 'navbar-dark bg-primary' }}">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            @include('layouts.headers.search');
+            @include('layouts.headers.search')
             <!-- Navbar links -->
             <ul class="navbar-nav align-items-center ml-md-auto">
                 <li class="nav-item d-xl-none">
@@ -17,7 +17,7 @@
                 </li>
                 <li class="nav-item d-sm-none">
                     <a class="nav-link" href="#" data-action="search-show" data-target="#navbar-search-main">
-                        <i class="ni ni-zoom-split-in"></i>
+                        <!-- Search <i class="ni ni-zoom-split-in"></i>-->
                     </a>
                 </li>
                 @include('layouts.headers.notifications')
