@@ -87,7 +87,7 @@
                                                                 <div class="col-md-4">
                                                                     <div class="card-profile-stats d-flex justify-content-center mb--5">
                                                                         <div>
-                                                                            <span class="heading">{{$event->date_sign_up_end->format("d.m.Y")}}</span>
+                                                                            <span class="heading">{{$event->date_sign_up_end->format("D, d.m.Y")}}</span>
                                                                             <span class="description">Anmeldeschluss</span>
                                                                         </div>
                                                                     </div>
