@@ -27,7 +27,7 @@
                         </div>
                         <p class="mt-3 mb-0 text-sm">
                             <span class="text-success mr-2">{{$countFuturePromisedAndWaitlistEvents}}</span>
-                            <span class="text-nowrap">zukünftige Veranstaltungen zugesagt (inkl. Warteliste)</span>
+                            <span class="text-black-50">zukünftige Veranstaltungen zugesagt (inkl. Warteliste)</span>
                     </div>
                 </div>
                 <div class="card card-stats">
