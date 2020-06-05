@@ -68,7 +68,7 @@ class EventRequest extends FormRequest
                 }
                 else if ($currentCountWaitlist > 0 && $maxParticipant != $currentCountPromises) {
                     // full waiting list, although participants not exhausted
-                    $rules['event_users'] = 'array|size:'.$maxParticipant;
+                    $rules['max_participant'] = 'numeric|size:'.$currentCountPromises;
                 }
             } else if ($maxParticipant == 0 && $currentCountWaitlist > 0) {
                 // full waiting list, although infinitely many participants
@@ -81,9 +81,8 @@ class EventRequest extends FormRequest
     public function messages()
     {
         return [
-            'event_users.size' => "Aktuell sind Teilnehmer in der Warteliste, aber die max. Teilnehmerzahl noch nicht ausgeschöpft.",
             'max_participant.min' => "Aktuell sind :min Teilnehmer gemeldet. Die max. Teilnehmerzahl darf nicht darunter liegen.",
-            'max_participant.size' => "Aktuell sind Teilnehmer in der Warteliste, aber die max. Teilnehmerzahl ist unendlich. "
+            'max_participant.size' => "Aktuell sind Teilnehmer in der Warteliste, aber die max. Teilnehmerzahl noch nicht ausgeschöpft.",
         ];
     }
 
