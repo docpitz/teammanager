@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme("https");
         }
         setlocale(LC_TIME, 'German');
-        Carbon::setLocale('de'); // sv
+        Carbon::setLocale('German'); // sv
     }
 
     /**
