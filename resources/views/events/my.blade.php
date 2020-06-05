@@ -45,7 +45,7 @@
                                             </div>
                                         </div>
                                         <div id="item{{$event->id}}" class="carousel-item {{$indexKey == 0 ? 'active': ''}} align-content-center">
-                                            <div class="col-lg-12">
+
                                                 <fieldset id="fieldset{{$event->id}}">
                                                     <div >
                                                         <!-- Card image -->
@@ -59,34 +59,21 @@
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <div class="row align-items-center ">
-                                                                <div class="col-8">
-                                                                    <h5 class="h2 card-title mb-0">{{$event->name}}</h5>
-                                                                    <small class="text-muted">{{__('Veröffentlichung: ').$event->date_publication->format('d.m.Y').__(' - Anmeldeschluss: ').$event->date_sign_up_end->format('d.m.Y')}}</small>
-                                                                </div>
-                                                                <div class="col-4 text-right">
-                                                                    <h5 class="h2 card-title mb-0">&nbsp;</h5>
-                                                                    <small class="text-muted">{{!empty($event->score) ? $event->score.__(' TWM-Points - ') : ''}}<span id="countPromises{{$event->id}}">{{$event->countPromise()}}</span>{{__(' von ')}}{!! $event->max_participant == 0 ? "&infin;" : __('max. ').$event->max_participant !!}{{__(' Teilnehmer')}}</small>
-                                                                </div>
+                                                            <div class="text-right">
+                                                            <small class="text-muted">{{!empty($event->score) ? $event->score.__(' TWM-Points - ') : ''}}<span id="countPromises{{$event->id}}">{{$event->countPromise()}}</span>{{__(' von ')}}{!! $event->max_participant == 0 ? "&infin;" : __('max. ').$event->max_participant !!}{{__(' Teilnehmer')}}</small>
                                                             </div>
+                                                            <h5 class="h2 card-title mb-0">{{$event->name}}</h5>
+
                                                             <div class="row mt--2">
-                                                                <div class="col">
+                                                                <div class="col-md-4">
                                                                     <div class="card-profile-stats d-flex justify-content-center mb--5">
                                                                         <div>
-                                                                            <span class="heading">{{$event->date_event_start->format('d.m.Y H:i').__(' Uhr')}}</span>
-                                                                            <span class="description">Start</span>
+                                                                            <span class="heading">@include("helpers.timeperiod", ["fromDate" => $event->date_event_start, "toDate" => $event->date_event_end, "formatDate" => "d.m.Y", "formatTime" => "H:i"])</span>
+                                                                            <span class="description">Zeitraum</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col">
-                                                                    <div class="card-profile-stats d-flex justify-content-center mb--5">
-                                                                        <div>
-                                                                            <span class="heading">{{$event->date_event_end->format('d.m.Y H:i').__(' Uhr')}}</span>
-                                                                            <span class="description">Ende</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col">
+                                                                <div class="col-md-4">
                                                                     <div class="card-profile-stats d-flex justify-content-center mb--5">
                                                                         <div>
                                                                             <span class="heading">{{$event->meeting_place}}</span>
@@ -94,11 +81,23 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="card-profile-stats d-flex justify-content-center mb--5">
+                                                                        <div>
+                                                                            <span class="heading">{{$event->date_sign_up_end->format("d.m.Y")}}</span>
+                                                                            <span class="description">Anmeldeschluss</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <p class="card-text mt-4">{{$event->description}}</p>
-
-                                                                @if($event->booking_possible)
-                                                                <div class="btn-group center mt-3 pb-4 ">
+                                                            @if(!empty($event->description))
+                                                            <p class="mt-5 text-justify">
+                                                                <h4>Details</h4>
+                                                                <p class="description text-justify">{{$event->description}}</p>
+                                                            </p>
+                                                            @endif
+                                                            @if($event->booking_possible)
+                                                                <div class="btn-group center mt-5 pb-4 ">
                                                                     <button onclick="onClickPromised({{$event->id}})" type="button" class="btn save_button btn-outline-success{{$event->isPromisedByUser(auth()->user()) ? ' active' : ''}}{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Promised ? ' d-none ' : ''}}" id="promised{{$event->id}}"><i id="ajaxLoadPromised{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxPromised{{$event->id}}">{{ __('Teilnehmen') }}</div></button>
                                                                     <button onclick="onClickWaitlist({{$event->id}})" type="button" class="btn save_button btn-outline-info{{$event->isWaitlistByUser(auth()->user()) ? ' active' : ''}}{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Waitlist ? ' d-none ' : ''}}" id="waitlist{{$event->id}}"><i id="ajaxLoadWaitlist{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxWaitlist{{$event->id}}">{{ __('Warteliste') }}</div></button>
                                                                     <button onclick="onClickCanceled({{$event->id}}, false)" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="canceled{{$event->id}}"><i id="ajaxLoadCanceled{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCanceled{{$event->id}}">{{ __('Absagen') }}</div></button>
@@ -119,7 +118,7 @@
                                                         </div>
                                                     </div>
                                                 </fieldset>
-                                            </div>
+
                                         </div>
                                     @endforeach
                                 </div>
