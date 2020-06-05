@@ -28,7 +28,6 @@
                         <p class="mt-3 mb-0 text-sm">
                             <span class="text-success mr-2">{{$countFuturePromisedAndWaitlistEvents}}</span>
                             <span class="text-nowrap">zukünftige Veranstaltungen zugesagt (inkl. Warteliste)</span>
-                        </p>
                     </div>
                 </div>
                 <div class="card card-stats">
@@ -47,6 +46,34 @@
                         </div>
                         <p class="mt-3 mb-0 text-sm">
                             <span class="text-warning mr-2">Bitte zum ersten Training mitbringen</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card card-stats">
+                    <!-- Card body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="card-title text-uppercase text-muted mb-0">Links</h5>
+                                <span class="h2 font-weight-bold mb-0">Auf einen Blick</span>
+                            </div>
+                            <div class="col-auto">
+                                <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                    <i class="ni ni-notification-70"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-3 mb-0 text-sm">
+                            <span class="text-black-50 mr-2"><i class="fas fa-home"></i></span>
+                            <span class="text-nowrap"><a target="_blank" href="http://www.tsvhofolding.de/index.php?abt=Tischtennis">Homepage</a></span><br>
+
+                            <span class="text-black-50 mr-2"><i class="fas fa-images"></i></span>
+                            <span class="text-nowrap"><a target="_blank" href="http://tt-foto.tsvhofolding.de">Interne Fotogalerie</a></span><br>
+                            <span class="text-black-50 mr-2"><i class="fab fa-facebook"></i></span>
+                            <span class="text-nowrap"><a target="_blank" href="https://www.facebook.com/TSVHofoldingTischtennis/">Facebook</a></span><br>
+                            <span class="text-black-50 mr-2"><i class="fab fa-instagram"></i></span>
+                            <span class="text-nowrap"><a target="_blank" href="https://www.instagram.com/tsvhofoldingtischtennis/?hl=de">Instagram</a></span><br>
+
                         </p>
                     </div>
                 </div>
