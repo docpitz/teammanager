@@ -6,6 +6,7 @@ use App\Item;
 use App\User;
 use App\Observers\ItemObserver;
 use App\Observers\UserObserver;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
         {
             URL::forceScheme("https");
         }
+        setlocale(LC_TIME, 'de_DE.utf8');
+        Carbon::setLocale('de'); // sv
     }
 
     /**
