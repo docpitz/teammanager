@@ -54,7 +54,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-8">
+                            <div class="col">
                                 <h3 class="mb-0">{{ __('Spielerprofil editieren') }}</h3>
                             </div>
                         </div>
