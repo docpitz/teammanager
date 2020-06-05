@@ -62,7 +62,10 @@
                                                             <div class="text-right">
                                                             <small class="text-muted">{{!empty($event->score) ? $event->score.__(' TWM-Points - ') : ''}}<span id="countPromises{{$event->id}}">{{$event->countPromise()}}</span>{{__(' von ')}}{!! $event->max_participant == 0 ? "&infin;" : __('max. ').$event->max_participant !!}{{__(' Teilnehmer')}}</small>
                                                             </div>
-                                                            <h5 class="h2 card-title mb-0">{{$event->name}}</h5>
+                                                            <div class="text-center">
+                                                                <span class="h1 text-center text-uppercase mb-0">{{$event->name}}</span>
+                                                            </div>
+
 
                                                             <div class="row mt--2">
                                                                 <div class="col-md-4">
@@ -158,6 +161,10 @@
             }
             $('#carouselEventIndicators').bcSwipe({ threshold: 50 });
             recalculateButtons();
+
+            $('#carouselEventIndicators').on('slid.bs.carousel', function () {
+                recalculateButtons();
+            });
         });
 
         function onClickPromised(eventId){
