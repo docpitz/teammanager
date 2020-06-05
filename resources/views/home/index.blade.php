@@ -63,7 +63,7 @@
                     </div>
                     <div class="card-body">
                         <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="https://www.youtube.com/watch?v=74oF3xDR7Mw" allowfullscreen></iframe>
+                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/74oF3xDR7Mw" allowfullscreen="allowfullscreen"></iframe>
                         </div>
                     </div>
                 </div>
