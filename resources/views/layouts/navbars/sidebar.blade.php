@@ -105,7 +105,7 @@
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
                         <a class="nav-link" target="_blank" href="http://www.tsvhofolding.de/index.php?abt=Tischtennis">
-                            <i class="fas fa-home text-primary"></i>
+                            <i class="fas fa-globe text-primary"></i>
                             <span class="nav-link-text">{{ __('Homepage') }}</span>
                         </a>
                     </li>
