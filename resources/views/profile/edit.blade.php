@@ -1,17 +1,14 @@
-@extends('layouts.app', ['title' => __('Spielerprofil'), 'navClass' => 'bg-default'])
+@extends('layouts.app')
 
 @section('content')
-    @include('forms.header', [
-        'title' => __('Hallo') . ' '. auth()->user()->firstname,
-        'description' => __('Das ist deine Profilseite. Wir werden sie in der nächsten Zeit weiter ausbauen.'),
-        'class' => 'col-lg-12'
-    ])
+    @component('layouts.headers.auth')
+    @endcomponent
 
     <div class="container-fluid mt--6">
+        <!--
         <div class="row">
             <div class="col-lg-6">
                 <div class="card bg-gradient-info border-0">
-                    <!-- Card body -->
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
@@ -33,7 +30,6 @@
             </div>
             <div class="col-lg-6">
                 <div class="card bg-gradient-danger border-0">
-                    <!-- Card body -->
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
@@ -54,6 +50,7 @@
                 </div>
             </div>
         </div>
+        -->
                 <div class="card">
                     <div class="card-header">
                         <div class="row align-items-center">
