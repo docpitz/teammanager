@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'de_DE',
 
     /*
     |--------------------------------------------------------------------------
@@ -188,7 +188,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         \App\Providers\ValidationRuleProvider::class,
         Altek\Accountant\AccountantServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
+        Jenssegers\Date\DateServiceProvider::class,
 
     ],
 
@@ -239,6 +240,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Avatar' => Laravolt\Avatar\Facade::class,
+        'Date' => Jenssegers\Date\Date::class,
     ],
 
 ];

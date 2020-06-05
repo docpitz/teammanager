@@ -71,7 +71,7 @@
                                                                 <div class="col-md-4">
                                                                     <div class="card-profile-stats d-flex justify-content-center mb--5">
                                                                         <div>
-                                                                            <span class="heading">@include("helpers.timeperiod", ["fromDate" => $event->date_event_start, "toDate" => $event->date_event_end, "formatDate" => "D, d.m.Y", "formatTime" => "H:i"])</span>
+                                                                            <span class="heading">@include("helpers.timeperiod", ["fromDate" => $event->date_event_start, "toDate" => $event->date_event_end, "formatDate" => "D d.m.Y", "formatTime" => "H:i"])</span>
                                                                             <span class="description">Veranstaltungsdatum</span>
                                                                         </div>
                                                                     </div>
@@ -87,7 +87,7 @@
                                                                 <div class="col-md-4">
                                                                     <div class="card-profile-stats d-flex justify-content-center mb--5">
                                                                         <div>
-                                                                            <span class="heading">{{$event->date_sign_up_end->format("D, d.m.Y")}}</span>
+                                                                            <span class="heading">{{\Jenssegers\Date\Date::parse($event->date_sign_up_end)->format("D d.m.Y")}}</span>
                                                                             <span class="description">Anmeldeschluss</span>
                                                                         </div>
                                                                     </div>
