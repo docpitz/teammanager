@@ -9,10 +9,10 @@ use App\Http\Requests\EventRequest;
 use App\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
-    private $request;
     public function __construct()
     {
         //FIXME: 403 - Forbidden
@@ -45,18 +45,23 @@ class EventController extends Controller
      * Store a newly created user in storage
      *
      * @param  \App\Http\Requests\UserRequest  $request
-     * @param  \App\User  $model
+     * @param  \App\User  $event
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(EventRequest $request, Event $model)
+    public function store(EventRequest $request, Event $event)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
-        $createdModel = $model->create($request->all());
+        $createdModel = $event->create($request->all());
         $arrayOfUserIds = $request->get('event_users');
         $createdModel->users()->attach($arrayOfUserIds,
             ['participation_status_id' => $request->get('participation_status_id'),
                 'changed_by_user_id' => auth()->user()->getIdentifier(),
                 'date_user_changed_participation_status' => Carbon::now() ]);
+
+        if(!empty($request->get('event_responsible'))) {
+            $arrayResonsibles = array_column(json_decode($request->get('event_responsible')),'data-id');
+            $createdModel->responsibles()->attach($arrayResonsibles);
+        }
 
         return redirect()->route('event.index')->withStatus(__('Veranstaltung erfolgreich erstellt.'));
     }
@@ -93,7 +98,9 @@ class EventController extends Controller
             $allUserWithEventInfo[$i]["selected"] = $selected;
             $i++;
         }
-        return view('events.edit', ['event' => $event, 'userWithEventInfo' => $allUserWithEventInfo]);
+        $eventResponsibles = $event->responsibles()->getModels([DB::raw('CAST(`id` as CHARACTER) AS `data-id`'), DB::raw('CONCAT(firstname, " ", surname) AS value')]);
+
+        return view('events.edit', ['event' => $event, 'userWithEventInfo' => $allUserWithEventInfo, 'event_responsible' => $eventResponsibles]);
     }
 
     /**
@@ -105,9 +112,6 @@ class EventController extends Controller
      */
     public function update(EventRequest $request, Event $event)
     {
-        $this->request = $request;
-        //$this->rules();
-
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
         $event->update($request->all());
 
@@ -128,6 +132,14 @@ class EventController extends Controller
                     'date_user_changed_participation_status' => Carbon::now()]);
 
         }
+
+        // Renew Responsibles
+        $event->responsibles()->detach();
+        if(!empty($request->get('event_responsible'))) {
+            $arrayResonsibles = array_column(json_decode($request->get('event_responsible')),'data-id');
+            $event->responsibles()->attach($arrayResonsibles);
+        }
+
         return redirect()->route('event.index')->withStatus(__('Veranstaltung erfolgreich geändert.'));
     }
 
@@ -143,90 +155,4 @@ class EventController extends Controller
         $event->delete();
         return redirect()->route('event.index')->withStatus(__('Veranstaltung erfolgreich gelöscht'));
     }
-// TODO: Remove!!!!
-/*
-
-    public function rules()
-    {
-        $rules = [
-            'name' => 'required|min:3',
-            'description' => 'nullable',
-            'score' => 'nullable',
-            'max_participant' => 'required',
-            'meeting_place' => 'required',
-            'date_event_range' => 'required',
-            'date_sign_up_range' => 'required',
-            'date_publication' => 'required',
-            'participation_status_id' => 'required',
-        ];
-
-        $id = 2;
-        $isNew = empty($id);
-        echo "id<br>";
-        var_dump($id);
-        echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-
-        $max_participant = $this->request->get('max_participant');
-        $participant_status_id = $this->request->get('participation_status_id');
-
-        if($max_participant > 0 && $participant_status_id == ParticipationStatusEnum::Promised) {
-            if (! $isNew) {
-                $event = Event::where('id', $id);
-                var_dump($event->toSql());
-                $event = $event->first();
-                var_dump($event->id);
-                $arrayPromisedEventUsersFromDB = array_column($event->getUsersByParticipation(ParticipationStatusEnum::Promised)->getModels(['id']), 'id'); // ids from all promised users for this event
-                $oldCountPromises = count($arrayPromisedEventUsersFromDB);
-                echo "arrayPromisedEventUsersFromDB<br>";
-                var_dump($arrayPromisedEventUsersFromDB);
-                echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-                // add new users
-                $arrayEventUsersFromDB = array_column($event->users()->getModels(['id']), 'id'); // ids from all users for this event
-                echo "arrayEventUsersFromDB<br>";
-                var_dump($arrayEventUsersFromDB);
-                echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-
-                $arrayOfUserIds = $this->request->get('event_users');
-                echo "arrayOfUserIds<br>";
-                var_dump($arrayOfUserIds);
-                echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-
-                $arrayAdded = is_null($arrayOfUserIds) ? [] : array_diff($arrayOfUserIds, $arrayEventUsersFromDB);
-                echo "arrayAdded<br>";
-                var_dump($arrayAdded);
-                echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-
-                $arrayPromisedEventUsersFromDB = array_merge($arrayPromisedEventUsersFromDB, $arrayAdded);
-                echo "arrayPromisedEventUsersFromDB<br>";
-                var_dump($arrayPromisedEventUsersFromDB);
-                echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-
-                // remove old users
-                $arrayDeleted = is_null($arrayOfUserIds) ? $arrayEventUsersFromDB : array_diff($arrayEventUsersFromDB, $arrayOfUserIds);
-                echo "arrayDeleted<br>";
-                var_dump($arrayDeleted);
-                echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-
-                Arr::forget($arrayPromisedEventUsersFromDB, $arrayDeleted);
-                echo "arrayPromisedEventUsersFromDB<br>";
-                var_dump($arrayPromisedEventUsersFromDB);
-                echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-
-                echo "max_participant<br>";
-                var_dump($max_participant);
-                echo "<br>+++++++++++++++++++++++++++++++++++++++++++++<br>";
-
-                $currentCountPromises = count($arrayPromisedEventUsersFromDB);
-                if($currentCountPromises > $max_participant) {
-                    $rules['event_users'] = 'array|max:'.$max_participant;
-                }
-            }
-            else {
-                $rules['event_users'] = 'array|max:'.$max_participant;
-            }
-
-        }
-        return $rules;
-    }
-*/
 }

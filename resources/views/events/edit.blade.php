@@ -88,6 +88,11 @@
                                     <input type="text" name="date_publication" id="input-date_publication" class="form-control{{ $errors->has('date_publication') ? ' is-invalid' : '' }}" placeholder="{{ __('Veröffentlichungsdatum') }}" value="{{ old('date_publication', $event->date_publication->format('d.m.Y')) }}" required>
                                     @include('alerts.feedback', ['field' => 'date_publication'])
                                 </div>
+                                <div class="form-group{{ $errors->has('event_responsible') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-event_responsible">{{ __('Verantwortliche') }}</label>
+                                    <input name="event_responsible"  id="input-event_responsible" placeholder="{{ __('Verantwortliche') }}">
+                                    @include('alerts.feedback', ['field' => 'event_responsible'])
+                                </div>
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-event_user">{{ __('Teilnehmer') }}
                                         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-info"></i></button>
@@ -141,12 +146,34 @@
 
 @push('css')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css')."/tagify.css" }}"/>
 @endpush
 
 @push('js')
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js')."/tagify.js"}}"></script>
     <script>
+        var input = document.querySelector('input[name="event_responsible"]'),
+            // init Tagify script on the above inputs
+            tagify = new Tagify(input, {
+                whitelist: [
+                    @foreach($userWithEventInfo as $user)
+                    {'value':'{{$user['firstname']}} {{$user["surname"]}}','data-id':'{{$user['id']}}'},
+                    @endforeach
+                ],
+                enforceWhitelist: true,
+                editTags: false,
+                dropdown: {
+                    maxItems: 5,           // <- mixumum allowed rendered suggestions
+                    classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
+                    enabled: 0,             // <- show suggestions on focus
+                    closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+                }
+            })
+
+        tagify.addTags({!! old('event_responsible', json_encode($event_responsible)) !!});
+
         $('input[name="date_event_range"]').daterangepicker({
             @if(old('date_event_range', $event['date_event_range']))
             startDate: moment('{{ explode(' - ',old('date_event_range', $event['date_event_range']))[0] }}','DD.MM.YYYY HH:mm'),
@@ -203,7 +230,6 @@
             $(this).val('');
         });
     </script>
-
 @endpush
 
 

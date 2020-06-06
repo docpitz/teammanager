@@ -11,7 +11,7 @@ use App\Helper\UserCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 
 class Event extends Model implements Recordable
 {
@@ -64,9 +64,13 @@ class Event extends Model implements Recordable
     protected $dates = ['date_event_start', 'date_event_end', 'date_sign_up_start', 'date_sign_up_end', 'date_publication'];
 
     public function users() {
-        return $this->belongsToMany('App\User')
+        return $this->belongsToMany('App\User', 'event_user')
             ->withPivot('participation_status_id', 'date_user_changed_participation_status', 'changed_by_user_id')
             ->withTimestamps();
+    }
+
+    public function responsibles() {
+        return $this->belongsToMany('App\User', 'event_responsible');
     }
 
     public function getUsersParticipation() {
@@ -112,32 +116,40 @@ class Event extends Model implements Recordable
 
         $userCache = new UserCache();
         $history = $ledgers->map(function (Ledger $ledger) use($userCache) {
-            $properties = $ledger->getPivotData()["properties"];
-            $metadata = $ledger->getMetadata();
-            $collection = collect($properties);
-            $properties = $collection->map(function (Array $property) use($metadata, $userCache) {
-                if($metadata['ledger_event'] == "detached")
-                {
-                    Arr::set($property, 'participation_status_name', 'Removed');
-                    Arr::set($property, 'date_user_changed_participation_status', $metadata['ledger_updated_at']);
-                    Arr::set($property, 'changed_by_user_id', $metadata['user_id']);
-                }
-                else
-                {
-                    if(Arr::has($property, 'participation_status_id'))
+            $pivotData = $ledger->getPivotData();
+            if($pivotData["relation"] == "users") {
+                $properties = $pivotData["properties"];
+                $metadata = $ledger->getMetadata();
+                $collection = collect($properties);
+                $properties = $collection->map(function (Array $property) use($metadata, $userCache) {
+                    if($metadata['ledger_event'] == "detached")
                     {
-                        Arr::set($property, 'participation_status_name', ParticipationStatusEnum::getInstance((int)$property['participation_status_id'])->description);
+                        Arr::set($property, 'participation_status_name', 'Removed');
+                        Arr::set($property, 'date_user_changed_participation_status', $metadata['ledger_updated_at']);
+                        Arr::set($property, 'changed_by_user_id', $metadata['user_id']);
                     }
-                }
-                $dateUserChangedParticipationStatus = $property['date_user_changed_participation_status'];
-                $carbon = new Carbon($dateUserChangedParticipationStatus);
-                $formatedTime = $carbon->timezone(config('app.timezone'))->format('d.m.Y H:i:s');
-                Arr::set($property, 'changed_date_formatted', $formatedTime);
+                    else
+                    {
+                        if(Arr::has($property, 'participation_status_id'))
+                        {
+                            Arr::set($property, 'participation_status_name', ParticipationStatusEnum::getInstance((int)$property['participation_status_id'])->description);
+                        }
+                    }
+                    if(!empty($property['date_user_changed_participation_status'])) {
+                        $dateUserChangedParticipationStatus = $property['date_user_changed_participation_status'];
+                        $carbon = new Carbon($dateUserChangedParticipationStatus);
+                        $formatedTime = $carbon->timezone(config('app.timezone'))->format('d.m.Y H:i:s');
+                        Arr::set($property, 'changed_date_formatted', $formatedTime);
+                    }
 
-                Arr::set($property, 'user', $userCache->getUserById($property['changed_by_user_id']));
-                return $property;
-            });
-            return $properties->toArray();
+                    if(!empty($property['changed_by_user_id']))
+                    {
+                        Arr::set($property, 'user', $userCache->getUserById($property['changed_by_user_id']));
+                    }
+                    return $property;
+                });
+                return $properties->toArray();
+            }
         });
         return collect($history)->collapse()->groupBy('user_id')->all();
     }

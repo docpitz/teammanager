@@ -42,6 +42,12 @@
                                 <h1>{{$event->name}}</h1>
                                 <small><b>Anmeldezeitraum: </b>{{$event->date_sign_up_start->format('d.m.Y')}} bis {{$event->date_sign_up_end->format('d.m.Y')}}</small><br>
                                 <small><b>Veranstaltungszeitraum: </b>{{$event->date_event_start->format('d.m.Y H:i')}} bis {{$event->date_event_end->format('d.m.Y H:i').__(' Uhr')}}</small><br><br>
+                                <div class="form-group{{ $errors->has('event_responsible') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="input-event_responsible">{{ __('Verantwortliche') }}</label>
+                                    <input name="event_responsible"  id="input-event_responsible" placeholder="{{ __('Verantwortliche') }}">
+                                    @include('alerts.feedback', ['field' => 'event_responsible'])
+                                </div>
+
                                 <div class="row">
                                     <div class="col-sm-4">
                                         @include('events.booking_overview_participation_status', ['header'=> $headerPromised, 'participationDescription' => $promisedDescription, 'users' => old('usersPromised', $usersPromised), 'color' => 'green'])
@@ -71,14 +77,36 @@
 @push('css')
     <link rel="stylesheet" type="text/css" href="../../css/sortable.css">
     <link rel="stylesheet" type="text/css" href="../../css/event_booking_overview.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css')."/tagify.css" }}"/>
 @endpush
 
 @push('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js')."/tagify.js"}}"></script>
     <script>
+        var input = document.querySelector('input[name="event_responsible"]'),
+            // init Tagify script on the above inputs
+            tagify = new Tagify(input, {
+                whitelist: [
+                        @foreach(\App\User::allUserSorted()->get() as $user)
+                    {'value':'{{$user->firstname}} {{$user->surname}}','data-id':'{{$user->id}}'},
+                    @endforeach
+                ],
+                enforceWhitelist: true,
+                editTags: false,
+                dropdown: {
+                    maxItems: 5,           // <- mixumum allowed rendered suggestions
+                    classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
+                    enabled: 0,             // <- show suggestions on focus
+                    closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+                }
+            })
+
+
         $( document ).ready(function() {
             calculateHeight();
             calculateHeight();
+            addTagify();
         });
         $(function () {
             $(".sortableItems").sortable({
@@ -116,6 +144,11 @@
             $("#{{$promisedDescription}}").css('padding-bottom', paddingBottomPromiseMember + 'px');
             $("#{{$canceledDescription}}").css('padding-bottom', paddingBottomCancelMember + 'px');
             $("#{{$quietDescription}}").css('padding-bottom', paddingBottomQuietMember + 'px');
+        }
+
+        function addTagify()
+        {
+            tagify.addTags({!! old('event_responsible', json_encode($event_responsible)) !!})
         }
 
     </script>
