@@ -49,7 +49,7 @@ class ResetPassword extends Notification
             ->subject('Zurücksetzen des Passwortes für ' . config('app.name'))
             ->greeting('Hallo!')
             ->line('du erhältst diese E-Mail, weil wir eine Anfrage zum Zurücksetzen des Passworts für dein Konto erhalten haben.')
-            ->action('Passwort zurücksetzen', url(config('app.url').route('password.reset', [$this->token, 'email='.$notifiable->email], false)))
+            ->action('Passwort zurücksetzen', url(config('app.url').route('password.reset', [$this->token, 'username='.$notifiable->username], false)))
             ->line('Dieser Link zum Zurücksetzen des Passworts läuft in 60 Minuten ab.')
             ->line('Wenn du kein Passwort Reset angefordert hast, ist keine weitere Aktion erforderlich.')
             ->salutation(new HtmlString("Viele Grüße <br>".config('app.name')));
