@@ -8,6 +8,7 @@ use App\Buisness\Enum\PermissionEnum;
 use App\Http\Requests\EventBookingOverviewRequest;
 use App\User;
 use App\Event;
+use Illuminate\Support\Facades\DB;
 
 class EventBookingOverviewController extends Controller
 {
@@ -36,7 +37,14 @@ class EventBookingOverviewController extends Controller
         $this->addChanges($usersCanceled, $history);
         $this->addChanges($usersQuiet, $history);
         $this->addChanges($usersWaitlist, $history);
-        return view('events.booking_overview', ['event' => $eventBookingOverview, 'usersPromised' => $usersPromised, 'usersCanceled' => $usersCanceled, 'usersQuiet' => $usersQuiet, 'usersWaitlist' => $usersWaitlist]);
+
+        $eventResponsibles = $eventBookingOverview->responsibles()->getModels([DB::raw('CAST(`id` as CHARACTER) AS `data-id`'), DB::raw('CONCAT(firstname, " ", surname) AS value')]);
+        return view('events.booking_overview', ['event' => $eventBookingOverview,
+            'usersPromised' => $usersPromised,
+            'usersCanceled' => $usersCanceled,
+            'usersQuiet' => $usersQuiet,
+            'usersWaitlist' => $usersWaitlist,
+            'event_responsible' => $eventResponsibles]);
     }
 
     public function update(EventBookingOverviewRequest $request, Event $eventBookingOverview)
@@ -47,6 +55,13 @@ class EventBookingOverviewController extends Controller
         $this->updateParticipation($eventBookingOverview, $request, ParticipationStatusEnum::Canceled);
         $this->updateParticipation($eventBookingOverview, $request, ParticipationStatusEnum::Quiet);
         $this->updateParticipation($eventBookingOverview, $request, ParticipationStatusEnum::Waitlist);
+
+        // Renew Responsibles
+        $eventBookingOverview->responsibles()->detach();
+        if(!empty($request->get('event_responsible'))) {
+            $arrayResonsibles = array_column(json_decode($request->get('event_responsible')),'data-id');
+            $eventBookingOverview->responsibles()->attach($arrayResonsibles);
+        }
 
         return redirect()->route('event.index')->withStatus(__('Teilnehmer an Veranstaltung erfolgreich geändert.'));
     }

@@ -50,7 +50,7 @@
                                                         <tr>
                                                             <td>{{$change['changed_date_formatted']}}</td>
                                                             <td>{{$change['participation_status_name']}}</td>
-                                                            @if (is_null($change['user']))
+                                                            @if (empty($change['user']))
                                                                 <td>{{__("User unbekannt (gelöscht)")}}</td>
                                                             @else
                                                             <td>{{$change['user']->surname}}, {{$change['user']->firstname}}</td>
