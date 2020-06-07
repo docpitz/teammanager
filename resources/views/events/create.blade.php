@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="form-group{{ $errors->has('description') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="input-description">{{ __('Beschreibung') }}</label>
-                                    <textarea rows="3" name="description" id="input-description" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" placeholder="{{ __('Beschreibung') }}" value="{{ old('description') }}"></textarea>
+                                    <textarea rows="3" name="description" id="input-description" class="form-control{{ $errors->has('description') ? ' is-invalid' : '' }}" placeholder="{{ __('Beschreibung') }}">{{ old('description') }}</textarea>
                                     @include('alerts.feedback', ['field' => 'description'])
                                 </div>
                                 <div class="form-group{{ $errors->has('score') ? ' has-danger' : '' }}">
