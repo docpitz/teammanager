@@ -145,7 +145,7 @@ class User extends Authenticatable implements Identifiable
         return $this->belongsToMany('App\Event')
             ->select(DB::raw('*, date_sign_up_start <= CURRENT_DATE() AND date_sign_up_end >= CURRENT_DATE() AS booking_possible'))
             ->whereDate('date_publication', '<=', Carbon::now())
-            ->whereDate('date_event_end', '>', Carbon::now())
+            ->whereDate('date_event_end', '>=', Carbon::now())
             ->withPivot('participation_status_id', 'date_user_changed_participation_status')
             ->orderBy('date_event_start')
             ->withTimestamps();
