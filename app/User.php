@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\InformationAboutParticipants;
 use App\Notifications\WaitlistToActiv;
 use Avatar;
 use Altek\Accountant\Contracts\Identifiable;
@@ -74,6 +75,11 @@ class User extends Authenticatable implements Identifiable
     public function sendWaitlistToActivNotification(Event $event)
     {
         $this->notify(new WaitlistToActiv($this, $event));
+    }
+
+    public function sendInformationAboutParticipants(Event $event)
+    {
+        $this->notify(new InformationAboutParticipants($event));
     }
 
     public function getRole() : ?RoleEnum {

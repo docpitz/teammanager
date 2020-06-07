@@ -8,6 +8,7 @@ use Altek\Accountant\Models\Ledger;
 use Altek\Eventually\Eventually;
 use App\Buisness\Enum\ParticipationStatusEnum;
 use App\Helper\UserCache;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -71,6 +72,10 @@ class Event extends Model implements Recordable
 
     public function responsibles() {
         return $this->belongsToMany('App\User', 'event_responsible');
+    }
+
+    public function sendedmails() {
+        return $this->hasMany('App\EventSendedmail');
     }
 
     public function getUsersParticipation() {
@@ -207,6 +212,15 @@ class Event extends Model implements Recordable
 
     public function hasQuietByUser(User $user) {
         return $this->hasStateByUser(ParticipationStatusEnum::Quiet, $user);
+    }
+
+    public function whereNotSendedEmail(String $emailType)
+    {
+        return $this->whereDoesntHave('sendedmails')
+            ->orWhereHas('sendedmails', function(Builder $query) use($emailType) {
+                $query->where('kind','!=', $emailType);
+            }
+        );
     }
 
     private function hasStateByUser(int $participationStatus, User $user) {
