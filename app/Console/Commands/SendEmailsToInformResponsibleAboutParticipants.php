@@ -43,7 +43,8 @@ class SendEmailsToInformResponsibleAboutParticipants extends Command
      */
     public function handle()
     {
-        $events = Event::where('date_event_start','<', Carbon::now()->subHours(2))
+        $events = Event::where('date_event_start','<', Carbon::now()->addHours(2))
+            ->where('date_event_start','>', Carbon::now()->subHours(6))
             ->whereDoesntHave('sendedmails')
             ->orWhereHas('sendedmails', function(Builder $query){
                 $query->where('kind','!=', $this->signature);
