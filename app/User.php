@@ -143,7 +143,7 @@ class User extends Authenticatable implements Identifiable
 
     public function eventsToBook() {
         return $this->belongsToMany('App\Event')
-            ->select(DB::raw('*, date_sign_up_start <= CURRENT_DATE() AND date_sign_up_end >= CURRENT_DATE() date_event_end > CURRENT_TIMESTAMP() AS booking_possible'))
+            ->select(DB::raw('*, date_sign_up_start <= CURRENT_DATE() AND date_sign_up_end >= CURRENT_DATE() AND date_event_end > CURRENT_TIMESTAMP() AS booking_possible'))
             ->whereDate('date_publication', '<=', Carbon::now())
             ->whereDate('date_event_end', '>=', Carbon::now())
             ->withPivot('participation_status_id', 'date_user_changed_participation_status')
