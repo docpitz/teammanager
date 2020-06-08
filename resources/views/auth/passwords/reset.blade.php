@@ -11,9 +11,9 @@
                         <div class="text-center text-muted mb-4">
                             <small>{{ __('Passwort zurücksetzen') }}</small>
                         </div>
-                        @if ($errors->has('email'))
+                        @if ($errors->has('username'))
                         <div class="alert alert-danger" role="alert">
-                            {{ $errors->first('email') }}
+                            {{ $errors->first('username') }}
                         </div>
                         @endif
                         @if ($errors->has('password'))
