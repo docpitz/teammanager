@@ -97,7 +97,8 @@
                         </a>
                     </li>
                     @endcan
-                </ul>
+                </ul>                
+                @endcan
                 <hr class="my-3">
                 <!-- Heading -->
                 <h6 class="navbar-heading p-0 text-muted">{{ __('Links') }}</h6>
@@ -128,7 +129,6 @@
                         </a>
                     </li>
                 </ul>
-                @endcan
             </div>
         </div>
     </div>
