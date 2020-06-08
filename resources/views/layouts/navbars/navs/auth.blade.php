@@ -15,11 +15,13 @@
                         </div>
                     </div>
                 </li>
+                <!--
                 <li class="nav-item d-sm-none">
                     <a class="nav-link" href="#" data-action="search-show" data-target="#navbar-search-main">
-                        <!-- Search <i class="ni ni-zoom-split-in"></i>-->
+                         Search <i class="ni ni-zoom-split-in"></i>
                     </a>
                 </li>
+                -->
                 @include('layouts.headers.notifications')
             </ul>
             <ul class="navbar-nav align-items-center ml-auto ml-md-0">
