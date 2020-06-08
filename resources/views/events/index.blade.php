@@ -48,9 +48,9 @@
                                 <tr>
                                     <td>{{ $event->name }}</td>
                                     <td>{{__("Teilnehmer: ".$event->countPromise())}} <br> {{__("frei: ")}}{!! $event->max_participant > 0 ? ($event->max_participant - $event->countPromise()) : "&infin;" !!} / {{__("wartend: ")}}{{$event->max_participant > 0 ? $event->countWaitlist() : "-" }} / {{__("angefragt: ").count($event->users) }}</td>
-                                    <td>{{ $event->date_event_start->format('d.m.Y H:i') }}</td>
-                                    <td>{{ $event->date_publication->format('d.m.Y') }}</td>
-                                    <td>{{ $event->date_sign_up_end->format('d.m.Y') }}</td>
+                                    <td>{{ \Jenssegers\Date\Date::parse($event->date_event_start)->format('D d.m.Y H:i') }}</td>
+                                    <td>{{ \Jenssegers\Date\Date::parse($event->date_publication)->format('D d.m.Y') }}</td>
+                                    <td>{{ \Jenssegers\Date\Date::parse($event->date_sign_up_end)->format('D d.m.Y') }}</td>
                                     <td class="text-right">
                                         <form action="{{ route('event.destroy', $event) }}" method="post">
                                             @csrf
