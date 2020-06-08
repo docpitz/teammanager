@@ -2,7 +2,7 @@
 
 Teammanager to organize sport clubs 
 
-*Current version*: Teammanager v0.0.1 
+*Current version*: Teammanager v1.0.0 
 
 ## Prerequisites
 
