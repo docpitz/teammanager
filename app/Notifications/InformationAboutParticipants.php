@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\HtmlString;
+use Jenssegers\Date\Date;
 
 class InformationAboutParticipants extends Notification
 {
@@ -46,7 +47,8 @@ class InformationAboutParticipants extends Notification
         $message = (new MailMessage)
             ->subject('Teilnehmer der Veranstaltung: '.$this->event->name)
             ->greeting('Hallo')
-            ->line('Heute von '.$this->event->date_event_start.' bis '.$this->event->date_event_end.' findet unsere Veranstaltung '.$this->event->name.' statt.')
+            ->line('Heute von '.Date::parse($this->event->date_event_start)->format('D d.m.Y H:i') .
+                ' bis '.Date::parse($this->event->date_event_end)->format('D d.m.Y H:i').' findet unsere Veranstaltung '.$this->event->name.' statt.')
             ->line('Folgende '.$this->event->countPromise().' Teilnehmer kommen: ');
         $persons = "";
         foreach ($this->event->getUsersByParticipation(ParticipationStatusEnum::Promised)->getModels() as $user) {
