@@ -30,6 +30,7 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
+                                <th scope="col">{{ __('Benutzername') }}</th>
                                 <th scope="col">{{ __('Name') }}</th>
                                 <th scope="col">{{ __('1. E-Mail') }}</th>
                                 <th scope="col">{{ __('2. E-Mail') }}</th>
@@ -40,6 +41,7 @@
                             <tbody>
                             @foreach ($users as $user)
                                 <tr>
+                                    <td>{{ $user->username }}</td>
                                     <td>{{ $user->surname }} {{ $user->firstname }}</td>
                                     <td>
                                         <a href="mailto:{{ $user->email }}">{{ \App\Helper\Email::replaceUmlauts($user->email) }}</a>
