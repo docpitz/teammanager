@@ -47,7 +47,12 @@
                             @forelse ($events as $event)
                                 <tr>
                                     <td>{{ $event->name }}</td>
-                                    <td>{{__("Teilnehmer: ".$event->countPromise())}} <br> {{__("frei: ")}}{!! $event->max_participant > 0 ? ($event->max_participant - $event->countPromise()) : "&infin;" !!} / {{__("wartend: ")}}{{$event->max_participant > 0 ? $event->countWaitlist() : "-" }} / {{__("angefragt: ").count($event->users) }}</td>
+                                    <td><a href="#" class="text-decoration-none" data-toggle="tooltip" data-html="true" data-placement="top" @if($event->countPromise()>0)title="<b>Angemeldet:</b><br>@foreach($event->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Promised)->getModels() as $participant){{$participant->firstname}} {{$participant->surname}}<br>@endforeach"@endif>{{__("Teilnehmer: ")}}</a>{{$event->countPromise()}}/
+                                        {!! $event->max_participant > 0 ? $event->max_participant : "&infin;" !!}
+                                        <br>
+                                        <a href="#" class="text-decoration-none" data-toggle="tooltip" data-html="true" data-placement="top" @if($event->countWaitlist()>0)title="<b>Warteliste:</b><br>@foreach($event->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Waitlist)->getModels() as $participant){{$participant->firstname}} {{$participant->surname}}<br>@endforeach"@endif>{{__("wartend: ")}}</a>{{$event->max_participant > 0 ? $event->countWaitlist() : "-" }} /
+                                        <a href="#" class="text-decoration-none" data-toggle="tooltip" data-html="true" data-placement="top" @if($event->countCancel()>0)title="<b>Abgesagt:</b><br>@foreach($event->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Canceled)->getModels() as $participant){{$participant->firstname}} {{$participant->surname}}<br>@endforeach"@endif>{{__("abgelehnt: ")}}</a> {{($event->countCancel()) }} /
+                                        {{__("angefragt: ").count($event->users) }}</td>
                                     <td>{{ \Jenssegers\Date\Date::parse($event->date_event_start)->format('D d.m.Y H:i') }}</td>
                                     <td>{{ \Jenssegers\Date\Date::parse($event->date_publication)->format('D d.m.Y') }}</td>
                                     <td>{{ \Jenssegers\Date\Date::parse($event->date_sign_up_end)->format('D d.m.Y') }}</td>
@@ -85,3 +90,7 @@
         @include('layouts.footers.auth')
     </div>
 @endsection
+
+@push('css')
+    <link rel="stylesheet" type="text/css" href="{{ asset('css') }}/text-decoration.css">
+@endpush

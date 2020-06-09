@@ -100,6 +100,10 @@ class Event extends Model implements Recordable
         return $this->users()->wherePivot('participation_status_id','=', ParticipationStatusEnum::Promised)->count();
     }
 
+    public function countCancel() {
+        return $this->users()->wherePivot('participation_status_id','=', ParticipationStatusEnum::Canceled)->count();
+    }
+
     public function countWaitlist() {
         return $this->waitlistOrderbyHighestWish()->count();
     }
