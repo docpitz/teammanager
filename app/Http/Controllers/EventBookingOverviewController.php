@@ -51,6 +51,8 @@ class EventBookingOverviewController extends Controller
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
 
+        $this->sendMailWaitlistToActiv($eventBookingOverview, $request);
+
         $this->updateParticipation($eventBookingOverview, $request, ParticipationStatusEnum::Promised);
         $this->updateParticipation($eventBookingOverview, $request, ParticipationStatusEnum::Canceled);
         $this->updateParticipation($eventBookingOverview, $request, ParticipationStatusEnum::Quiet);
@@ -104,5 +106,23 @@ class EventBookingOverviewController extends Controller
             $users = $eventBookingOverview->getUsersParticipationByUserIds($oldUserIds)->getModels();
         }
         return $users;
+    }
+
+    private function sendMailWaitlistToActiv(Event $eventBookingOverview, EventBookingOverviewRequest $request)
+    {
+        $userIdsWithNewStatusPromised = $request->get(ParticipationStatusEnum::getInstance(ParticipationStatusEnum::Promised)->description);
+        if(empty($userIdsWithNewStatusPromised))
+        {
+            return;
+        }
+        foreach ($userIdsWithNewStatusPromised as $userId)
+        {
+            $user = $this->userCache->getUserById($userId);
+            $oldParticipationStatusEnum = ParticipationStatusEnum::getInstance($eventBookingOverview->getParticipationState($user));
+            if($oldParticipationStatusEnum->value == ParticipationStatusEnum::Waitlist)
+            {
+                $user->sendWaitlistToActivNotification($eventBookingOverview);
+            }
+        }
     }
 }
