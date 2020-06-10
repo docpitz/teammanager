@@ -251,7 +251,8 @@
   }
 
   function move(dualListbox) {
-    var scrollPos = dualListbox.elements.select1.scrollTop();
+    var initialScrollPositionSelect1 = dualListbox.elements.select1.scrollTop();
+    var initialScrollPositionSelect2 = dualListbox.elements.select2.scrollTop();
     if (dualListbox.settings.preserveSelectionOnMove === 'all' && !dualListbox.settings.moveOnSelect) {
       saveSelections(dualListbox, 1);
       saveSelections(dualListbox, 2);
@@ -267,7 +268,8 @@
     });
 
     refreshSelects(dualListbox);
-    dualListbox.elements.select1.scrollTop(scrollPos);
+    dualListbox.elements.select1.scrollTop(initialScrollPositionSelect1);
+    dualListbox.elements.select2.scrollTop(initialScrollPositionSelect2);
     triggerChangeEvent(dualListbox);
     if(dualListbox.settings.sortByInputOrder){
         sortOptionsByInputOrder(dualListbox.elements.select2);
@@ -277,6 +279,8 @@
   }
 
   function remove(dualListbox) {
+    var initialScrollPositionSelect1 = dualListbox.elements.select1.scrollTop();
+    var initialScrollPositionSelect2 = dualListbox.elements.select2.scrollTop();
     if (dualListbox.settings.preserveSelectionOnMove === 'all' && !dualListbox.settings.moveOnSelect) {
       saveSelections(dualListbox, 1);
       saveSelections(dualListbox, 2);
@@ -292,6 +296,8 @@
     });
 
     refreshSelects(dualListbox);
+    dualListbox.elements.select1.scrollTop(initialScrollPositionSelect1);
+    dualListbox.elements.select2.scrollTop(initialScrollPositionSelect2);
     triggerChangeEvent(dualListbox);
     sortOptions(dualListbox.elements.select1);
     if(dualListbox.settings.sortByInputOrder){
