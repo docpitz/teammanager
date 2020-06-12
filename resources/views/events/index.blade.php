@@ -48,7 +48,7 @@
                                 <tr>
                                     <td>{{ $event->name }}</td>
                                     <td><a class="text-decoration-none" data-toggle="tooltip" data-html="true" data-placement="top" @if($event->countPromise()>0)title="<b>Angemeldet:</b><br>@foreach($event->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Promised)->getModels() as $participant){{$participant->firstname}} {{$participant->surname}}<br>@endforeach"@endif>{{__("Teilnehmer: ")}}</a>{{$event->countPromise()}} /
-                                        {!! $event->max_participant > 0 ? $event->max_participant : "&infin;" !!}
+                                        {{ $event->max_participant > 0 ? $event->max_participant : "∞" }}
                                         <br>
                                         <a class="text-decoration-none" data-toggle="tooltip" data-html="true" data-placement="top" @if($event->countWaitlist()>0)title="<b>Warteliste:</b><br>@foreach($event->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Waitlist)->getModels() as $participant){{$participant->firstname}} {{$participant->surname}}<br>@endforeach"@endif>{{__("Warteliste: ")}}</a>{{$event->max_participant > 0 ? $event->countWaitlist() : "-" }} |
                                         <a class="text-decoration-none" data-toggle="tooltip" data-html="true" data-placement="top" @if($event->countCancel()>0)title="<b>Abgesagt:</b><br>@foreach($event->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Canceled)->getModels() as $participant){{$participant->firstname}} {{$participant->surname}}<br>@endforeach"@endif>{{__("Ablehnung: ")}}</a> {{($event->countCancel()) }} |
