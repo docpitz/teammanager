@@ -37,9 +37,9 @@
                             <tr>
                                 <th scope="col">{{ __('Name') }}</th>
                                 <th scope="col">{{ __('Teilnehmer') }}</th>
-                                <th scope="col">{{ __('Veranstaltungsbeginn') }}</th>
+                                <th scope="col">{{ __('Veranstaltungszeitraum') }}</th>
                                 <th scope="col">{{ __('Veröffentlichung') }}</th>
-                                <th scope="col">{{ __('Anmeldeschluss') }}</th>
+                                <th scope="col">{{ __('Anmeldezeitraum') }}</th>
                                 <th scope="col"></th>
                             </tr>
                             </thead>
@@ -53,9 +53,15 @@
                                         <a class="text-decoration-none" data-boundary="window" data-toggle="tooltip" data-html="true" data-placement="top" @if($event->countWaitlist()>0)title="<b>Warteliste:</b><br>@foreach($event->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Waitlist)->getModels() as $participant){{$participant->firstname}} {{$participant->surname}}<br>@endforeach"@endif>{{__("Warteliste: ")}}</a>{{$event->max_participant > 0 ? $event->countWaitlist() : "-" }} |
                                         <a class="text-decoration-none" data-boundary="window" data-toggle="tooltip" data-html="true" data-placement="top" @if($event->countCancel()>0)title="<b>Abgesagt:</b><br>@foreach($event->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Canceled)->getModels() as $participant){{$participant->firstname}} {{$participant->surname}}<br>@endforeach"@endif>{{__("Ablehnung: ")}}</a> {{($event->countCancel()) }} |
                                         {{__("Anfragen: ").count($event->users) }}</td>
-                                    <td>{{ \Jenssegers\Date\Date::parse($event->date_event_start)->format('D d.m.Y H:i') }}</td>
+                                    <td>
+                                        {{ \Jenssegers\Date\Date::parse($event->date_event_start)->format('D d.m.Y H:i') }} - <br>
+                                        {{ \Jenssegers\Date\Date::parse($event->date_event_end)->format('D d.m.Y H:i') }}
+                                    </td>
                                     <td>{{ \Jenssegers\Date\Date::parse($event->date_publication)->format('D d.m.Y') }}</td>
-                                    <td>{{ \Jenssegers\Date\Date::parse($event->date_sign_up_end)->format('D d.m.Y') }}</td>
+                                    <td>
+                                        {{ \Jenssegers\Date\Date::parse($event->date_sign_up_start)->format('D d.m.Y') }} - <br>
+                                        {{ \Jenssegers\Date\Date::parse($event->date_sign_up_end)->format('D d.m.Y') }}
+                                    </td>
                                     <td class="text-right">
                                         <form action="{{ route('event.destroy', $event) }}" method="post">
                                             @csrf
