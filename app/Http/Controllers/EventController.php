@@ -27,7 +27,7 @@ class EventController extends Controller
     public function index(Event $model)
     {
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
-        return view('events.index', ['events' => Event::futureOrderByEventStart()->paginate(25)]);
+        return view('events.index', ['events' => Event::futureOrderByEventStart()->paginate(25), 'eventsOld' => Event::pastOrderByEventStart()->paginate(25)]);
     }
 
     /**

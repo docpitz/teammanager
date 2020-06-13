@@ -67,6 +67,11 @@ class Event extends Model implements Recordable
         return self::orderBy('date_event_start','asc')->whereDate('date_event_end', '>=', Carbon::now());
     }
 
+    public static function pastOrderByEventStart()
+    {
+        return self::orderBy('date_event_start','asc')->whereDate('date_event_end', '<', Carbon::now());
+    }
+
     protected $dates = ['date_event_start', 'date_event_end', 'date_sign_up_start', 'date_sign_up_end', 'date_publication'];
 
     public function users() {
