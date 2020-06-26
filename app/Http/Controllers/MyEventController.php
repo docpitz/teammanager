@@ -77,7 +77,7 @@ class MyEventController extends Controller
             'participationStatus' => $this->getParticipationStatusForAjaxResponse($event),
             $this->getParticipationStatusForAjaxResponse($event) => true, // the new state
             'countPromises' => $event->countPromise(),
-            'countQuiet' => Gate::check(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)) ? auth()->user()->countFutureQuietEvents() : auth()->user()->countFutureQuietEventsDelayed(),
+            'countQuiet' => auth()->user()->can(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key) ? auth()->user()->countFutureQuietEvents() : auth()->user()->countFutureQuietEventsDelayed(),
             'isConsulationNecessaryByCanceled' => $isConsulationNecessaryByCanceled]);
     }
 
