@@ -151,6 +151,15 @@ class User extends Authenticatable implements Identifiable
             ->withTimestamps();
     }
 
+    public function countFutureQuietEventsDelayed() {
+        return $this->belongsToMany('App\Event')
+            ->whereDate('date_publication', '<=', Carbon::now())
+            ->where('date_event_end', '>', Carbon::now()->toDateTimeString())
+            ->whereDate('date_sign_up_end', '=', Carbon::now())
+            ->wherePivot('participation_status_id',"=", ParticipationStatusEnum::Quiet)
+            ->count();
+    }
+
     public function countFutureQuietEvents() {
         return $this->belongsToMany('App\Event')
             ->whereDate('date_publication', '<=', Carbon::now())
@@ -163,7 +172,7 @@ class User extends Authenticatable implements Identifiable
 
     public function countFuturePromisedAndWaitlistEvents() {
          $query = $this->belongsToMany('App\Event')
-             ->whereDate('date_event_end', '>', Carbon::now())
+             ->where('date_event_end', '>', Carbon::now()->toDateTimeString())
              ->withPivot('participation_status_id')
              ->wherePivotIn('participation_status_id',  [ParticipationStatusEnum::Promised, ParticipationStatusEnum::Waitlist]);
         return $query->count();

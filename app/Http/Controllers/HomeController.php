@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Buisness\Enum\PermissionEnum;
+use Illuminate\Support\Facades\Gate;
+
 class HomeController extends Controller
 {
     /**
@@ -22,7 +25,8 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $countFutureQuietEvents = $user->countFutureQuietEvents();
+
+        $countFutureQuietEvents = Gate::check(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)) ? $user->countFutureQuietEvents() : $user->countFutureQuietEventsDelayed();
         $countFuturePromisedAndWaitlistEvents = $user->countFuturePromisedAndWaitlistEvents();
         return view('home.index', ['countFutureQuietEvents' => $countFutureQuietEvents, 'countFuturePromisedAndWaitlistEvents' => $countFuturePromisedAndWaitlistEvents]);
     }

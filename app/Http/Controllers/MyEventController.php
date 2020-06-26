@@ -8,6 +8,8 @@ use App\Event;
 use App\Http\Requests\MyEventRequest;
 use App\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 
@@ -20,7 +22,7 @@ class MyEventController extends Controller
      * @return \Illuminate\View\View
      */
     public function edit() {
-        $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
+        $this->authorizing();
         $events = auth()->user()->eventsToBook()->getModels();
         return view('events.my', ['events' => $events]);
     }
@@ -59,18 +61,28 @@ class MyEventController extends Controller
         return $this->createResponse($success, false, $event);
     }
 
+    private function authorizing()
+    {
+        if (Auth::user()->can(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class)) {
+            $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
+        }
+        else {
+            $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingDelayed)->key, User::class);
+        }
+    }
+
     private function createResponse(bool $success, bool $isConsulationNecessaryByCanceled, Event $event) {
         return response()->json(['success'=> $success,
             'hideParticipationStatus' => $this->getHideParticipationStatusForAjaxResponse($event),
             'participationStatus' => $this->getParticipationStatusForAjaxResponse($event),
             $this->getParticipationStatusForAjaxResponse($event) => true, // the new state
             'countPromises' => $event->countPromise(),
-            'countQuiet' => auth()->user()->countFutureQuietEvents(),
+            'countQuiet' => Gate::check(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)) ? auth()->user()->countFutureQuietEvents() : auth()->user()->countFutureQuietEventsDelayed(),
             'isConsulationNecessaryByCanceled' => $isConsulationNecessaryByCanceled]);
     }
 
     private function changeParticipation(Event $event, int $participationStatus) {
-        $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key, User::class);
+        $this->authorizing();
         return $event->saveParticipation(auth()->user(), $participationStatus, auth()->user());
     }
 

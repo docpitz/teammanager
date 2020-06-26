@@ -27,8 +27,9 @@
                         </a>
                     </li>
                 </ul>
-                @canany(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::UserOwn)->key,
-                \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key)
+                @canany([\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::UserOwn)->key,
+                \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingDelayed)->key,
+                \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key])
                 <!-- Divider -->
                 <hr class="my-3">
                 <!-- Heading -->
@@ -42,11 +43,18 @@
                         </a>
                     </li>
                     @endcan
-                    @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key)
+                    @canany([\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key,
+                            \App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingDelayed)->key])
                     <li class="nav-item">
-                        @if(auth()->user()->countFutureQuietEvents() > 0)
-                        <span id="badge_quiet" class="badge badge-pill badge-warning" style="float:right;margin-bottom:-23px;">{{auth()->user()->countFutureQuietEvents()}}</span>
-                        @endif
+                        @can(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key)
+                            @if(auth()->user()->countFutureQuietEvents() > 0)
+                                <span id="badge_quiet" class="badge badge-pill badge-warning" style="float:right;margin-bottom:-23px;">{{auth()->user()->countFutureQuietEvents()}}</span>
+                            @endif
+                        @elsecan((\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingDelayed)->key))
+                            @if(auth()->user()->countFutureQuietEventsDelayed() > 0)
+                                <span id="badge_quiet" class="badge badge-pill badge-warning" style="float:right;margin-bottom:-23px;">{{auth()->user()->countFutureQuietEventsDelayed()}}</span>
+                            @endif
+                        @endcan
                         <a class="nav-link" href="{{ route('myEvent') }}">
                             <i class="fas fa-table-tennis text-primary"></i>
                             <span class="nav-link-text">{{ __('Meine Veranstaltungen') }}</span>
@@ -97,7 +105,7 @@
                         </a>
                     </li>
                     @endcan
-                </ul>                
+                </ul>
                 @endcan
                 <hr class="my-3">
                 <!-- Heading -->

@@ -99,24 +99,30 @@
                                                                 <p class="description text-justify">{{$event->description}}</p>
                                                             </p>
                                                             @endif
-                                                            @if($event->booking_possible)
+                                                            @if(($event->booking_possible && \Illuminate\Support\Facades\Gate::check(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key)) ||
+                                                                ($event->booking_possible && \Illuminate\Support\Facades\Gate::check(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingDelayed)->key) && $event->date_sign_up_end->isToday()))
                                                                 <div class="btn-group center mt-5 pb-4 ">
                                                                     <button onclick="onClickPromised({{$event->id}})" type="button" class="btn save_button btn-outline-success{{$event->isPromisedByUser(auth()->user()) ? ' active' : ''}}{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Promised ? ' d-none ' : ''}}" id="promised{{$event->id}}"><i id="ajaxLoadPromised{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxPromised{{$event->id}}">{{ __('Teilnehmen') }}</div></button>
                                                                     <button onclick="onClickWaitlist({{$event->id}})" type="button" class="btn save_button btn-outline-info{{$event->isWaitlistByUser(auth()->user()) ? ' active' : ''}}{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Waitlist ? ' d-none ' : ''}}" id="waitlist{{$event->id}}"><i id="ajaxLoadWaitlist{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxWaitlist{{$event->id}}">{{ __('Warteliste') }}</div></button>
                                                                     <button onclick="onClickCanceled({{$event->id}}, false)" type="button" class="btn save_button btn-outline-danger{{$event->isCanceledByUser(auth()->user()) ? ' active' : ''}}" id="canceled{{$event->id}}"><i id="ajaxLoadCanceled{{$event->id}}" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxCanceled{{$event->id}}">{{ __('Absagen') }}</div></button>
                                                                 </div>
+                                                            @else
+                                                                <div class="text-center mt-5">
+                                                                @if($event->isPromisedByUser(auth()->user()))
+                                                                    <button type="button" class="btn save_button btn-success" disabled="disabled">{{ __('Zugesagt') }}</button>
+                                                                @elseif($event->isCanceledByUser(auth()->user()))
+                                                                    <button type="button" class="btn save_button btn-danger" disabled="disabled">{{ __('Abgesagt') }}</button>
                                                                 @else
-                                                                    <div class="text-center mt-5">
-                                                                    @if($event->isPromisedByUser(auth()->user()))
-                                                                        <button type="button" class="btn save_button btn-success" disabled="disabled">{{ __('Zugesagt') }}</button>
-                                                                    @elseif($event->isCanceledByUser(auth()->user()))
-                                                                        <button type="button" class="btn save_button btn-danger" disabled="disabled">{{ __('Abgesagt') }}</button>
-                                                                    @else
-                                                                        <button type="button" class="btn save_button btn-dark" disabled="disabled">{{ __('Ohne Antwort') }}</button>
+                                                                    <button type="button" class="btn save_button btn-dark" disabled="disabled">{{ __('Ohne Antwort') }}</button>
+                                                                @endif
+                                                                    <br>
+                                                                    @if(\Illuminate\Support\Facades\Gate::check(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingImmediate)->key))
+                                                                        <h5>Anmeldezeitraum zwischen {{$event->date_sign_up_start->format('d.m.Y')}} und {{$event->date_sign_up_end->format('d.m.Y')}}</h5>
+                                                                    @elseif(\Illuminate\Support\Facades\Gate::check(\App\Buisness\Enum\PermissionEnum::getInstance(\App\Buisness\Enum\PermissionEnum::EventBookingDelayed)->key))
+                                                                        <h5>Anmeldung möglich am {{$event->date_sign_up_end->format('d.m.Y')}}</h5>
                                                                     @endif
-                                                                        <br><h5>Anmeldezeitraum zwischen {{$event->date_sign_up_start->format('d.m.Y')}} und {{$event->date_sign_up_end->format('d.m.Y')}}</h5>
-                                                                    </div>
-                                                                @endIf
+                                                                </div>
+                                                            @endIf
 
                                                         </div>
                                                     </div>
