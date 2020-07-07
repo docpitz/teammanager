@@ -26,7 +26,6 @@ Route::get('home', 'HomeController@index')->name('home');
 Route::get('lock', 'PageController@lock')->name('page.lock');
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::resource('role', 'RoleController', ['except' => ['show', 'destroy']]);
 	Route::resource('user', 'UserController', ['except' => ['show']]);
 
     Route::resource('group', 'GroupController', ['except' => ['show']]);
@@ -44,8 +43,6 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
     Route::post('profile/avatar', ['as' => 'profile.avatar', 'uses' => 'ProfileController@avatar']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
-
-	Route::get('{page}', ['as' => 'page.index', 'uses' => 'PageController@index']);
 });
 
 
