@@ -74,6 +74,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
+        $newEvent = $event->replicate();
         $this->authorize(PermissionEnum::getInstance(PermissionEnum::EventManagement)->key, User::class);
         $event['date_event_range'] = $event->date_event_start->format('d.m.Y H:i').' - '.$event->date_event_end->format('d.m.Y H:i');
         $event['date_sign_up_range'] = $event->date_sign_up_start->format('d.m.Y').' - '.$event->date_sign_up_end->format('d.m.Y');
@@ -100,6 +101,9 @@ class EventController extends Controller
         }
         $eventResponsibles = $event->responsibles()->getModels([DB::raw('CAST(`id` as CHARACTER) AS `data-id`'), DB::raw('CONCAT(firstname, " ", surname) AS value')]);
 
+
+
+        
         return view('events.edit', ['event' => $event, 'userWithEventInfo' => $allUserWithEventInfo, 'event_responsible' => $eventResponsibles]);
     }
 
