@@ -170,12 +170,17 @@ class User extends Authenticatable implements Identifiable
             ->count();
     }
 
+    public function futurePromisedAndWaitlistEvents() {
+        return $this->belongsToMany('App\Event')
+            ->addSelect('events.*', 'event_user.*')
+            ->where('date_event_end', '>', Carbon::now()->toDateTimeString())
+            ->withPivot('participation_status_id')
+            ->wherePivotIn('participation_status_id',  [ParticipationStatusEnum::Promised, ParticipationStatusEnum::Waitlist])
+            ->orderBy('date_event_start');
+    }
+
     public function countFuturePromisedAndWaitlistEvents() {
-         $query = $this->belongsToMany('App\Event')
-             ->where('date_event_end', '>', Carbon::now()->toDateTimeString())
-             ->withPivot('participation_status_id')
-             ->wherePivotIn('participation_status_id',  [ParticipationStatusEnum::Promised, ParticipationStatusEnum::Waitlist]);
-        return $query->count();
+        return $this->futurePromisedAndWaitlistEvents()->count();
     }
 
     /**

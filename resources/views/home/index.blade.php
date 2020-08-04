@@ -28,6 +28,32 @@
                         <p class="mt-3 mb-0 text-sm">
                             <span class="text-success mr-2">{{$countFuturePromisedAndWaitlistEvents}}</span>
                             <span class="text-black-50">zukünftige Veranstaltungen zugesagt (inkl. Warteliste)</span>
+                        </p>
+                        <table class="mt-3">
+                            @foreach($futureEvents as $event)
+                                <tr class="text-sm">
+                                    <td>
+                                        <span class="text-black-50">{{\Jenssegers\Date\Date::parse($event->date_event_start)->format("D")}}</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-black-50 ml-1">{{\Jenssegers\Date\Date::parse($event->date_event_start)->format("d.m.Y H:i")}} Uhr</span>
+                                    </td>
+                                    <td>
+                                        @if($event->isPromisedByUser(auth()->user()))
+                                            <span class="ml-2 badge badge-pill badge-success"><i class="ni ni-check-bold"></i></span>
+                                        @else
+                                            <span class="ml-2 badge badge-pill badge-primary"><i class="ni ni-send"></i></span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr class="text-sm">
+                                    <td colspan="3">
+                                        <a class="ml-2 text-black" href="{{route('showEvent', [$event->id])}}">{{$event->name}}</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+
                     </div>
                 </div>
                 <div class="card card-stats">
