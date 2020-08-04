@@ -40,7 +40,7 @@
                                     </td>
                                     <td>
                                         @if($event->isPromisedByUser(auth()->user()))
-                                            <span class="ml-2 badge badge-pill badge-success"><i class="ni ni-check-bold"></i></span>
+                                            <span class="ml-2 badge badge-pill badge-success"><i class="ni ni-like-2"></i></span>
                                         @else
                                             <span class="ml-2 badge badge-pill badge-primary"><i class="ni ni-send"></i></span>
                                         @endif
