@@ -27,7 +27,7 @@
                         </div>
                         <p class="mt-3 mb-0 text-sm">
                             <span class="text-success mr-2">{{$countFuturePromisedAndWaitlistEvents}}</span>
-                            <span class="text-black-50">zukünftige Veranstaltungen zugesagt<span class="ml-2 badge badge-pill badge-success"><i class="ni ni-like-2"></i></span> inkl. Warteliste<span class="ml-2 badge badge-pill badge-primary"><i class="ni ni-send"></i></span></span>
+                            <span class="text-black-50">zukünftige Veranstaltungen zugesagt<span class="badge badge-pill badge-success"><i class="ni ni-like-2"></i></span> inkl. Warteliste<span class="badge badge-pill badge-primary"><i class="ni ni-send"></i></span></span>
                         </p>
                         <table class="mt-3">
                             @foreach($futureEvents as $event)
