@@ -48,7 +48,11 @@
                                 </tr>
                                 <tr class="text-sm">
                                     <td colspan="3" class="pb-2">
+                                        @if($event->show_in_my_events)
                                         <a class="ml-2" href="{{route('showEvent', [$event->id])}}">{{$event->name}}</a>
+                                        @else
+                                            <span class="ml-2">{{$event->name}}</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

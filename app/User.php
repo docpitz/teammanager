@@ -172,7 +172,7 @@ class User extends Authenticatable implements Identifiable
 
     public function futurePromisedAndWaitlistEvents() {
         return $this->belongsToMany('App\Event')
-            ->addSelect('events.*', 'event_user.*')
+            ->select(DB::raw('events.*, event_user.*, events.date_publication <= CURRENT_TIMESTAMP AS show_in_my_events'))
             ->where('date_event_end', '>', Carbon::now()->toDateTimeString())
             ->withPivot('participation_status_id')
             ->wherePivotIn('participation_status_id',  [ParticipationStatusEnum::Promised, ParticipationStatusEnum::Waitlist])
