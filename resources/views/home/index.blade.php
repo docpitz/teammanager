@@ -48,7 +48,7 @@
                                 </tr>
                                 <tr class="text-sm">
                                     <td colspan="3">
-                                        <a class="ml-2 text-black" href="{{route('showEvent', [$event->id])}}">{{$event->name}}</a>
+                                        <a class="nav-link text-black" href="{{route('showEvent', [$event->id])}}">{{$event->name}}</a>
                                     </td>
                                 </tr>
                             @endforeach
