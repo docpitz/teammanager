@@ -30,7 +30,8 @@ class HomeController extends Controller
         $countFutureQuietEvents = Gate::check(PermissionEnum::getInstance(PermissionEnum::EventBookingImmediate)->key) ? $user->countFutureQuietEvents() : $user->countFutureQuietEventsDelayed();
         $countFuturePromisedAndWaitlistEvents = $user->countFuturePromisedAndWaitlistEvents();
         $futureEvents = Event::overviewForUser($user->id)->get();
+        $countFutureResponsibles = $user->countFutureResponsibleEvents();
 
-        return view('home.index', ['countFutureQuietEvents' => $countFutureQuietEvents, 'countFuturePromisedAndWaitlistEvents' => $countFuturePromisedAndWaitlistEvents, 'futureEvents' => $futureEvents]);
+        return view('home.index', ['countFutureQuietEvents' => $countFutureQuietEvents, 'countFuturePromisedAndWaitlistEvents' => $countFuturePromisedAndWaitlistEvents, 'countFutureResponsibles' => $countFutureResponsibles, 'futureEvents' => $futureEvents]);
     }
 }

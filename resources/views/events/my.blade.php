@@ -52,7 +52,7 @@
                                                         <div style="position: relative; text-align: center;color: white;">
                                                             <img class="card-img" src="{{ asset('hofolding') }}/tt-event.jpg" alt="Veranstaltungsbild">
                                                             <div style="position: absolute; bottom: 15px; right: -20px;">
-                                                                <h3 id="stamp{{$event->id}}" class="{{ $event->isCanceledByUser(auth()->user()) || $event->hasQuietByUser(auth()->user()) ? 'd-none ' : ''}} stamp-text">
+                                                                <h3 id="stamp{{$event->id}}" class="{{ $event->isCanceledByUser(auth()->user()) || $event->isQuietByUser(auth()->user()) ? 'd-none ' : ''}} stamp-text">
                                                                     <div class="{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Promised ? ' d-none ' : ''}}" id="stamp{{$event->id}}promised">{{__('Angemeldet')}}</div>
                                                                     <div class="{{$event->getHideParticipationState(auth()->user()) == \App\Buisness\Enum\ParticipationStatusEnum::Waitlist ? ' d-none ' : ''}}" id="stamp{{$event->id}}waitlist">{{__('Warteliste')}}</div>
                                                                 </h3>

@@ -29,6 +29,12 @@
                             <span class="text-success mr-2">{{$countFuturePromisedAndWaitlistEvents}}</span>
                             <span class="text-black-50">zukünftige Veranstaltungen zugesagt<span class="badge badge-pill badge-success"><i class="ni ni-like-2"></i></span> inkl. Warteliste<span class="badge badge-pill badge-primary"><i class="ni ni-send"></i></span></span>
                         </p>
+                        @if($countFutureResponsibles > 0)
+                        <p class="mt-3 mb-0 text-sm">
+                            <span class="text-primary mr-2">{{$countFutureResponsibles}}</span>
+                            <span class="text-black-50">zukünftige Veranstaltungen hast du die Verantwortung<span class="badge badge-pill badge-default"><i class="ni ni-notification-70"></i></span></span>
+                        </p>
+                        @endif
                         <table class="mt-3">
                             @foreach($futureEvents as $event)
                                 @php($eventObject = \App\Event::find($event->id))
@@ -46,13 +52,13 @@
                                             <span class="ml-2 badge badge-pill badge-primary"><i class="ni ni-send"></i></span>
                                         @endif
                                         @if($eventObject->isResponsibleByUser(auth()->user()))
-                                            <span class="ml-2 badge badge-pill badge-primary"><i class="ni ni-notification-70"></i></span>
+                                            <span class="ml-2 badge badge-pill badge-default"><i class="ni ni-notification-70"></i></span>
                                         @endif
                                     </td>
                                 </tr>
                                 <tr class="text-sm">
                                     <td colspan="3" class="pb-2">
-                                        @if($event->show_in_my_events && ($eventObject->isPromisedByUser(auth()->user()) || $eventObject->isWaitlistByUser(auth()->user())))
+                                        @if($event->show_in_my_events && ($eventObject->isPromisedByUser(auth()->user()) || $eventObject->isWaitlistByUser(auth()->user()) || $eventObject->isCanceledByUser(auth()->user()) || $eventObject->isQuietByUser(auth()->user())))
                                         <a class="ml-2" href="{{route('showEvent', [$event->id])}}">{{$event->name}}</a>
                                         @else
                                             <span class="ml-2">{{$event->name}}</span>

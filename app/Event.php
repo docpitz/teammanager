@@ -229,7 +229,7 @@ class Event extends Model implements Recordable
         return $this->responsibles()->where('event_responsible.user_id', '=', $user->id)->count() >= 1;
     }
 
-    public function hasQuietByUser(User $user) {
+    public function isQuietByUser(User $user) {
         return $this->hasStateByUser(ParticipationStatusEnum::Quiet, $user);
     }
 

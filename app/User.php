@@ -134,6 +134,10 @@ class User extends Authenticatable implements Identifiable
             ->withTimestamps();
     }
 
+    public function responsibles() {
+        return $this->belongsToMany('App\Event', 'event_responsible');
+    }
+
     public function events() {
         return $this->belongsToMany('App\Event')
             ->withPivot('participation_status_id', 'date_user_changed_participation_status')
@@ -167,6 +171,12 @@ class User extends Authenticatable implements Identifiable
             ->whereDate('date_sign_up_start', '<=', Carbon::now())
             ->whereDate('date_sign_up_end', '>=', Carbon::now())
             ->wherePivot('participation_status_id',"=", ParticipationStatusEnum::Quiet)
+            ->count();
+    }
+
+    public function countFutureResponsibleEvents() {
+        return $this->responsibles()
+            ->where('date_event_end', '>', Carbon::now()->toDateString())
             ->count();
     }
 
