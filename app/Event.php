@@ -206,7 +206,11 @@ class Event extends Model implements Recordable
     }
 
     public function getParticipationState(User $user) {
-        return $this->users()->whereKey($user->id)->first()->pivot->participation_status_id;
+        $result = $this->users()->whereKey($user->id)->first();
+        if(! is_object($result)) {
+            return -1;
+        }
+        return $result->pivot->participation_status_id;
     }
 
     public function isPromisedPossible() {
