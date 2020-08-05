@@ -4,11 +4,9 @@ namespace App\Console\Commands;
 use App\Event;
 use App\EventSendedmail;
 use App\SendedMails;
-use App\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Mail;
 
 class SendEmailsToInformResponsibleAboutParticipants extends Command
 {
@@ -24,7 +22,7 @@ class SendEmailsToInformResponsibleAboutParticipants extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send E-Mail to inform Responsibles about the participants';
 
     /**
      * Create a new command instance.
