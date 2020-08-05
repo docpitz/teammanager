@@ -226,7 +226,7 @@ class Event extends Model implements Recordable
     }
 
     public function isResponsibleByUser(User $user) {
-        return $this->responsibles()->where('user_id', '=', $user->id)->count() >= 1;
+        return $this->responsibles()->where('event_responsible.user_id', '=', $user->id)->count() >= 1;
     }
 
     public function hasQuietByUser(User $user) {
