@@ -245,9 +245,10 @@ class Event extends Model implements Recordable
     public static function overviewForUser($userId) {
         return DB::table('events')
             ->select(DB::raw('events.id, events.date_event_start, events.name, events.date_publication <= CURRENT_TIMESTAMP AS show_in_my_events'))
-            ->join('event_responsible', 'events.id', '=', 'event_responsible.event_id')
-            ->join('event_user', 'events.id', '=', 'event_user.event_id')
+            ->leftJoin('event_responsible', 'events.id', '=', 'event_responsible.event_id')
+            ->leftJoin('event_user', 'events.id', '=', 'event_user.event_id')
             ->where('date_event_end', '>', Carbon::now()->toDateString(), 'and')
+            ->whereIn('event_user.participation_status_id', [ParticipationStatusEnum::Promised, ParticipationStatusEnum::Waitlist])
             ->where(function ($q) use ($userId) {
                 $q->where('event_user.user_id', '=', $userId, 'or')
                   ->where('event_responsible.user_id', '=', $userId, 'or');
