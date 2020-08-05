@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Event extends Model implements Recordable
@@ -224,6 +225,10 @@ class Event extends Model implements Recordable
         return $this->hasStateByUser(ParticipationStatusEnum::Canceled, $user);
     }
 
+    public function isResponsibleByUser(User $user) {
+        return $this->responsibles()->where('user_id', '=', $user->id);
+    }
+
     public function hasQuietByUser(User $user) {
         return $this->hasStateByUser(ParticipationStatusEnum::Quiet, $user);
     }
@@ -235,6 +240,20 @@ class Event extends Model implements Recordable
                 $query->where('kind','!=', $emailType);
             }
         );
+    }
+
+    public static function overviewForUser($userId) {
+        return DB::table('events')
+            ->select(DB::raw('events.id, events.date_event_start, events.name, events.date_publication <= CURRENT_TIMESTAMP AS show_in_my_events'))
+            ->leftJoin('event_responsible', 'events.id', '=', 'event_responsible.event_id')
+            ->leftJoin('event_user', 'events.id', '=', 'event_user.event_id')
+            ->where('date_event_end', '>', Carbon::now()->toDateString(), 'and')
+            ->where(function ($q) use ($userId) {
+                $q->where('event_user.user_id', '=', $userId, 'or')
+                  ->where('event_responsible.user_id', '=', $userId, 'or');
+            })
+            ->orderBy('events.date_event_start')
+            ->groupBy('events.id');
     }
 
     private function hasStateByUser(int $participationStatus, User $user) {
