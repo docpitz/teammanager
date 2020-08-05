@@ -112,6 +112,8 @@
                                                                     <button type="button" class="btn save_button btn-success" disabled="disabled">{{ __('Zugesagt') }}</button>
                                                                 @elseif($event->isCanceledByUser(auth()->user()))
                                                                     <button type="button" class="btn save_button btn-danger" disabled="disabled">{{ __('Abgesagt') }}</button>
+                                                                @elseif($event->isWaitlistByUser(auth()->user()))
+                                                                    <button type="button" class="btn save_button btn-info" disabled="disabled">{{ __('Warteliste') }}</button>
                                                                 @else
                                                                     <button type="button" class="btn save_button btn-dark" disabled="disabled">{{ __('Ohne Antwort') }}</button>
                                                                 @endif
