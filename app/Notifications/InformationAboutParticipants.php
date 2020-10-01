@@ -3,8 +3,8 @@
 namespace App\Notifications;
 
 use App\Buisness\Enum\ParticipationStatusEnum;
+use App\Event;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\HtmlString;
@@ -20,7 +20,7 @@ class InformationAboutParticipants extends Notification
      *
      * @return void
      */
-    public function __construct($event)
+    public function __construct(Event $event)
     {
         $this->event = $event;
     }

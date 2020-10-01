@@ -42,11 +42,17 @@
                                 <h1>{{$event->name}}</h1>
                                 <small><b>Anmeldezeitraum: </b>{{$event->date_sign_up_start->format('d.m.Y')}} bis {{$event->date_sign_up_end->format('d.m.Y')}}</small><br>
                                 <small><b>Veranstaltungszeitraum: </b>{{$event->date_event_start->format('d.m.Y H:i')}} bis {{$event->date_event_end->format('d.m.Y H:i').__(' Uhr')}}</small><br><br>
-                                <div class="form-group{{ $errors->has('event_responsible') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="input-event_responsible">{{ __('Verantwortliche') }}</label>
-                                    <input name="event_responsible"  id="input-event_responsible" placeholder="{{ __('Verantwortliche') }}">
-                                    @include('alerts.feedback', ['field' => 'event_responsible'])
-                                </div>
+                                <fieldset id="fieldset">
+                                    <div class="form-group{{ $errors->has('event_responsible') ? ' has-danger' : '' }}">
+                                        <label class="form-control-label" for="input-event_responsible">{{ __('Verantwortliche') }}</label>
+                                        <input name="event_responsible"  id="input-event_responsible" placeholder="{{ __('Verantwortliche') }}">
+                                        <div class="text-center">
+                                            <button onclick="ajaxCall({{$event->id}},false)" type="button" class="btn btn-sm btn-success mt-4"><i id="ajaxSave" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxSave">{{ __('Verantwortliche speichern') }}</div></button>
+                                            <button onclick="ajaxCall({{$event->id}},true)" type="button" class="btn btn-sm btn-success mt-4"><i id="ajaxEmail" class="fas fa-spinner fa-spin d-none"></i><div id="noAjaxEmail">{{ __('Verantwortliche speichern & sofort informieren') }}</div></button>
+                                        </div>
+                                        @include('alerts.feedback', ['field' => 'event_responsible'])
+                                    </div>
+                                </fieldset>
 
                                 <div class="row">
                                     <div class="col-sm-4">
@@ -93,6 +99,7 @@
                     @endforeach
                 ],
                 enforceWhitelist: true,
+                loading: true,
                 editTags: false,
                 dropdown: {
                     maxItems: 5,           // <- mixumum allowed rendered suggestions
@@ -150,6 +157,45 @@
         {
             tagify.addTags({!! old('event_responsible', json_encode($event_responsible)) !!})
         }
+
+        function beforeAjaxCall() {
+            tagify.loading(true);
+            $("#fieldset").attr('disabled', 'disabled');
+            $("#ajaxSave").removeClass('d-none');
+            $("#ajaxEmail").removeClass('d-none');
+            $("#noAjaxSave").addClass('d-none');
+            $("#noAjaxEmail").addClass('d-none');
+        }
+
+        function afterAjaxCall() {
+            tagify.loading(false);
+            $("#fieldset").removeAttr('disabled');
+            $("#ajaxSave").addClass('d-none');
+            $("#ajaxEmail").addClass('d-none');
+            $("#noAjaxSave").removeClass('d-none');
+            $("#noAjaxEmail").removeClass('d-none');
+        }
+
+
+        function ajaxCall(eventId, sendMail) {
+            beforeAjaxCall();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            jQuery.ajax({
+                url: '{{ url("/eventBookingOverview") }}/'+eventId+'/ajax',
+                method: 'post',
+                data: {
+                    id: eventId,
+                    sendMail: sendMail,
+                    responsibles:$('#input-event_responsible').val()
+                },
+                success: function(result){
+                    afterAjaxCall();
+                }});
+        };
 
     </script>
 @endpush

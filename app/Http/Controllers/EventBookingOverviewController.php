@@ -68,6 +68,26 @@ class EventBookingOverviewController extends Controller
         return redirect()->route('event.index')->withStatus(__('Teilnehmer an Veranstaltung erfolgreich geändert.'));
     }
 
+    public function informResponsibleAboutEvent(Event $event, EventBookingOverviewRequest $request)
+    {
+        $event->responsibles()->detach();
+        if(!empty($request["responsibles"])) {
+            $arrayResponsibles = array_column(json_decode($request["responsibles"]),'data-id');
+            $event->responsibles()->attach($arrayResponsibles);
+
+            if((!empty($request["sendMail"]) && $request["sendMail"] === "true"))
+            {
+                $responsibles = json_decode($request["responsibles"], true);
+                foreach ($responsibles as $responsible)
+                {
+                    $user = User::find($responsible["data-id"]);
+                    $user->sendInformationAboutParticipants($event);
+                }
+            }
+        }
+        return response()->json();
+    }
+
     private function updateParticipation(Event $eventBookingOverview, EventBookingOverviewRequest $request, int $newParticipationStatus)
     {
         $newParticipationStatusEnum = ParticipationStatusEnum::getInstance($newParticipationStatus);

@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('event', 'EventController', ['except' => ['show']]);
 
     Route::resource('eventBookingOverview', 'EventBookingOverviewController', ['only' => ['edit', 'update']]);
+    Route::post('eventBookingOverview/{event}/ajax', 'EventBookingOverviewController@informResponsibleAboutEvent')->name('eventBookingOverview.ajax');
 
     Route::get('myEvent', 'MyEventController@edit')->name('myEvent');
     Route::get('showEvent/{event}', 'MyEventController@edit')->name('showEvent');
