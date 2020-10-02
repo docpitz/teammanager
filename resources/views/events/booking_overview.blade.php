@@ -47,8 +47,8 @@
                                         <label class="form-control-label" for="input-event_responsible">{{ __('Verantwortliche') }}</label>
                                         <input name="event_responsible"  id="input-event_responsible" placeholder="{{ __('Verantwortliche') }}">
                                         <div class="text-center">
-                                            <button onclick="ajaxCall({{$event->id}},false)" type="button" class="btn btn-sm btn-success mt-4"><i id="ajaxSave" class="fas fa-spinner fa-spin d-none"></i><i id="noAjaxSave" class="fas fa-save"></i> {{ __('Verantwortliche speichern') }}</button>
-                                            <button onclick="ajaxCall({{$event->id}},true)" type="button" class="btn btn-sm btn-success mt-4"><i id="ajaxEmail" class="fas fa-spinner fa-spin d-none"></i><i id="noAjaxEmail" class="fas fa-envelope"></i> {{ __('Verantwortliche speichern & sofort informieren') }}</button>
+                                            <button onclick="ajaxCall({{$event->id}},false)" type="button" class="btn btn-sm btn-success mt-4"><i id="ajaxSave" class="fas fa-spinner fa-spin d-none"></i><i id="noAjaxSave" class="fas fa-save"></i> {{ __('Speichern') }}</button>
+                                            <button onclick="ajaxCall({{$event->id}},true)" type="button" class="btn btn-sm btn-success mt-4"><i id="ajaxEmail" class="fas fa-spinner fa-spin d-none"></i><i id="noAjaxEmail" class="fas fa-envelope"></i> {{ __('Speichern & eMail senden') }}</button>
                                         </div>
                                         @include('alerts.feedback', ['field' => 'event_responsible'])
                                     </div>
