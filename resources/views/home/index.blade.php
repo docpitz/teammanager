@@ -52,7 +52,21 @@
                                             <span class="ml-2 badge badge-pill badge-primary"><i class="ni ni-send"></i></span>
                                         @endif
                                         @if($eventObject->isResponsibleByUser(auth()->user()))
-                                            <span class="ml-2 badge badge-pill badge-default"><i class="ni ni-notification-70"></i></span>
+                                                <span class="ml-2 badge badge-pill badge-default">
+                                            <a class="text-decoration-none" data-boundary="window" data-toggle="tooltip" data-html="true" data-placement="top"
+                                               @if($eventObject->countPromise()>0)
+                                                    title="<b>Angemeldet:</b><br>
+                                                        @foreach($eventObject->getUsersByParticipation(\App\Buisness\Enum\ParticipationStatusEnum::Promised)->getModels() as $participant)
+                                                            {{$participant->firstname}} {{$participant->surname}}<br>
+                                                        @endforeach
+                                                   "
+                                               @else
+                                                    title="Keine Anmeldungen"
+                                                @endif
+                                            >
+                                                <i class="ni ni-notification-70"></i>
+                                            </a>
+                                            </span>
                                         @endif
                                     </td>
                                 </tr>
