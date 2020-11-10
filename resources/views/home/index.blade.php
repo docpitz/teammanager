@@ -4,7 +4,7 @@
     @component('layouts.headers.auth')
         @component('layouts.headers.breadcrumbs')
             @slot('title')
-                {{ __('Willkommmen') }}
+                {{ __('Willkommen') }}
             @endslot
         @endcomponent
     @endcomponent
