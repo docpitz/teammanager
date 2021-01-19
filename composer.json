@@ -16,7 +16,7 @@
         "fideloper/proxy": "^4.3",
         "intervention/image": "^2.5",
         "jenssegers/date": "^4.0",
-        "laravel/framework": "7.9.*",
+        "laravel/framework": "7.30.*",
         "laravel/tinker": "^2.4",
         "laravel/ui": "2.0",
         "laravolt/avatar": "^3.2",
